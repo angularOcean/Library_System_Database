@@ -218,7 +218,7 @@ VALUES ('978-19-8213798-4', 'If It Bleeds', 1, '2021', 1),
         'A Farewell to Arms',
         5,
         '2019',
-        8
+        7
     );
 /*
  BookCopies 
