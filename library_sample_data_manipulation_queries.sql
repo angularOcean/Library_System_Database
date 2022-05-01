@@ -7,6 +7,11 @@
  */
 
 
+/*
+General queries
+ */
+
+
 show tables;
 select * from authors;
 select * from books;
@@ -16,3 +21,20 @@ select * from locations;
 select * from checkedbooks;
 select * from patrons;
 select * from publishers;
+
+
+/*
+Book queries
+ */
+
+
+
+/*
+Patron queries
+ */
+
+
+ /*
+Checkout queries
+ */
+
