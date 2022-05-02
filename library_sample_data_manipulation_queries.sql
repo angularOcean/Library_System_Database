@@ -22,19 +22,38 @@ select * from checkedbooks;
 select * from patrons;
 select * from publishers;
 
-
 /*
-Book queries
+Authors queries
  */
 
 
+/*
+Books queries
+ */
 
 /*
-Patron queries
+Bookcopies queries
+ */
+
+
+/*
+Patrons queries
  */
 
 
  /*
-Checkout queries
+Checkouts queries
  */
 
+  /*
+Checkedbooks queries
+ */
+
+
+ /*
+Publishers queries
+ */
+
+  /*
+Locations queries
+ */
