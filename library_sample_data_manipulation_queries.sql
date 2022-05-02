@@ -24,36 +24,52 @@ select * from publishers;
 
 /*
 Authors queries
+SELECT
+INSERT
  */
 
 
 /*
 Books queries
+SELECT
+INSERT
  */
 
 /*
 Bookcopies queries
+SELECT
+INSERT
  */
 
 
 /*
 Patrons queries
+SELECT
+INSERT
  */
 
 
  /*
 Checkouts queries
+SELECT
+INSERT
  */
 
   /*
 Checkedbooks queries
+SELECT
+INSERT
  */
 
 
  /*
 Publishers queries
+SELECT
+INSERT
  */
 
   /*
 Locations queries
+SELECT
+INSERT
  */
