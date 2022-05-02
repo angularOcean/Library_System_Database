@@ -16,6 +16,11 @@ def root():
 
 #2. authors.html - Jenna
 #3. books.html - Herakles
+@app.route('/books.html')
+def books_page():
+    return render_template("books.j2")
+
+
 #4. bookcopies.html - Jenna
 #5. patrons.html - Herakles
 #6. checkouts.html - Jenna
