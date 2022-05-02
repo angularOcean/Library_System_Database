@@ -56,12 +56,14 @@ DELETE
 Checkouts queries
 CREATE/INSERT
 READ/SELECT
+UPDATE
  */
 
   /*
 Checkedbooks queries
 CREATE/INSERT
 READ/SELECT
+DELETE
  */
 
 
