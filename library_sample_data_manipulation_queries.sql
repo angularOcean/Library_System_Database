@@ -9,6 +9,7 @@
 
 /*
 General queries
+pages: index.html
  */
 
 
@@ -27,6 +28,7 @@ Authors queries
 CREATE/INSERT
 READ/SELECT
 
+pages: authors.html
  */
 
 
@@ -34,12 +36,17 @@ READ/SELECT
 Books queries
 CREATE/INSERT
 READ/SELECT
+
+pages: books.html
  */
+
 
 /*
 Bookcopies queries
 CREATE/INSERT
 READ/SELECT
+
+pages: bookcopies.html
  */
 
 
@@ -49,6 +56,8 @@ CREATE/INSERT
 READ/SELECT
 UPDATE
 DELETE
+
+pages: patrons.html
  */
 
 
@@ -57,6 +66,8 @@ Checkouts queries
 CREATE/INSERT
 READ/SELECT
 UPDATE
+
+pages: checkouts.html
  */
 
   /*
@@ -64,6 +75,8 @@ Checkedbooks queries
 CREATE/INSERT
 READ/SELECT
 DELETE
+
+pages: checkedbooks.html
  */
 
 
@@ -71,10 +84,14 @@ DELETE
 Publishers queries
 CREATE/INSERT
 READ/SELECT
+
+pages: publishers.html
  */
 
   /*
 Locations queries
 CREATE/INSERT
 READ/SELECT
+
+pages: locations.html
  */
