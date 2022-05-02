@@ -1,9 +1,69 @@
 <html>
 <head>
     <title>OSU - CS 340 - Group 2 Project Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
 </head>
 <body>
-    <h1>CS 340: Group Project - Penguin Libraries </h1>
-    <p>This is the main page of the Penguin Library Database</p>
+    <header>
+        <div class ="container">
+            <nav>
+                <ul class = "menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="authors.html">Authors</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="bookcopies.html">Bookcopies</a></li>
+                <li><a href="patrons.html">Patrons</a></li>
+                <li><a href="checkouts.html">Checkouts</a></li>
+                <li><a href="checkedbooks.html">Checkedbooks</a></li>
+                <li><a href="publishers.html">Publishers</a></li>
+                <li><a href="locations.html">Locations</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <h1>CS 340: Group Project - Penguin Library System </h1>
+    <p>This is the main page of the Penguin Library System Database. Please use the above bar to navigate to the different data tables within the database.</p>
+
+    <table>
+    <caption>Database Outline</caption>
+    <thead>
+    <tr>
+        <th>Database Entity</th>
+        <th>Contents</th>
+    </tr>
+    <tbody>
+    <tr>
+        <td>Authors</td>
+        <td>Name</td>
+    </tr>
+        <tr>
+        <td>Books</td>
+        <td>ISBN, Title, Year, Author, Publisher</td>
+    </tr>
+        <tr>
+        <td>Bookcopies</td>
+        <td>Title, Location</td>
+    </tr>
+        <tr>
+        <td>Patrons</td>
+        <td>Name, Email</td>
+    </tr>
+        <tr>
+        <td>Checkouts</td>
+        <td>Checkout Date, Return Date</td>
+    </tr>
+        <tr>
+        <td>Checkedbooks</td>
+        <td>Book Title, Patron Name, Checkout Date, Return Date, Returned</td>
+    </tr>
+        <tr>
+        <td>Publishers</td>
+        <td>Name</td>
+    </tr>
+        <tr>
+        <td>Locations</td>
+        <td>Name, Address</td>
+    </tr>
+    </table>
 </body>
 </html>

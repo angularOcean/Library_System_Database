@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Penguin Library System Books</title>
+    <title>Penguin Library System Checked Books</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
 </head>
 <body>
@@ -21,26 +21,26 @@
             </nav>
         </div>
     </header>
-    <h1>Books Database</h1>
-    <p>This is a database of books in the Penguin Library System</p>
+    <h1>Checked Books Database</h1>
+    <p>This a database of checked books for Penguin Library System</p>
 
     <table>
     <thead>
     <tr>
-        <th>ISBN</th>
-        <th>Title</th>
-        <th>Year</th>
-        <th>Author</th>
-        <th>Publisher</th>
+        <th>Book Title</th>
+        <th>Patron Name</th>
+        <th>Checkout Date</th>
+        <th>Return Date</th>
+        <th>Returned</th>
     </tr>
     <tbody>
-    {% for item in books %}
+    {% for item in checkedbooks %}
     <tr>
-        <td>{{item['ISBN']}}</td>
-        <td>{{item['Title']}}</td>
-        <td>{{item['Year']}}</td>
-        <td>{{item['Author']}}</td>
-        <td>{{item['Publisher']}}</td>
+        <td>{{item['Book_Title']}}</td>
+        <td>{{item['Patron_Name']}}</td>
+        <td>{{item['Checkout_Date']}}</td>
+        <td>{{item['Return_Date']}}</td>
+        <td>{{item['Returned']}}</td>
     </tr>
     {% endfor %}
     </table>

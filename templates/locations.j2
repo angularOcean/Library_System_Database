@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Penguin Library System Books</title>
+    <title>Penguin Library System Locations</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
 </head>
 <body>
@@ -21,26 +21,20 @@
             </nav>
         </div>
     </header>
-    <h1>Books Database</h1>
-    <p>This is a database of books in the Penguin Library System</p>
+    <h1>Loacations Database</h1>
+    <p>This is a database of library locations for Penguin Library System</p>
 
     <table>
     <thead>
     <tr>
-        <th>ISBN</th>
-        <th>Title</th>
-        <th>Year</th>
-        <th>Author</th>
-        <th>Publisher</th>
+        <th>Name</th>
+        <th>Address</th>
     </tr>
     <tbody>
-    {% for item in books %}
+    {% for item in locations %}
     <tr>
-        <td>{{item['ISBN']}}</td>
-        <td>{{item['Title']}}</td>
-        <td>{{item['Year']}}</td>
-        <td>{{item['Author']}}</td>
-        <td>{{item['Publisher']}}</td>
+        <td>{{item['Name']}}</td>
+        <td>{{item['Address']}}</td>
     </tr>
     {% endfor %}
     </table>
