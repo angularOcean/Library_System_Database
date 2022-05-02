@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import os
 
 # Configuration
@@ -7,9 +7,9 @@ app = Flask(__name__)
 
 # Routes 
 
-@app.route('/')
+@app.route('/index.html')
 def root():
-    return "Welcome to the OSU CS 340 - Flask Tutorial! Project Group 2: Penguin Library"
+    return render_template("main.j2")
 
 # Listener
 
