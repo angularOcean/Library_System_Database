@@ -41,7 +41,9 @@ READ/SELECT
 
 pages: authors.html
  */
-
+ /* Generate Initial Table View */
+ select Author.first_name, Author.last_name from Authors
+ order by Author.last_name asc;
 
 /*
 Books queries
@@ -59,6 +61,14 @@ READ/SELECT
 
 pages: bookcopies.html
  */
+ 
+ /* Generate Initial Table View */
+select Books.title, Authors.author_first, Authors.author_last, Locations.location_name
+from Locations
+inner join BookCopies on Locations.location_id = BookCopies.location_id
+inner join Books on BookCopies.book_id = Books.book_id
+inner join Authors on Books.author_id = Authors.author_id
+order by Books.title asc;
 
 
 /*
@@ -81,14 +91,13 @@ UPDATE
 pages: checkouts.html
  */
  
-/* SQL to Generate Intitial Table View */
+/* SQL to Generate Intitial Checkouts Table View */
 select Patrons.patron_first, Patrons.patron_last, Checkouts.checkout_date, Checkouts.return_date
 from Patrons
 inner join Checkouts on Patrons.patron_id = Checkouts.patron_id
 order by Checkouts.checkout_date desc;
 
 /* Checkouts INSERT */
-insert into Checkouts (
 
 
 
