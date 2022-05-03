@@ -80,6 +80,18 @@ UPDATE
 
 pages: checkouts.html
  */
+ 
+/* SQL to Generate Intitial Table View */
+select Patrons.patron_first, Patrons.patron_last, Checkouts.checkout_date, Checkouts.return_date
+from Patrons
+inner join Checkouts on Patrons.patron_id = Checkouts.patron_id
+order by Checkouts.checkout_date desc;
+
+/* Checkouts INSERT */
+insert into Checkouts (
+
+
+
 
   /*
 Checkedbooks queries
@@ -98,6 +110,16 @@ READ/SELECT
 
 pages: publishers.html
  */
+ 
+/* SQL to Generate Intitial Table View */
+select Publishers.publisher_name from Publishers
+order by Publishers.publisher_name asc;
+
+/* SQL to Insert New Publisher */
+insert into Publishers (Publishers.publisher_name)
+values (:publisher_name_input);
+
+
 
   /*
 Locations queries
