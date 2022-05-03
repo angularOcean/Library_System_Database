@@ -1,3 +1,11 @@
+# ------- Citations ---------
+
+# Citation for table_template:
+# Date: 05/03/2022
+# Based on:
+# Source URL: https://www.youtube.com/watch?v=mCy52I4exTU
+
+
 from flask import Flask, render_template
 import os
 
@@ -22,8 +30,21 @@ def root():
 # 2. authors.html - Jenna
 @app.route("/authors.html")
 def authors_page():
-    pass
+    return render_template(
+        "table_template.html",
+        title="Authors",
+        headings=authors_headings,
+        data=authors_data,
+    )
 
+authors_headings = ["First Name", "Last Name"]
+authors_data = [
+    ["Stephen", "King"],
+    ["Mark", "Twain"],
+    ["Agatha", "Christie"],
+    ["Jane", "Austen"],
+    ["Ernest", "Hemingway"],
+]
 
 # 3. books.html - Herakles
 @app.route("/books.html")

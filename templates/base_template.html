@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OSU - CS 340 - Group 2 Project Demo</title>
+        <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='css/app.css') }}">
+    </head>
+    <body>
+        <header>
+            <div class ="container">
+                <nav>
+                    <ul class = "menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="authors.html">Authors</a></li>
+                    <li><a href="books.html">Books</a></li>
+                    <li><a href="bookcopies.html">Bookcopies</a></li>
+                    <li><a href="patrons.html">Patrons</a></li>
+                    <li><a href="checkouts.html">Checkouts</a></li>
+                    <li><a href="checkedbooks.html">Checkedbooks</a></li>
+                    <li><a href="publishers.html">Publishers</a></li>
+                    <li><a href="locations.html">Locations</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        {% block content %}{% endblock %}
+    </body>
+</html>
