@@ -37,6 +37,7 @@ def authors_page():
         data=authors_data,
     )
 
+
 authors_headings = ["First Name", "Last Name"]
 authors_data = [
     ["Stephen", "King"],
@@ -86,7 +87,40 @@ books_from_app_py = [
 # 4. bookcopies.html - Jenna
 @app.route("/bookcopies.html")
 def bookcopies_page():
-    pass
+    return render_template(
+        "table_template.html",
+        title="Book Copies",
+        headings=book_copies_headings,
+        data=book_copies_rows,
+    )
+
+
+book_copies_headings = ["Title", "Author", "Location"]
+
+book_copies_rows = [
+    ["A Farewell to Arms", "Ernest Hemingway", "Little Penguin Library"],
+    ["A Farewell to Arms", "Ernest Hemingway", "Macaroni Penguin Library"],
+    ["Adventures of Huckleberry Finn", "Mark Twain", "Royal Penguin Library"],
+    ["And Then There Were None", "Agatha Christie", "Macaroni Penguin Library"],
+    ["Crooked House", "Agatha Christie", "Rockhopper Penguin Library"],
+    ["Crooked House", "Agatha Christie", "Emperor Penguin Library"],
+    ["For Whom the Bell Tolls", "Ernest Hemingway", "Emperor Penguin Library"],
+    ["If It Bleeds", "Stephen King", "Rockhopper Penguin Library"],
+    ["If It Bleeds", "Stephen King", "Royal Penguin Library"],
+    ["Needful Things", "Stephen King", "Emperor Penguin Library"],
+    ["Pride and Prejudice", "Jane Austen", "Rockhopper Penguin Library"],
+    ["Sense and Sensibility", "Jane Austen", "Royal Penguin Library"],
+    [
+        "The Adventures of Tom Sawyer: Original Illustrations",
+        "Mark Twain",
+        "Little Penguin Library",
+    ],
+    [
+        "The Adventures of Tom Sawyer: Original Illustrations",
+        "Mark Twain",
+        "Macaroni Penguin Library",
+    ],
+]
 
 
 # 5. patrons.html - Herakles
@@ -104,8 +138,23 @@ patrons_from_app_py = [
 # 6. checkouts.html - Jenna
 @app.route("/checkouts.html")
 def checkouts_page():
-    pass
+    return render_template(
+        "table_template.html",
+        title="Checkouts",
+        description="They are sorted by the most recent checkout date.",
+        headings=checkouts_headings,
+        data=checkouts_rows,
+    )
 
+
+checkouts_headings = ["Patron Name", "Checkout Date", "Return Date"]
+checkouts_rows = [
+    ["Zelenka Fichter", "2022-02-03", "2022-02-24"],
+    ["Corbett Farner", "2022-01-29", "2022-02-19"],
+    ["Koko Irish", "2021-10-29", "2021-11-19"],
+    ["Eloise Westfall", "2021-05-26", "2021-06-16"],
+    ["Zelenka Fichter", "2021-01-11", "2021-02-01"],
+]
 
 # 7. checkedbooks.html - Herakles
 @app.route("/checkedbooks.html")
@@ -139,7 +188,24 @@ checkedbooks_from_app_py = [
 # 8. publishers.html - Jenna
 @app.route("/publishers.html")
 def publishers_page():
-    pass
+    return render_template(
+        "table_template.html",
+        title="Book Publishers",
+        headings=publisher_headings,
+        data=publisher_rows,
+    )
+
+
+publisher_headings = ["Publisher Name"]
+publisher_rows = [
+    ["Dover Publications"],
+    ["Forgotten Books"],
+    ["Gallery Books"],
+    ["Penguin Books"],
+    ["Scribner"],
+    ["SeeWolf Press"],
+    ["William Morrow"],
+]
 
 
 # 9. locations.html - Herakles
