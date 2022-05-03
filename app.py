@@ -19,6 +19,7 @@ def root():
 
 
 #2. authors.html - Jenna
+@app.route('authors.html/')
 
 
 #3. books.html - Herakles
@@ -57,6 +58,7 @@ books_from_app_py =[
 ]
 
 #4. bookcopies.html - Jenna
+@app.route('bookcopies.html/')
 
 
 #5. patrons.html - Herakles
@@ -82,6 +84,7 @@ patrons_from_app_py =[
 ]
 
 #6. checkouts.html - Jenna
+@app.route('checkouts.html/')
 
 
 #7. checkedbooks.html - Herakles
@@ -114,6 +117,8 @@ checkedbooks_from_app_py =[
 
 ]
 #8. publishers.html - Jenna
+@app.route('publishers.html/')
+
 #9. locations.html - Herakles
 @app.route('/locations.html')
 def locations_page():
