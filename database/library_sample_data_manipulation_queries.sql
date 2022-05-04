@@ -36,15 +36,15 @@ values (
     :author_last_name_input
   );
 /* Update */
-select author_id
-from Authors
-where author_first = :author_first
-  and author_last = :author_last;
-/* capture the author_id found as :author_id_var */
 update Authors
 set author_first = :author_first_name_input,
   author_last = :author_last_name_input
-where author_id = :author_id_var;
+where author_id = (
+    select author_id
+    from Authors
+    where author_first = :author_first_selected
+      and author_last = :author_last_selected
+  );
 /* Delete */
 delete from Authors
 where author_first = :author_first_name_input
@@ -112,13 +112,27 @@ order by Checkouts.checkout_date desc;
  
  pages: publishers.html
  */
-/* SQL to Generate Intitial Table View */
+/* Generate Intitial Table View */
 select Publishers.publisher_name
 from Publishers
 order by Publishers.publisher_name asc;
-/* SQL to Insert New Publisher */
-insert into Publishers (Publishers.publisher_name)
+
+/* Insert Publishers */
+insert into Publishers (publisher_name)
 values (:publisher_name_input);
+
+/* Update Publishers */
+update Publishers
+set publisher_name = :publisher_name_input
+where author_id = (
+    select publisher_id
+    from Publishers
+    where publisher_name = :publisher_name_selected
+  );
+
+/* Delete Publishers */
+delete from Publishers
+where publisher_name = :publisher_name_selected;
 /* ----------- LOCATIONS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
