@@ -5,8 +5,12 @@
 # Based on:
 # Source URL: https://www.youtube.com/watch?v=mCy52I4exTU
 
+# Citation for app.py:
+# Date: 05/03/2022
+# Based on: OSU CS340 Flask Starter Guide
+# Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app
 
-from flask import Flask, render_template
+from flask import Flask, render_template, json
 import os
 
 
@@ -31,7 +35,7 @@ def root():
 @app.route("/authors.html")
 def authors_page():
     return render_template(
-        "table_template.html",
+        "table_template.j2",
         title="Authors",
         headings=authors_headings,
         data=authors_data,
@@ -50,45 +54,50 @@ authors_data = [
 # 3. books.html - Herakles
 @app.route("/books.html")
 def books_page():
-    return render_template("books.j2", books=books_from_app_py)
+    return render_template(
+        "table_template.j2", 
+        title ="Books",
+        headings =books_headings, 
+        data= books_rows)
 
 
-books_from_app_py = [
-    {
-        "ISBN": "978-19-8213798-4 ",
-        "Title": "If It Bleeds",
-        "Year": 2021,
-        "Author": "Stephen King",
-        "Publisher": "Scribner",
-    },
-    {
-        "ISBN": "978-15-0114741-8",
-        "Title": "Needful Things",
-        "Year": 2018,
-        "Author": "Stephen King",
-        "Publisher": "Gallery Books",
-    },
-    {
-        "ISBN": "978-1948-13282-4",
-        "Title": "The Adventures of Tom Sawyer: Original Illustrations",
-        "Year": "2018",
-        "Author": "Mark Twain",
-        "Publisher": "SeeWolf Books",
-    },
-    {
-        "ISBN": "978-0062-07348-8",
-        "Title": "And Then There Were None",
-        "Year": "2011",
-        "Author": "Agatha Christie",
-        "Publisher": "Dover Publications",
-    },
+books_headings = ["ISBN", "Title", "Year", "Author", "Publisher"] 
+books_rows = [
+    [
+        "978-19-8213798-4 ",
+         "If It Bleeds",
+        2021,
+        "Stephen King",
+        "Scribner",
+    ],
+    [
+        "978-15-0114741-8",
+        "Needful Things",
+        2018,
+        "Stephen King",
+        "Gallery Books",
+    ],
+    [
+        "978-1948-13282-4",
+        "The Adventures of Tom Sawyer: Original Illustrations",
+        2018,
+        "Mark Twain",
+        "SeeWolf Books",
+    ],
+    [
+        "978-0062-07348-8",
+        "And Then There Were None",
+        2011,
+        "Agatha Christie",
+        "Dover Publications",
+    ],
 ]
 
 # 4. bookcopies.html - Jenna
 @app.route("/bookcopies.html")
 def bookcopies_page():
     return render_template(
-        "table_template.html",
+        "table_template.j2",
         title="Book Copies",
         headings=book_copies_headings,
         data=book_copies_rows,
@@ -126,20 +135,25 @@ book_copies_rows = [
 # 5. patrons.html - Herakles
 @app.route("/patrons.html")
 def patrons_page():
-    return render_template("patrons.j2", patrons=patrons_from_app_py)
+    return render_template(
+        "table_template.j2", 
+        title = "Patrons",
+        headings=patrons_headings,
+        data = patrons_rows
+        )
 
-
-patrons_from_app_py = [
-    {"First_Name": "Koko", "Last_Name": "Irish", "Email": "kokoiri@egl.com"},
-    {"First_Name": "Corbett", "Last_Name": "Farner", "Email": "corbetfarn@gmail.com"},
-    {"First_Name": "Eloise", "Last_Name": "Westfall", "Email": "elwestfa@hotmail.com"},
+patrons_headings = ["First Name", "Last Name", "Email"]
+patrons_rows = [
+    ["Koko",  "Irish", "kokoiri@egl.com"],
+    ["Corbett", "Farner",  "corbetfarn@gmail.com"],
+    ["Eloise",  "Westfall", "elwestfa@hotmail.com"],
 ]
 
 # 6. checkouts.html - Jenna
 @app.route("/checkouts.html")
 def checkouts_page():
     return render_template(
-        "table_template.html",
+        "table_template.j2",
         title="Checkouts",
         description="They are sorted by the most recent checkout date.",
         headings=checkouts_headings,
@@ -159,37 +173,41 @@ checkouts_rows = [
 # 7. checkedbooks.html - Herakles
 @app.route("/checkedbooks.html")
 def checkedbooks_page():
-    return render_template("checkedbooks.j2", checkedbooks=checkedbooks_from_app_py)
+    return render_template("table_template.j2",
+        title = "Checked Books", 
+        headings=checkedbooks_headings,
+        data = checkedbooks_rows
+        )
 
-
-checkedbooks_from_app_py = [
-    {
-        "Book_Title": "Sense and Sensibility",
-        "Patron_Name": "Zelenka Fichter",
-        "Checkout_Date": "2022-02-03",
-        "Return_Date": "2022-02-24",
-        "Returned": "Yes",
-    },
-    {
-        "Book_Title": "Pride and Prejudice",
-        "Patron_Name": "Koko Irish",
-        "Checkout_Date": "2021-10-29",
-        "Return_Date": "2021-11-19",
-        "Returned": "Yes",
-    },
-    {
-        "Book_Title": "Crooked House",
-        "Patron_Name": "Blanche Estell",
-        "Checkout_Date": "2021-01-11",
-        "Return_Date": "2021-02-01",
-        "Returned": "Yes",
-    },
+checkedbooks_headings = ["Book_Title","Patron_Name", "Checkout_Date", "Return_Date", "Returned"]
+checkedbooks_rows= [
+    [
+        "Sense and Sensibility",
+        "Zelenka Fichter",
+        "2022-02-03",
+        "2022-02-24",
+        "Yes",
+    ],
+    [
+        "Pride and Prejudice",
+        "Koko Irish",
+         "2021-10-29",
+        "2021-11-19",
+        "Yes",
+    ],
+    [
+        "Crooked House",
+        "Blanche Estell",
+         "2021-01-11",
+        "2021-02-01",
+        "Yes",
+    ],
 ]
 # 8. publishers.html - Jenna
 @app.route("/publishers.html")
 def publishers_page():
     return render_template(
-        "table_template.html",
+        "table_template.j2",
         title="Book Publishers",
         headings=publisher_headings,
         data=publisher_rows,
@@ -211,15 +229,21 @@ publisher_rows = [
 # 9. locations.html - Herakles
 @app.route("/locations.html")
 def locations_page():
-    return render_template("locations.j2", locations=locations_from_app_py)
+    return render_template(
+        "table_template.j2", 
+        title = "Locations",
+        headings=locations_headings,
+        data = locations_rows
+        )
 
 
-locations_from_app_py = [
-    {"Name": "Little Penguin Library", "Address": "67 Cooper Ave"},
-    {"Name": "Macaroni Penguin Library", "Address": "658 Lincoln Lane"},
-    {"Name": "Emperor Penguin Library", "Address": "7580 Devon Rd"},
-    {"Name": "Rockhopper Penguin Library", "Address": "319 6th St"},
-    {"Name": "Royal Penguin Library", "Address": "309 East Walnutwood Lane"},
+locations_headings = ["Name", "Address"]
+locations_rows = [
+    ["Little Penguin Library", "67 Cooper Ave"],
+    [ "Macaroni Penguin Library",  "658 Lincoln Lane"],
+    ["Emperor Penguin Library",  "7580 Devon Rd"],
+    ["Rockhopper Penguin Library",  "319 6th St"],
+    ["Royal Penguin Library", "309 East Walnutwood Lane"],
 ]
 
 # Listener
