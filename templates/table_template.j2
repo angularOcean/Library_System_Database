@@ -27,6 +27,8 @@
 </table>
 {% if title == "Checkouts" %}
     {% include "insert_checkout_template.j2" %}
+{% elif title == "Book Copies" %}
+    {% include "insert_bookcopies_template.j2" %}
 {%else %}
     {% include "insert_template.j2" %}
 {% endif %}
