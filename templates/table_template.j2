@@ -9,6 +9,8 @@
             {% for header in headings %}
             <th>{{ header }}</th>
             {% endfor %}
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -17,8 +19,11 @@
             {% for cell in row %}
             <td>{{ cell }}</td>
             {% endfor %}
+            <td><a href="#" onClick="update()">Edit</a></td>
+            <td><a href="#" onclick="delete()">Delete</a></td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+{% include "insert_template.j2" %}
 {% endblock %}

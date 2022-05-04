@@ -1,0 +1,16 @@
+<br>
+<div id="insert">
+    <form method="POST" id="insert">
+        <legend><strong>Add {{ title }} </strong></legend>
+          <fieldset class="fields">
+            
+            {% for header in headings %}
+            <label> {{ header }}</label> 
+            <input type="text" name="fname">
+            {% endfor %} 
+            
+      </fieldset>
+          <input class="btn" type="button" id="add value" value="Add {{ title }}">
+          <input class="btn" type="button" value="Cancel" onClick="">
+	</form> 
+</div>

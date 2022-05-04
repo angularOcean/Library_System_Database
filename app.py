@@ -10,7 +10,7 @@
 # Based on: OSU CS340 Flask Starter Guide
 # Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app
 
-from flask import Flask, render_template
+from flask import Flask, render_template, json
 import os
 
 
@@ -137,11 +137,12 @@ book_copies_rows = [
 def patrons_page():
     return render_template(
         "table_template.j2", 
-        patrons=patrons_headings,
+        title = "Patrons",
+        headings=patrons_headings,
         data = patrons_rows
         )
 
-patrons_headings = ["First Name", "Last Name"]
+patrons_headings = ["First Name", "Last Name", "Email"]
 patrons_rows = [
     ["Koko",  "Irish", "kokoiri@egl.com"],
     ["Corbett", "Farner",  "corbetfarn@gmail.com"],
@@ -172,10 +173,11 @@ checkouts_rows = [
 # 7. checkedbooks.html - Herakles
 @app.route("/checkedbooks.html")
 def checkedbooks_page():
-    return render_template("table_template.j2", 
-    headings=checkedbooks_headings,
-    data = checkedbooks_rows
-    )
+    return render_template("table_template.j2",
+        title = "Checked Books", 
+        headings=checkedbooks_headings,
+        data = checkedbooks_rows
+        )
 
 checkedbooks_headings = ["Book_Title","Patron_Name", "Checkout_Date", "Return_Date", "Returned"]
 checkedbooks_rows= [
@@ -227,13 +229,15 @@ publisher_rows = [
 # 9. locations.html - Herakles
 @app.route("/locations.html")
 def locations_page():
-    return render_template("table_template.j2", 
-    headers=locations_headers,
-    data = locations_rows
-    )
+    return render_template(
+        "table_template.j2", 
+        title = "Locations",
+        headings=locations_headings,
+        data = locations_rows
+        )
 
 
-locations_headers = ["Name", "Address"]
+locations_headings = ["Name", "Address"]
 locations_rows = [
     ["Little Penguin Library", "67 Cooper Ave"],
     [ "Macaroni Penguin Library",  "658 Lincoln Lane"],
