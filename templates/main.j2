@@ -1,27 +1,7 @@
-<html>
-<head>
-    <title>OSU - CS 340 - Group 2 Project Demo</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
-</head>
-<body>
-    <header>
-        <div class ="container">
-            <nav>
-                <ul class = "menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="authors.html">Authors</a></li>
-                <li><a href="books.html">Books</a></li>
-                <li><a href="bookcopies.html">Bookcopies</a></li>
-                <li><a href="patrons.html">Patrons</a></li>
-                <li><a href="checkouts.html">Checkouts</a></li>
-                <li><a href="checkedbooks.html">Checkedbooks</a></li>
-                <li><a href="publishers.html">Publishers</a></li>
-                <li><a href="locations.html">Locations</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    <h1>CS 340: Group Project - Penguin Library System </h1>
+{% extends "base_template.j2" %}
+{{ super() }}
+{% block content %}
+<h1>CS 340: Group Project - Penguin Library System </h1>
     <p>This is the main page of the Penguin Library System Database. Please use the above bar to navigate to the different data tables within the database.</p>
 
     <table>
@@ -66,4 +46,4 @@
     </tr>
     </table>
 </body>
-</html>
+{% endblock %}
