@@ -14,15 +14,31 @@
         </tr>
     </thead>
     <tbody>
-        {% for row in data %}
-        <tr>
-            {% for cell in row %}
-            <td>{{ cell }}</td>
+        {% if title == "Checkouts" %}
+            {% for row in data %}
+                <tr>
+                {% for cell in row %}
+                    {% if cell == row[0]%}
+                        <td><a href="/checkedbooks.html" onClick="go_to_checkedbook()">{{ cell }}</a></td>
+                    {% else %}
+                        <td>{{ cell }}</td>
+                    {% endif %}
+                {% endfor %}
+                <td><a href="#" onClick="update()">Edit</a></td>
+                <td><a href="#" onclick="delete()">Delete</a></td> 
+                </tr>
             {% endfor %}
-            <td><a href="#" onClick="update()">Edit</a></td>
-            <td><a href="#" onclick="delete()">Delete</a></td>
-        </tr>
-    {% endfor %}
+        {% else %}
+            {% for row in data %}
+                <tr>
+                {% for cell in row %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+                <td><a href="#" onClick="update()">Edit</a></td>
+                <td><a href="#" onclick="delete()">Delete</a></td> 
+                </tr> 
+            {% endfor %}
+        {% endif %}
     </tbody>
 </table>
 {% if title == "Checkouts" %}
