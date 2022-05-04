@@ -57,7 +57,6 @@ where author_first = :author_first_name_input
  
  pages: books.html
  */
-
 /* ----------- BOOKCOPIES QUERIES---------------
  CREATE/INSERT
  READ/SELECT
@@ -81,23 +80,25 @@ select Books.title,
   Locations.location_name
 from Locations
   inner join BookCopies on Locations.location_id = BookCopies.location_id
+  inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
   inner join Books on BookCopies.book_id = Books.book_id
   inner join Authors on Books.author_id = Authors.author_id
-where Locations.location_name IS NOT NULL
+where CheckedBooks.returned is null
+  or CheckedBooks.returned = 1
 order by Books.title asc;
-/* Generate List of Books Currently Checked Out (i.e. Location is NULL)
+/* Generate List of Books Currently Checked Out 
  with Return Dates
  */
 select Books.title,
+  Locations.location_name,
   Checkouts.return_date
 from Locations
   inner join BookCopies on Locations.location_id = BookCopies.location_id
-  and Locations.location_name is null
   inner join Books on BookCopies.book_id = Books.book_id
   inner join Authors on Books.author_id = Authors.author_id
   inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
   inner join Checkouts on CheckedBooks.checkout_id = Checkouts.checkout_id
-)
+where CheckedBooks.returned = 0
 order by Books.title asc;
 /* Create New Book Copy By Searching for Book ISBN. If ISBN is not found, redirect person to Create New Book Table */
 select book_id
@@ -113,7 +114,6 @@ values (:book_id, :location_id);
 /* Delete Book Copy */
 delete from BookCopies
 where book_copy_id = :book_copy_selected_from_table;
-
 /* ----------- PATRONS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
@@ -122,7 +122,6 @@ where book_copy_id = :book_copy_selected_from_table;
  
  pages: patrons.html
  */
-
 /* ----------- CHECKOUTS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
@@ -166,7 +165,6 @@ where checkout_id = :checkout_id_selected;
 /* Checkouts DELETE - deletes entire Checkout */
 delete from Checkouts
 where checkout_id = :checkout_id_selected;
-
 /* ----------- CHECKEDBOOKS QUERIES---------------
  Checkedbooks queries
  CREATE/INSERT
@@ -177,7 +175,6 @@ where checkout_id = :checkout_id_selected;
  */
 select
   /* I was thinking that maybe we should have /checkedbooks.html redirect from clicking on a checkout_id from the Checkouts table. Then it still counts as a separate page. So, a user would first add a Checkout. Then, the checkout would appear on the table. Then, the user would click on the Checkout id in the table and add CheckedBooks from there.*/
-
   /* ----------- PUBLISHERS QUERIES---------------
    /*
    Publishers queries
@@ -204,7 +201,6 @@ where author_id = (
 /* Delete Publishers */
 delete from Publishers
 where publisher_name = :publisher_name_selected;
-
 /* ----------- LOCATIONS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
