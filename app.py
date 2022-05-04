@@ -55,17 +55,15 @@ authors_data = [
 @app.route("/books.html")
 def books_page():
     return render_template(
-        "table_template.j2", 
-        title ="Books",
-        headings =books_headings, 
-        data= books_rows)
+        "table_template.j2", title="Books", headings=books_headings, data=books_rows
+    )
 
 
-books_headings = ["ISBN", "Title", "Year", "Author", "Publisher"] 
+books_headings = ["ISBN", "Title", "Year", "Author", "Publisher"]
 books_rows = [
     [
         "978-19-8213798-4 ",
-         "If It Bleeds",
+        "If It Bleeds",
         2021,
         "Stephen King",
         "Scribner",
@@ -136,17 +134,18 @@ book_copies_rows = [
 @app.route("/patrons.html")
 def patrons_page():
     return render_template(
-        "table_template.j2", 
-        title = "Patrons",
+        "table_template.j2",
+        title="Patrons",
         headings=patrons_headings,
-        data = patrons_rows
-        )
+        data=patrons_rows,
+    )
+
 
 patrons_headings = ["First Name", "Last Name", "Email"]
 patrons_rows = [
-    ["Koko",  "Irish", "kokoiri@egl.com"],
-    ["Corbett", "Farner",  "corbetfarn@gmail.com"],
-    ["Eloise",  "Westfall", "elwestfa@hotmail.com"],
+    ["Koko", "Irish", "kokoiri@egl.com"],
+    ["Corbett", "Farner", "corbetfarn@gmail.com"],
+    ["Eloise", "Westfall", "elwestfa@hotmail.com"],
 ]
 
 # 6. checkouts.html - Jenna
@@ -161,26 +160,34 @@ def checkouts_page():
     )
 
 
-checkouts_headings = ["Patron Name", "Checkout Date", "Return Date"]
+checkouts_headings = ["Checkout ID", "Patron Name", "Checkout Date", "Return Date"]
 checkouts_rows = [
-    ["Zelenka Fichter", "2022-02-03", "2022-02-24"],
-    ["Corbett Farner", "2022-01-29", "2022-02-19"],
-    ["Koko Irish", "2021-10-29", "2021-11-19"],
-    ["Eloise Westfall", "2021-05-26", "2021-06-16"],
-    ["Zelenka Fichter", "2021-01-11", "2021-02-01"],
+    [1, "Zelenka Fichter", "2022-02-03", "2022-02-24"],
+    [4, "Corbett Farner", "2022-01-29", "2022-02-19"],
+    [5, "Koko Irish", "2021-10-29", "2021-11-19"],
+    [3, "Eloise Westfall", "2021-05-26", "2021-06-16"],
+    [2, "Zelenka Fichter", "2021-01-11", "2021-02-01"],
 ]
 
 # 7. checkedbooks.html - Herakles
 @app.route("/checkedbooks.html")
 def checkedbooks_page():
-    return render_template("table_template.j2",
-        title = "Checked Books", 
+    return render_template(
+        "table_template.j2",
+        title="Checked Books",
         headings=checkedbooks_headings,
-        data = checkedbooks_rows
-        )
+        data=checkedbooks_rows,
+    )
 
-checkedbooks_headings = ["Book_Title","Patron_Name", "Checkout_Date", "Return_Date", "Returned"]
-checkedbooks_rows= [
+
+checkedbooks_headings = [
+    "Book_Title",
+    "Patron_Name",
+    "Checkout_Date",
+    "Return_Date",
+    "Returned",
+]
+checkedbooks_rows = [
     [
         "Sense and Sensibility",
         "Zelenka Fichter",
@@ -191,14 +198,14 @@ checkedbooks_rows= [
     [
         "Pride and Prejudice",
         "Koko Irish",
-         "2021-10-29",
+        "2021-10-29",
         "2021-11-19",
         "Yes",
     ],
     [
         "Crooked House",
         "Blanche Estell",
-         "2021-01-11",
+        "2021-01-11",
         "2021-02-01",
         "Yes",
     ],
@@ -230,19 +237,19 @@ publisher_rows = [
 @app.route("/locations.html")
 def locations_page():
     return render_template(
-        "table_template.j2", 
-        title = "Locations",
+        "table_template.j2",
+        title="Locations",
         headings=locations_headings,
-        data = locations_rows
-        )
+        data=locations_rows,
+    )
 
 
 locations_headings = ["Name", "Address"]
 locations_rows = [
     ["Little Penguin Library", "67 Cooper Ave"],
-    [ "Macaroni Penguin Library",  "658 Lincoln Lane"],
-    ["Emperor Penguin Library",  "7580 Devon Rd"],
-    ["Rockhopper Penguin Library",  "319 6th St"],
+    ["Macaroni Penguin Library", "658 Lincoln Lane"],
+    ["Emperor Penguin Library", "7580 Devon Rd"],
+    ["Rockhopper Penguin Library", "319 6th St"],
     ["Royal Penguin Library", "309 East Walnutwood Lane"],
 ]
 
