@@ -6,6 +6,7 @@
 /*This temporarily disables referential constraints 
  when needing to re-create or reload many tables */
 SET FOREIGN_KEY_CHECKS = 0;
+SET AUTOCOMMIT = 0;
 DROP TABLE IF EXISTS Books;
 DROP TABLE IF EXISTS Publishers;
 DROP TABLE IF EXISTS Authors;
@@ -262,4 +263,5 @@ VALUES (1, 12, 1),
     (5, 4, 1),
     (5, 3, 1),
     (5, 12, 1);
--- SET FOREIGN_KEY_CHECKS=1;
+SET FOREIGN_KEY_CHECKS = 1;
+COMMIT;
