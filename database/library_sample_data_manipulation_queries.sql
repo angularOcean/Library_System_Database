@@ -22,7 +22,9 @@
  /* ----------- AUTHORS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
+
  pages: authors.html
+
  */
 /* Generate Initial Table View */
 select author_first,
@@ -55,8 +57,29 @@ where author_first = :author_first_name_input
  CREATE/INSERT
  READ/SELECT
  
+ ISBN, Title, Year, Author, Publisher
  pages: books.html
  */
+
+ /* Initial Table View*/
+ select Books.isbn, 
+ Books.title, 
+ Books.year,
+ Authors.author_first,
+ Authors.author_last,
+ Publishers.publisher_name
+from Books
+	inner join Authors on Books.author_id = Authors.author_id
+    inner join Publishers on Books.publisher_id = Publishers.publisher_id
+order by isbn asc;
+
+/* Insertion */
+
+/* Update */
+
+/* Delete */
+
+
 /* ----------- BOOKCOPIES QUERIES---------------
  CREATE/INSERT
  READ/SELECT
@@ -120,8 +143,45 @@ where book_copy_id = :book_copy_selected_from_table;
  UPDATE
  DELETE
  
+ Patron first, Patron last, Patron email
  pages: patrons.html
  */
+
+/* Initial Table View*/
+ select patron_first,
+patron_last,
+email
+ from Patrons
+ order by patron_last asc;
+
+
+/* Insertion */
+insert into Patrons(patron_first, patron_last, email)
+values(
+:patron_first_input,
+:patron_last_input,
+:email_input
+);
+
+/* Update */
+update Patrons
+set patron_first = :patron_first_input,
+	patron_last = :patron_last_input,
+    email = :email_input
+where patron_id = (
+	select patron_id
+    from Patrons
+    where patron_first = :patron_first_input,
+	and patron_last = :patron_last_input,
+    and email = :email_input
+    );
+
+/* Delete */
+delete from Patrons
+    where patron_first = :patron_first_input,
+	and patron_last = :patron_last_input,
+    and email = :email_input;
+
 /* ----------- CHECKOUTS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
@@ -165,15 +225,27 @@ where checkout_id = :checkout_id_selected;
 /* Checkouts DELETE - deletes entire Checkout */
 delete from Checkouts
 where checkout_id = :checkout_id_selected;
+
+
 /* ----------- CHECKEDBOOKS QUERIES---------------
  Checkedbooks queries
  CREATE/INSERT
  READ/SELECT
  DELETE
  
+ Book Title, Patron First, Patron Last, Checkout Date, Return Date, Returned
  pages: checkedbooks.html
  */
-select
+
+/* Initial Table View*/
+
+/* Insertion */
+
+/* Update */
+
+/* Delete */
+
+
   /* I was thinking that maybe we should have /checkedbooks.html redirect from clicking on a checkout_id from the Checkouts table. Then it still counts as a separate page. So, a user would first add a Checkout. Then, the checkout would appear on the table. Then, the user would click on the Checkout id in the table and add CheckedBooks from there.*/
   /* ----------- PUBLISHERS QUERIES---------------
    /*
@@ -201,9 +273,40 @@ where author_id = (
 /* Delete Publishers */
 delete from Publishers
 where publisher_name = :publisher_name_selected;
+
+
 /* ----------- LOCATIONS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
  
+ location name, location address 
  pages: locations.html
  */
+
+ /* Initial Table View*/
+ select location_name,
+ location_address
+ from Locations
+ order by location_name asc;
+
+/* Insertion */
+insert into Locations(location_name, location_address)
+values (
+:location_name_input,
+:location_address_input
+);
+
+/* Update */
+update Locations
+set location_name = :location_name_input,
+	location_address = :location_address_input
+where location_id = (
+	select location_id
+    from Locations
+    where location_name = :location_name_input
+	and location_address = :location_address_input
+    );
+/* Delete */
+delete from Locations
+where location_name = :location_name_input
+	or location_address = :location_address_input;
