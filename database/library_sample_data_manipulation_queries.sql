@@ -22,6 +22,8 @@
  /* ----------- AUTHORS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
+ UPDATE
+ DELETE
 
  pages: authors.html
 
@@ -56,6 +58,7 @@ where author_first = :author_first_name_input
  /* ----------- BOOKS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
+ DELETE
  
  ISBN, Title, Year, Author, Publisher
  pages: books.html
@@ -74,10 +77,22 @@ from Books
 order by isbn asc;
 
 /* Insertion */
+select publisher_id
+from Publishers
+where  publisher_id = :publisher_id_input;
 
-/* Update */
+select author_id
+from Authors
+where author_id = :author_id_input;
+
+insert into Books(isbn, title, year, author_id, publisher_id)
+values(:isbn_input, :title_input, :year_input, :author_id, :publisher_id);
+
+
 
 /* Delete */
+delete from Books 
+where book_isbn = :book_isbn_input;
 
 
 /* ----------- BOOKCOPIES QUERIES---------------
@@ -186,6 +201,7 @@ delete from Patrons
  CREATE/INSERT
  READ/SELECT
  UPDATE
+ DELETE
  
  pages: checkouts.html
  */
@@ -238,12 +254,36 @@ where checkout_id = :checkout_id_selected;
  */
 
 /* Initial Table View*/
+select Books.title,
+Patrons.patron_first,
+Patrons.patron_last,
+Checkouts.checkout_date,
+Checkouts.return_date,
+CheckedBooks.returned
+
+from Books
+  inner join BookCopies on Books.book_id = BookCopies.book_id
+  inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
+  inner join Checkouts on Checkouts.checkout_id = CheckedBooks.checkout_id
+  inner join Patrons on Patrons.patron_id = Checkouts.patron_id
+order by Checkouts.checkout_date desc;
 
 /* Insertion */
+insert into CheckedBooks (checkout_id, copy_id, returned)
+values (
+  :checkout_id_input,
+  :copy_id_input,
+  0
+);
 
 /* Update */
+update CheckedBooks
+set returned = :return_date_input
+where CheckedBooks_id = :checkedbooks_id_input;
 
 /* Delete */
+delete from CheckedBooks
+where CheckedBooks_id = :checkedbooks_id_input;
 
 
   /* I was thinking that maybe we should have /checkedbooks.html redirect from clicking on a checkout_id from the Checkouts table. Then it still counts as a separate page. So, a user would first add a Checkout. Then, the checkout would appear on the table. Then, the user would click on the Checkout id in the table and add CheckedBooks from there.*/
@@ -252,6 +292,8 @@ where checkout_id = :checkout_id_selected;
    Publishers queries
    CREATE/INSERT
    READ/SELECT
+   UPDATE
+   DELETE
    
    pages: publishers.html
    */
@@ -278,6 +320,8 @@ where publisher_name = :publisher_name_selected;
 /* ----------- LOCATIONS QUERIES---------------
  CREATE/INSERT
  READ/SELECT
+ UPDATE
+ DELETE
  
  location name, location address 
  pages: locations.html
