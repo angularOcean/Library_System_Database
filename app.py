@@ -12,11 +12,15 @@
 
 from flask import Flask, render_template, json
 import os
+import database.db_connector as db
 
 
 # Configuration
 
 app = Flask(__name__)
+
+# Connect to Database
+db_connection = db.connect_to_database()
 
 # Routes
 @app.route("/")
