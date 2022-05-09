@@ -20,7 +20,7 @@ import database.db_connector as db
 app = Flask(__name__)
 
 # Connect to Database
-db_connection = db.connect_to_database()
+# db_connection = db.connect_to_database()
 # # Connect to ClearDB
 # app.config['CLEARDB_URI'] = 'mysql://b801c093665e4e:2e99890d@us-cdbr-east-05.cleardb.net/heroku_644610a0aac00cb?reconnect=true'
 
@@ -265,5 +265,4 @@ if __name__ == "__main__":
     # port = int(os.environ.get("PORT", 9112))
     # #                                ^^^^
     # #              You can replace this number with any valid port
-
     app.run()
