@@ -64,6 +64,7 @@ def authors_page():
         title="Authors",
         headings=authors_headings,
         data=authors_data,
+        description="",
     )
 
 
@@ -80,7 +81,11 @@ authors_data = [
 @app.route("/books.html")
 def books_page():
     return render_template(
-        "table_template.j2", title="Books", headings=books_headings, data=books_rows
+        "table_template.j2",
+        title="Books",
+        headings=books_headings,
+        data=books_rows,
+        description="",
     )
 
 
@@ -124,6 +129,7 @@ def bookcopies_page():
         title="Book Copies",
         headings=book_copies_headings,
         data=book_copies_rows,
+        description="",
     )
 
 
@@ -163,6 +169,7 @@ def patrons_page():
         title="Patrons",
         headings=patrons_headings,
         data=patrons_rows,
+        description="",
     )
 
 
@@ -179,7 +186,7 @@ def checkouts_page():
     return render_template(
         "table_template.j2",
         title="Checkouts",
-        description="They are sorted by the most recent checkout date.",
+        description="They are sorted by the most recent checkout date. Click on a Checkout ID to view the items in the checkout selected.",
         headings=checkouts_headings,
         data=checkouts_rows,
     )
@@ -194,6 +201,82 @@ checkouts_rows = [
     [2, "Zelenka Fichter", "2021-01-11", "2021-02-01"],
 ]
 
+# 6.1 - To CheckedBooks from Checkouts (Jenna)
+@app.route("/checkedbooks/<checkout_id>")
+def go_to_checkedbooks(checkout_id):
+    checkedbooks_headings = [
+        "Book Title",
+        "Patron Name",
+        "Checkout Date",
+        "Return Date",
+        "Returned",
+    ]
+    checkedbooks = []
+    if checkout_id == "1":
+        checkedbooks = [
+            [
+                "Sense and Sensibility",
+                "Zelenka Fichter",
+                "2022-02-03",
+                "2022-02-24",
+                "Yes",
+            ],
+            ["If It Bleeds", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
+            ["Crooked House", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
+        ]
+    elif checkout_id == "2":
+        checkedbooks = [
+            ["A Farewell to Arms", "Zelenka Fichter", "2021-01-11", "2021-02-01", "Yes"]
+        ]
+    elif checkout_id == "3":
+        checkedbooks = [
+            [
+                "Adventures of Huckleberry Finn",
+                "Eloise Westfall",
+                "2021-05-26",
+                "2021-06-16",
+                "Yes",
+            ],
+            [
+                "The Adventures of Tom Sawyer: Original Illustrations",
+                "Eloise Westfall",
+                "2021-05-26",
+                "2021-06-16",
+                "Yes",
+            ],
+        ]
+    elif checkout_id == "4":
+        checkedbooks = [
+            [
+                "Adventures of Huckleberry Finn",
+                "Corbett Farner",
+                "2022-01-29",
+                "2022-02-19",
+                "Yes",
+            ]
+        ]
+    elif checkout_id == "5":
+        checkedbooks = [
+            [
+                "The Adventures of Tom Sawyer: Original Illustrations",
+                "Koko Irish",
+                "2021-10-29",
+                "2021-11-19",
+                "Yes",
+            ],
+            ["Needful Things", "Koko Irish", "2021-10-29", "2021-11-19", "Yes"],
+            ["Sense and Sensibility", "Koko Irish", "2021-10-29", "2021-11-19", "Yes"],
+        ]
+
+    return render_template(
+        "table_template.j2",
+        title=f"Checkout #{checkout_id}",
+        headings=checkedbooks_headings,
+        data=checkedbooks,
+        description="",
+    )
+
+
 # 7. checkedbooks.html - Herakles
 @app.route("/checkedbooks.html")
 def checkedbooks_page():
@@ -202,39 +285,55 @@ def checkedbooks_page():
         title="Checked Books",
         headings=checkedbooks_headings,
         data=checkedbooks_rows,
+        description="This is a list of all checkout line items in the Penguin Library Database.",
     )
 
 
 checkedbooks_headings = [
-    "Book_Title",
-    "Patron_Name",
-    "Checkout_Date",
-    "Return_Date",
+    "Book Title",
+    "Patron Name",
+    "Checkout Date",
+    "Return Date",
     "Returned",
 ]
 checkedbooks_rows = [
+    ["Sense and Sensibility", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
+    ["If It Bleeds", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
+    ["Crooked House", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
+    ["A Farewell to Arms", "Zelenka Fichter", "2021-01-11", "2021-02-01", "Yes"],
     [
-        "Sense and Sensibility",
-        "Zelenka Fichter",
-        "2022-02-03",
-        "2022-02-24",
+        "Adventures of Huckleberry Finn",
+        "Eloise Westfall",
+        "2021-05-26",
+        "2021-06-16",
         "Yes",
     ],
     [
-        "Pride and Prejudice",
+        "The Adventures of Tom Sawyer: Original Illustrations",
+        "Eloise Westfall",
+        "2021-05-26",
+        "2021-06-16",
+        "Yes",
+    ],
+    [
+        "Adventures of Huckleberry Finn",
+        "Corbett Farner",
+        "2022-01-29",
+        "2022-02-19",
+        "Yes",
+    ],
+    [
+        "The Adventures of Tom Sawyer: Original Illustrations",
         "Koko Irish",
         "2021-10-29",
         "2021-11-19",
         "Yes",
     ],
-    [
-        "Crooked House",
-        "Blanche Estell",
-        "2021-01-11",
-        "2021-02-01",
-        "Yes",
-    ],
+    ["Needful Things", "Koko Irish", "2021-10-29", "2021-11-19", "Yes"],
+    ["Sense and Sensibility", "Koko Irish", "2021-10-29", "2021-11-19", "Yes"],
 ]
+
+
 # 8. publishers.html - Jenna
 @app.route("/publishers.html")
 def publishers_page():
@@ -243,6 +342,7 @@ def publishers_page():
         title="Book Publishers",
         headings=publisher_headings,
         data=publisher_rows,
+        description="",
     )
 
 
@@ -266,6 +366,7 @@ def locations_page():
         title="Locations",
         headings=locations_headings,
         data=locations_rows,
+        description="",
     )
 
 

@@ -2,14 +2,14 @@
 {{ super() }}
 {% block content %}
 <h1>{{ title }} Data</h1>
-<p>These are the {{ title }} in the Penguin Library System. {{ description }}</p>
+<p>{{ description }}</p>
 <table>
     <thead>
         <tr>
             {% for header in headings %}
             <th>{{ header }}</th>
             {% endfor %}
-            <th>Edit</th>
+            <th>Edit</th>e
             <th>Delete</th>
         </tr>
     </thead>
@@ -19,7 +19,7 @@
                 <tr>
                 {% for cell in row %}
                     {% if cell == row[0]%}
-                        <td><a href="/checkedbooks.html" onClick="go_to_checkedbook()">{{ cell }}</a></td>
+                        <td><a href="/checkedbooks/{{ cell }}" onClick="go_to_checkedbooks({{ cell }})">{{ cell }}</a></td>
                     {% else %}
                         <td>{{ cell }}</td>
                     {% endif %}
@@ -34,8 +34,10 @@
                 {% for cell in row %}
                     <td>{{ cell }}</td>
                 {% endfor %}
-                <td><a href="#" onClick="update()">Edit</a></td>
-                <td><a href="#" onclick="delete()">Delete</a></td> 
+                {% if title != "Checked Books" %}
+                    <td><a href="#" onClick="update()">Edit</a></td>
+                    <td><a href="#" onclick="delete()">Delete</a></td> 
+                {% endif %}
                 </tr> 
             {% endfor %}
         {% endif %}
@@ -45,7 +47,9 @@
     {% include "insert_checkout_template.j2" %}
 {% elif title == "Book Copies" %}
     {% include "insert_bookcopies_template.j2" %}
-{%else %}
+{% elif title == "Checked Books" %}
+    ''
+{% else %}
     {% include "insert_template.j2" %}
 {% endif %}
 {% endblock %}
