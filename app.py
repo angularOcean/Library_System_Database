@@ -12,7 +12,7 @@
 
 from flask import Flask, render_template, json
 import os
-from flaskext.mysql import MySQL
+import pymysql
 from flask import request
 import database.db_connector as db
 from dotenv import load_dotenv, find_dotenv
