@@ -15,7 +15,6 @@ import os
 import pymysql
 from flask import request
 import database.db_connector as db
-from dotenv import load_dotenv, find_dotenv
 
 
 # Configuration
@@ -25,11 +24,10 @@ app = Flask(__name__)
 # Connect to Database
 db_connection = db.connect_to_database()
 
-load_dotenv(find_dotenv())
-
-app.config["MYSQL_HOST"] = os.environ.get("340DBHOST")
-app.config["MYSQL_USER"] = os.environ.get("340DBUSER")
-app.config["MYSQL_PASSWORD"] = os.environ.get("340DBPW")
+app.config["MYSQL_HOST"] = "us-cdbr-east-05.cleardb.net"
+app.config["MYSQL_USER"] = "ba031860081bf8"
+app.config["MYSQL_PASSWORD"] = "817ac4bf"
+app.config["MYSQL_DB"] = "heroku_dc5763538edd08a"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 
