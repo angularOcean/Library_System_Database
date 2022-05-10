@@ -15,6 +15,8 @@ import os
 import pymysql
 from flask import request
 import database.db_connector as db
+from boto.s3.connection import S3Connection
+
 
 
 # Configuration
@@ -24,20 +26,13 @@ app = Flask(__name__)
 # Connect to Database
 db_connection = db.connect_to_database()
 
-app.config["MYSQL_HOST"] = "eanl4i1omny740jw.cbetxkdyhwsb.us-east-1.rds.amazonaws.com"
-app.config["MYSQL_USER"] = "l9z84k4osv9q2k1c"
-app.config["MYSQL_PASSWORD"] = "afi8mnpappf30nd2"
-app.config["MYSQL_DB"] = "jwftwaknimfur5r3"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"
-
-
 # Routes
 @app.route("/")
 def index():
     return render_template("main.j2")
 
 
-# SAMPLE
+# SAMPLE 
 @app.route("/sample.html")
 def sample():
     query = "SELECT * FROM Patrons;"
@@ -281,4 +276,4 @@ if __name__ == "__main__":
     # port = int(os.environ.get("PORT", 9112))
     # #                                ^^^^
     # #              You can replace this number with any valid port
-    app.run()
+    app.run(debug=True)
