@@ -38,10 +38,10 @@ def index():
 
 
 # SAMPLE
-@app.route("/sample.html", methods=["POST", "GET"])
+@app.route("/sample.html")
 def sample():
-    query_sample = "SELECT * FROM Patrons;"
-    cursor = db.execute_query(dbconnection=db_connection, query=query_sample)
+    query = "SELECT * FROM Patrons;"
+    cursor = db.execute_query(db_connection=db_connection, query=query)
     results = json.dumps(cursor.fetchall())
     return results
 
