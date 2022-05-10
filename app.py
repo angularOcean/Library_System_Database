@@ -12,7 +12,10 @@
 
 from flask import Flask, render_template, json
 import os
+from flaskext.mysql import MySQL
+from flask import request
 import database.db_connector as db
+from dotenv import load_dotenv, find_dotenv
 
 
 # Configuration
@@ -20,14 +23,29 @@ import database.db_connector as db
 app = Flask(__name__)
 
 # Connect to Database
-# db_connection = db.connect_to_database()
-# # Connect to ClearDB
-# app.config['CLEARDB_URI'] = 'mysql://b801c093665e4e:2e99890d@us-cdbr-east-05.cleardb.net/heroku_644610a0aac00cb?reconnect=true'
+db_connection = db.connect_to_database()
+
+load_dotenv(find_dotenv())
+
+app.config["MYSQL_HOST"] = os.environ.get("340DBHOST")
+app.config["MYSQL_USER"] = os.environ.get("340DBUSER")
+app.config["MYSQL_PASSWORD"] = os.environ.get("340DBPW")
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+
 
 # Routes
 @app.route("/")
 def index():
     return render_template("main.j2")
+
+
+# SAMPLE
+@app.route("/sample", methods=["POST", "GET"])
+def sample():
+    query_sample = "SELECT * FROM Patrons;"
+    cursor = db.execute_query(dbconnection=db_connection, query=query_sample)
+    results = json.dumps(cursor.fetchall())
+    return results
 
 
 # 1. index.html
