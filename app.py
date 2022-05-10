@@ -18,10 +18,15 @@ import database.db_connector as db
 from boto.s3.connection import S3Connection
 
 
-
 # Configuration
 
 app = Flask(__name__)
+
+app.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST")
+app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER")
+app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD")
+app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB")
+app.config["MYSQL_CURSORCLASS"] = os.environ.get("MYSQL_CURSORCLASS")
 
 # Connect to Database
 db_connection = db.connect_to_database()
@@ -32,7 +37,7 @@ def index():
     return render_template("main.j2")
 
 
-# SAMPLE 
+# SAMPLE
 @app.route("/sample.html")
 def sample():
     query = "SELECT * FROM Patrons;"
