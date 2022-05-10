@@ -37,13 +37,16 @@ def index():
     return render_template("main.j2")
 
 
-# SAMPLE
+# SAMPLE TO TEST DB CONNECTION
 @app.route("/sample.html")
 def sample():
     query = "SELECT * FROM Patrons;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = json.dumps(cursor.fetchall())
-    return results
+    results = cursor.fetchall()
+    patrons_headings = ["ID", "First Name", "Last Name", "Email"]
+    return render_template(
+        "table_template.j2", title="Patrons", headings=patrons_headings, data=results
+    )
 
 
 # 1. index.html

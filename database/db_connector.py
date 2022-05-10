@@ -47,7 +47,7 @@ def execute_query(db_connection=None, query=None, query_params=()):
 
     print("Executing %s with %s" % (query, query_params))
     # Create a cursor to execute query. Why? Because apparently they optimize execution by retaining a reference according to PEP0249
-    cursor = db_connection.cursor(pymysql.cursors.DictCursor)
+    cursor = db_connection.cursor()
 
     """
     params = tuple()
