@@ -24,10 +24,10 @@ app = Flask(__name__)
 # Connect to Database
 db_connection = db.connect_to_database()
 
-app.config["MYSQL_HOST"] = "us-cdbr-east-05.cleardb.net"
-app.config["MYSQL_USER"] = "ba031860081bf8"
-app.config["MYSQL_PASSWORD"] = "817ac4bf"
-app.config["MYSQL_DB"] = "heroku_dc5763538edd08a"
+app.config["MYSQL_HOST"] = "eanl4i1omny740jw.cbetxkdyhwsb.us-east-1.rds.amazonaws.com"
+app.config["MYSQL_USER"] = "l9z84k4osv9q2k1c"
+app.config["MYSQL_PASSWORD"] = "afi8mnpappf30nd2"
+app.config["MYSQL_DB"] = "jwftwaknimfur5r3"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 
