@@ -9,8 +9,10 @@
             {% for header in headings %}
             <th>{{ header }}</th>
             {% endfor %}
-            <th>Edit</th>e
-            <th>Delete</th>
+            {% if title != "Checked Books" %}
+                <th>Edit</th>e
+                <th>Delete</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -48,7 +50,6 @@
 {% elif title == "Book Copies" %}
     {% include "insert_bookcopies_template.j2" %}
 {% elif title == "Checked Books" %}
-    ''
 {% else %}
     {% include "insert_template.j2" %}
 {% endif %}

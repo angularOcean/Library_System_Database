@@ -285,7 +285,7 @@ def checkedbooks_page():
         title="Checked Books",
         headings=checkedbooks_headings,
         data=checkedbooks_rows,
-        description="This is a list of all checkout line items in the Penguin Library Database.",
+        description="This is a read-only list of all checkout line items in the Penguin Library Database. Please edit any checkout information from the Checkouts page.",
     )
 
 
