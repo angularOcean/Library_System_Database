@@ -136,7 +136,7 @@ def bookcopies_page():
 book_copies_headings = ["Title", "Author", "Location"]
 
 book_copies_rows = [
-    ["Charlie and the Chocolate Factory", "Roald Dahl", "Book Location", "2022-06-11"],
+    ["Charlie and the Chocolate Factory", "Roald Dahl", "Royal Penguin Library"],
     ["A Farewell to Arms", "Ernest Hemingway", "Little Penguin Library"],
     ["A Farewell to Arms", "Ernest Hemingway", "Macaroni Penguin Library"],
     ["Adventures of Huckleberry Finn", "Mark Twain", "Royal Penguin Library"],
@@ -169,7 +169,7 @@ def show_checked_out():
         [
             "Charlie and the Chocolate Factory",
             "Roald Dahl",
-            "Book Location",
+            "Royal Penguin Library",
             "2022-06-11",
         ]
     ]
