@@ -136,6 +136,7 @@ def bookcopies_page():
 book_copies_headings = ["Title", "Author", "Location"]
 
 book_copies_rows = [
+    ["Charlie and the Chocolate Factory", "Roald Dahl", "Book Location", "2022-06-11"],
     ["A Farewell to Arms", "Ernest Hemingway", "Little Penguin Library"],
     ["A Farewell to Arms", "Ernest Hemingway", "Macaroni Penguin Library"],
     ["Adventures of Huckleberry Finn", "Mark Twain", "Royal Penguin Library"],
@@ -159,6 +160,36 @@ book_copies_rows = [
         "Macaroni Penguin Library",
     ],
 ]
+
+# 4.1 Dynamically Display Checked Out Books
+@app.route("/bookcopies/checked-out")
+def show_checked_out():
+    checked_out_headings = ["Title", "Author", "Location", "Return Date"]
+    checked_out_sample = [
+        [
+            "Charlie and the Chocolate Factory",
+            "Roald Dahl",
+            "Book Location",
+            "2022-06-11",
+        ]
+    ]
+    return render_template(
+        "table_template.j2",
+        title="Checked Out Books",
+        headings=checked_out_headings,
+        data=checked_out_sample,
+    )
+
+
+# 4.2 Dynamically Display Returned Books (On Shelf)
+@app.route("/bookcopies/on-shelf")
+def show_on_shelf():
+    return render_template(
+        "table_template.j2",
+        title="Books on the Shelf",
+        headings=book_copies_headings,
+        data=book_copies_rows,
+    )
 
 
 # 5. patrons.html - Herakles
