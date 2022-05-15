@@ -64,7 +64,11 @@ def authors_page():
     results = cursor.fetchall()
     authors_headings = [ "First Name", "Last Name"]
     return render_template(
-        "table_template.j2", title="Authors", headings=authors_headings, data=results
+        "table_template.j2", 
+        title="Authors",
+        description = "This is a database of authors.", 
+        headings=authors_headings, 
+        data=results
     )
 
 #books.html
@@ -86,7 +90,11 @@ def books_page():
     results = cursor.fetchall()
     books_headings = [ "ISBN", "Title", "Year", "Author", "Publisher"]
     return render_template(
-        "table_template.j2", title="Books", headings=books_headings, data=results
+        "table_template.j2", 
+        title="Books",
+        description = "This is a database of books.",  
+        headings=books_headings, 
+        data=results
     )
 
 
@@ -107,7 +115,11 @@ def bookcopies_page():
     results = cursor.fetchall()
     bookcopies_headings = ["Title", "Author", "Location"]
     return render_template(
-        "table_template.j2", title="Bookcopies", headings=bookcopies_headings, data=results
+        "table_template.j2", 
+        title="Bookcopies", 
+        description = "This is a database of individual copies of books", 
+        headings=bookcopies_headings, 
+        data=results
     )
 
 
@@ -156,30 +168,38 @@ def patrons_page():
     results = cursor.fetchall()
     patrons_headings = ["First Name", "Last Name", "Email"]
     return render_template(
-        "table_template.j2", title="Patrons", headings=patrons_headings, data=results
+        "table_template.j2", 
+        title="Patrons",
+        description = "This is a database of patrons.",  
+        headings=patrons_headings, 
+        data=results
     )
 
-
-# 6. checkouts.html - Jenna
+# 6. checkouts.html 
 @app.route("/checkouts.html")
 def checkouts_page():
+    query = """ 
+    select
+        Checkouts.checkout_id,
+        Patrons.patron_first,
+        Patrons.patron_last,
+        Checkouts.checkout_date,
+        Checkouts.return_date
+    from Patrons
+        inner join Checkouts on Patrons.patron_id = Checkouts.patron_id
+    order by Checkouts.checkout_date desc;
+    """
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
+    checkouts_headings = ["Checkout ID", "First Name", "Last Name", "Checkout Date", "Return Date"]
     return render_template(
-        "table_template.j2",
+        "table_template.j2", 
         title="Checkouts",
-        description="They are sorted by the most recent checkout date. Click on a Checkout ID to view the items in the checkout selected.",
-        headings=checkouts_headings,
-        data=checkouts_rows,
+        description = "This is a database of checkouts.",  
+        headings=checkouts_headings, 
+        data=results
     )
 
-
-checkouts_headings = ["Checkout ID", "Patron Name", "Checkout Date", "Return Date"]
-checkouts_rows = [
-    [1, "Zelenka Fichter", "2022-02-03", "2022-02-24"],
-    [4, "Corbett Farner", "2022-01-29", "2022-02-19"],
-    [5, "Koko Irish", "2021-10-29", "2021-11-19"],
-    [3, "Eloise Westfall", "2021-05-26", "2021-06-16"],
-    [2, "Zelenka Fichter", "2021-01-11", "2021-02-01"],
-]
 
 # 6.1 - To CheckedBooks from Checkouts (Jenna)
 @app.route("/checkedbooks/<checkout_id>")
@@ -256,108 +276,79 @@ def go_to_checkedbooks(checkout_id):
         description="",
     )
 
-
-# 7. checkedbooks.html - Herakles
+# 7. checkedbooks.html
 @app.route("/checkedbooks.html")
 def checkedbooks_page():
-    return render_template(
-        "table_template.j2",
-        title="Checked Books",
-        headings=checkedbooks_headings,
-        data=checkedbooks_rows,
-        description="This is a read-only list of all checkout line items in the Penguin Library Database. Please edit any checkout information from the Checkouts page.",
-    )
+    query = """ 
+    select Books.title,
+        Patrons.patron_first,
+        Patrons.patron_last,
+        Checkouts.checkout_date,
+        Checkouts.return_date,
+        CheckedBooks.returned
 
-
-checkedbooks_headings = [
-    "Book Title",
-    "Patron Name",
+    from Books
+        inner join BookCopies on Books.book_id = BookCopies.book_id
+        inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
+        inner join Checkouts on Checkouts.checkout_id = CheckedBooks.checkout_id
+        inner join Patrons on Patrons.patron_id = Checkouts.patron_id
+    order by Checkouts.checkout_date desc;
+    """
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
+    checkedbooks_headings = [ "Book Title",
+    "Patron First",
+    "Patron Last",
     "Checkout Date",
     "Return Date",
-    "Returned",
-]
-checkedbooks_rows = [
-    ["Sense and Sensibility", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
-    ["If It Bleeds", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
-    ["Crooked House", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
-    ["A Farewell to Arms", "Zelenka Fichter", "2021-01-11", "2021-02-01", "Yes"],
-    [
-        "Adventures of Huckleberry Finn",
-        "Eloise Westfall",
-        "2021-05-26",
-        "2021-06-16",
-        "Yes",
-    ],
-    [
-        "The Adventures of Tom Sawyer: Original Illustrations",
-        "Eloise Westfall",
-        "2021-05-26",
-        "2021-06-16",
-        "Yes",
-    ],
-    [
-        "Adventures of Huckleberry Finn",
-        "Corbett Farner",
-        "2022-01-29",
-        "2022-02-19",
-        "Yes",
-    ],
-    [
-        "The Adventures of Tom Sawyer: Original Illustrations",
-        "Koko Irish",
-        "2021-10-29",
-        "2021-11-19",
-        "Yes",
-    ],
-    ["Needful Things", "Koko Irish", "2021-10-29", "2021-11-19", "Yes"],
-    ["Sense and Sensibility", "Koko Irish", "2021-10-29", "2021-11-19", "Yes"],
-]
+    "Returned"]
+    return render_template(
+        "table_template.j2", 
+        title="Checked Books",
+        description = "This is a read-only list of all checkout line items in the Penguin Library Database. Please edit any checkout information from the Checkouts page.",  
+        headings=checkedbooks_headings, 
+        data=results
+    )
 
-
-# 8. publishers.html - Jenna
+# 8. publishers.html
 @app.route("/publishers.html")
 def publishers_page():
+    query = """ 
+    select Publishers.publisher_name
+    from Publishers
+    order by Publishers.publisher_name asc;
+    """
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
+    publishers_headings = ["Publisher Name"]
     return render_template(
-        "table_template.j2",
+        "table_template.j2", 
         title="Book Publishers",
-        headings=publisher_headings,
-        data=publisher_rows,
-        description="",
+        description = "This is a database of publishers",  
+        headings=publishers_headings, 
+        data=results
     )
 
-
-publisher_headings = ["Publisher Name"]
-publisher_rows = [
-    ["Dover Publications"],
-    ["Forgotten Books"],
-    ["Gallery Books"],
-    ["Penguin Books"],
-    ["Scribner"],
-    ["SeeWolf Press"],
-    ["William Morrow"],
-]
-
-
-# 9. locations.html - Herakles
+# 9. locations.htm
 @app.route("/locations.html")
 def locations_page():
+    query = """ 
+    select location_name,
+    location_address
+    from Locations
+    order by location_name asc;
+    """
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
+    locations_headings = ["Name", "Address"]
     return render_template(
-        "table_template.j2",
-        title="Locations",
-        headings=locations_headings,
-        data=locations_rows,
-        description="",
+        "table_template.j2", 
+        title="Library Locations",
+        description = "This is a database of library locations",  
+        headings=locations_headings, 
+        data=results
     )
 
-
-locations_headings = ["Name", "Address"]
-locations_rows = [
-    ["Little Penguin Library", "67 Cooper Ave"],
-    ["Macaroni Penguin Library", "658 Lincoln Lane"],
-    ["Emperor Penguin Library", "7580 Devon Rd"],
-    ["Rockhopper Penguin Library", "319 6th St"],
-    ["Royal Penguin Library", "309 East Walnutwood Lane"],
-]
 
 # Listener
 # Port is 5000
