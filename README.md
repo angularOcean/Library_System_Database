@@ -8,9 +8,7 @@ Group Members: Jenna Bucien, Herakles Li
 
 
 Project: Penguin Library System
-Project Description: TBD
-
-
+Project Description: This project is a fully functioning database using python flask and SQL and hosted on Heroku and JawsDB at: https://penguin-library-db.herokuapp.com/ 
 
 Deploying to Heroku and GitHub:
 https://devcenter.heroku.com/articles/git
