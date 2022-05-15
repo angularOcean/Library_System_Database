@@ -1,5 +1,6 @@
 /.vscode
 .env
+.env_heroku
 /venv
 /env
 
