@@ -37,26 +37,14 @@ def index():
     return render_template("main.j2")
 
 
-# SAMPLE TO TEST DB CONNECTION
-@app.route("/sample.html")
-def sample():
-    query = "SELECT * FROM Patrons;"
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
-    patrons_headings = ["ID", "First Name", "Last Name", "Email"]
-    return render_template(
-        "table_template.j2", title="Patrons", headings=patrons_headings, data=results
-    )
-
-
 # 1. index.html
 # render a navigation bar
 @app.route("/index.html")
 def root():
     return render_template("main.j2")
 
-
-#authors.html
+#-----------AUTHOSR-----------
+#2. authors.html
 @app.route("/authors.html")
 def authors_page():
     query = "select author_first, author_last from Authors order by author_last asc;"
@@ -71,7 +59,17 @@ def authors_page():
         data=results
     )
 
-#books.html
+# author INSERT
+
+
+# author UPDATE
+
+
+# author DELETE
+
+
+#-----------BOOKS-----------
+#3. books.html
 @app.route("/books.html")
 def books_page():
     query = """
@@ -97,8 +95,12 @@ def books_page():
         data=results
     )
 
+# books INSERT
 
-#bookcopies.html
+
+# books DELETE
+
+#4. bookcopies.html
 @app.route("/bookcopies.html")
 def bookcopies_page():
     query = """
@@ -153,7 +155,11 @@ def show_on_shelf():
         data=book_copies_rows,
     )
 
+# bookcopies DELETE
 
+
+
+#-----------PATRONS-----------
 # 5. patrons.html - Herakles
 @app.route("/patrons.html")
 def patrons_page():
@@ -174,7 +180,15 @@ def patrons_page():
         headings=patrons_headings, 
         data=results
     )
+# patrons INSERT
 
+
+# patrons UPDATE
+
+
+# patrons DELETE
+
+#-----------CHECKOUTS-----------
 # 6. checkouts.html 
 @app.route("/checkouts.html")
 def checkouts_page():
@@ -276,6 +290,15 @@ def go_to_checkedbooks(checkout_id):
         description="",
     )
 
+# checkouts INSERT
+
+
+# checkouts UPDATE
+
+
+# checkouts DELETE
+
+#-----------CHECKEDBOOKS-----------
 # 7. checkedbooks.html
 @app.route("/checkedbooks.html")
 def checkedbooks_page():
@@ -309,7 +332,15 @@ def checkedbooks_page():
         headings=checkedbooks_headings, 
         data=results
     )
+# checkedbooks INSERT
 
+
+# checkedbooks UPDATE
+
+
+# checkedbooks DELETE
+
+#-----------PUBLISHERS-----------
 # 8. publishers.html
 @app.route("/publishers.html")
 def publishers_page():
@@ -329,6 +360,15 @@ def publishers_page():
         data=results
     )
 
+# publishers INSERT
+
+
+# publishers UPDATE
+
+
+# publishers DELETE
+
+#-----------LOCATIONS-----------
 # 9. locations.htm
 @app.route("/locations.html")
 def locations_page():
@@ -349,6 +389,13 @@ def locations_page():
         data=results
     )
 
+# locations INSERT
+
+
+# locations UPDATE
+
+
+# locations DELETE
 
 # Listener
 # Port is 5000
