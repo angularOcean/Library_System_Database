@@ -67,49 +67,110 @@ def authors_page():
         "table_template.j2", title="Authors", headings=authors_headings, data=results
     )
 
-#books.html
+# 2. authors.html - Jenna
+@app.route("/authors2.html")
+def authors_page2():
+    return render_template(
+        "table_template.j2",
+        title="Authors",
+        headings=authors_headings,
+        data=authors_data,
+        description="",
+    )
+
+
+authors_headings = ["First Name", "Last Name"]
+authors_data = [
+    ["Stephen", "King"],
+    ["Mark", "Twain"],
+    ["Agatha", "Christie"],
+    ["Jane", "Austen"],
+    ["Ernest", "Hemingway"],
+]
+
+# 3. books.html - Herakles
 @app.route("/books.html")
 def books_page():
-    query = """
-    select Books.isbn, 
-        Books.title, 
-        Books.year,
-        Authors.author_first,
-        Authors.author_last,
-        Publishers.publisher_name
-    from Books
-        inner join Authors on Books.author_id = Authors.author_id
-        inner join Publishers on Books.publisher_id = Publishers.publisher_id
-    order by isbn asc;
-    """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
-    books_headings = [ "ISBN", "Title", "Year", "Author", "Publisher"]
     return render_template(
-        "table_template.j2", title="Books", headings=books_headings, data=results
+        "table_template.j2",
+        title="Books",
+        headings=books_headings,
+        data=books_rows,
+        description="",
     )
 
 
-#bookcopies.html
+books_headings = ["ISBN", "Title", "Year", "Author", "Publisher"]
+books_rows = [
+    [
+        "978-19-8213798-4 ",
+        "If It Bleeds",
+        2021,
+        "Stephen King",
+        "Scribner",
+    ],
+    [
+        "978-15-0114741-8",
+        "Needful Things",
+        2018,
+        "Stephen King",
+        "Gallery Books",
+    ],
+    [
+        "978-1948-13282-4",
+        "The Adventures of Tom Sawyer: Original Illustrations",
+        2018,
+        "Mark Twain",
+        "SeeWolf Books",
+    ],
+    [
+        "978-0062-07348-8",
+        "And Then There Were None",
+        2011,
+        "Agatha Christie",
+        "Dover Publications",
+    ],
+]
+
+# 4. bookcopies.html - Jenna
 @app.route("/bookcopies.html")
 def bookcopies_page():
-    query = """
-    select Books.title,
-        concat(Authors.author_first, ' ', Authors.author_last) as author_name,
-        Locations.location_name
-    from Locations
-        inner join BookCopies on Locations.location_id = BookCopies.location_id
-        inner join Books on BookCopies.book_id = Books.book_id
-        inner join Authors on Books.author_id = Authors.author_id
-    order by Books.title asc;
-    """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
-    bookcopies_headings = ["Title", "Author", "Location"]
     return render_template(
-        "table_template.j2", title="Bookcopies", headings=bookcopies_headings, data=results
+        "table_template.j2",
+        title="Book Copies",
+        headings=book_copies_headings,
+        data=book_copies_rows,
+        description="",
     )
 
+
+book_copies_headings = ["Title", "Author", "Location"]
+
+book_copies_rows = [
+    ["Charlie and the Chocolate Factory", "Roald Dahl", "Royal Penguin Library"],
+    ["A Farewell to Arms", "Ernest Hemingway", "Little Penguin Library"],
+    ["A Farewell to Arms", "Ernest Hemingway", "Macaroni Penguin Library"],
+    ["Adventures of Huckleberry Finn", "Mark Twain", "Royal Penguin Library"],
+    ["And Then There Were None", "Agatha Christie", "Macaroni Penguin Library"],
+    ["Crooked House", "Agatha Christie", "Rockhopper Penguin Library"],
+    ["Crooked House", "Agatha Christie", "Emperor Penguin Library"],
+    ["For Whom the Bell Tolls", "Ernest Hemingway", "Emperor Penguin Library"],
+    ["If It Bleeds", "Stephen King", "Rockhopper Penguin Library"],
+    ["If It Bleeds", "Stephen King", "Royal Penguin Library"],
+    ["Needful Things", "Stephen King", "Emperor Penguin Library"],
+    ["Pride and Prejudice", "Jane Austen", "Rockhopper Penguin Library"],
+    ["Sense and Sensibility", "Jane Austen", "Royal Penguin Library"],
+    [
+        "The Adventures of Tom Sawyer: Original Illustrations",
+        "Mark Twain",
+        "Little Penguin Library",
+    ],
+    [
+        "The Adventures of Tom Sawyer: Original Illustrations",
+        "Mark Twain",
+        "Macaroni Penguin Library",
+    ],
+]
 
 # 4.1 Dynamically Display Checked Out Books
 @app.route("/bookcopies/checked-out")
@@ -145,20 +206,21 @@ def show_on_shelf():
 # 5. patrons.html - Herakles
 @app.route("/patrons.html")
 def patrons_page():
-    query = """ 
-    select patron_first,
-        patron_last,
-        email
-    from Patrons
-    order by patron_last asc;
-    """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
-    patrons_headings = ["First Name", "Last Name", "Email"]
     return render_template(
-        "table_template.j2", title="Patrons", headings=patrons_headings, data=results
+        "table_template.j2",
+        title="Patrons",
+        headings=patrons_headings,
+        data=patrons_rows,
+        description="",
     )
 
+
+patrons_headings = ["First Name", "Last Name", "Email"]
+patrons_rows = [
+    ["Koko", "Irish", "kokoiri@egl.com"],
+    ["Corbett", "Farner", "corbetfarn@gmail.com"],
+    ["Eloise", "Westfall", "elwestfa@hotmail.com"],
+]
 
 # 6. checkouts.html - Jenna
 @app.route("/checkouts.html")

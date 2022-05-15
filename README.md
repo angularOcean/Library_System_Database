@@ -17,5 +17,5 @@ Steps for conecting Heroku app with existing repositry for collaborative project
 2. Install Heroku CLI and login using: heroku login
 3. Create a Heroku remote using: heroku create -a [APP ROOT DIRECTORY]
 4. This should result in two connections, origin for github and heroku for heroku. 
-5. Deploy code using: git push heroku main 
-6. 
+5. Deploy code to Heroku using: git push heroku main 
+6. Deploy code to Github using: git push origin
