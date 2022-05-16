@@ -397,11 +397,6 @@ def locations_page():
         mysql.connection.commit()
         return redirect('/locations.html')
 
-# locations UPDATE
-
-
-# locations DELETE
-
 
 
 #render template
@@ -410,9 +405,44 @@ def locations_page():
         title="Library Locations",
         description = "This is a database of library locations",  
         headings=locations_headings, 
-        data=results
+        data=results,
+        routeURL = "location"
+    )
+# locations UPDATE
+
+@app.route("/update_location/<int:id>", methods=["POST", "GET"])
+def locations_edit(id):
+    if request.method == "GET":
+        query = "SELECT * FROM Locations WHERE location_id = %s"
+        curr = mysql.connection.cursor()
+        curr.execute(query,(id,))
+        info = curr.fetchall()
+        
+        
+    locations_edit_headings = ["ID", "Name", "Address"]
+    locations_attributes = ["location_id", "location_name", "location_address"]
+
+    if request.method == "POST":
+        request.form.get("Update Location")
+        loc_name = request.form["Name"]
+        loc_address = request.form["Address"]
+        loc_id = id
+        query = f"update Locations set location_name = %s, location_address = %s where location_id = %s;"
+        curr = mysql.connection.cursor()
+        curr.execute(query, (loc_name, loc_address, loc_id))
+        mysql.connection.commit()
+        return redirect('/locations.html')
+
+    return render_template("update_template.j2",
+    data = info,
+    description = "Editing library location.", 
+    headings = locations_edit_headings,
+    attributes = locations_attributes,
+    title = "Location"
     )
 
+
+# locations DELETE
 @app.route("/delete_location/<int:id>", methods=['GET', 'POST'])
 def delete_location(id):
     query ="DELETE FROM Locations WHERE location_id = %s"

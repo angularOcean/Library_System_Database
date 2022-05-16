@@ -37,8 +37,8 @@
                     <td>{{ cell }}</td>
                 {% endfor %}
                 {% if title != "Checked Books" %}
-                    <td><a href= {{row[0]}} onClick="update()">Edit</a></td>
-                    <td><a href="/delete_location/{{row[0]}}" class = "btn btn-default">Delete</a></td> 
+                    <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()">Edit</a></td>
+                    <td><a href="/delete_{{routeURL}}/{{row[0]}}" class = "btn btn-default">Delete</a></td> 
                 {% endif %}
                 </tr> 
             {% endfor %}

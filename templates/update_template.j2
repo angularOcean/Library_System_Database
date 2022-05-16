@@ -1,0 +1,26 @@
+{% extends "base_template.j2" %}
+{{ super() }}
+{% block content %}
+<h1>Edit {{ title }} Data</h1>
+<p>{{ description }}{{data[0][attributes[2]]}}</p>
+
+
+<br>
+<div id="insert">
+    <form method="POST" id= "update {{ title }}">
+        <legend><strong>Update {{ title }} </strong></legend>
+          <fieldset class="fields">
+              
+            {% for index in range(headings| length()) %}
+              {% if headings[index] != "ID" %}
+                <label> {{headings[index]}} </label> 
+                <input type="text" name= {{headings[index]}} value = {{data[0][attributes[index]]}}><br><br>
+              {% endif %} 
+            {% endfor %} 
+            
+      </fieldset>
+          <input class="btn" type="submit" id="Update {{ title }}" value="Update {{ title }}">
+	</form> 
+</div>
+
+{% endblock %}
