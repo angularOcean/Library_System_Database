@@ -10,9 +10,10 @@
 # Based on: OSU CS340 Flask Starter Guide
 # Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app
 
-from flask import Flask, render_template, json
+from flask import Flask, render_template, json, request, redirect
 import os
 import pymysql
+from flask_mysqldb import MySQL
 from flask import request
 import database.db_connector as db
 from boto.s3.connection import S3Connection
@@ -27,6 +28,8 @@ app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER")
 app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD")
 app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB")
 app.config["MYSQL_CURSORCLASS"] = os.environ.get("MYSQL_CURSORCLASS")
+
+mysql = MySQL(app)
 
 # Connect to Database
 db_connection = db.connect_to_database()
@@ -370,17 +373,38 @@ def publishers_page():
 
 #-----------LOCATIONS-----------
 # 9. locations.htm
-@app.route("/locations.html")
+@app.route("/locations.html", methods = ["POST", "GET"])
 def locations_page():
     query = """ 
-    select location_name,
+    select location_id,
+    location_name,
     location_address
     from Locations
-    order by location_name asc;
+    order by location_id asc;
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
-    locations_headings = ["Name", "Address"]
+    locations_headings = ["ID", "Name", "Address"]
+
+# locations INSERT
+    if request.method =="POST":
+        request.form.get("insert Library Locations")
+        loc_name = request.form["Name"]
+        loc_address = request.form["Address"]
+        query = f"INSERT INTO Locations(location_name, location_address) VALUES (%s,%s); "
+        curr = mysql.connection.cursor()
+        curr.execute(query, (loc_name, loc_address))
+        mysql.connection.commit()
+        return redirect('/locations.html')
+
+# locations UPDATE
+
+
+# locations DELETE
+
+
+
+#render template
     return render_template(
         "table_template.j2", 
         title="Library Locations",
@@ -389,13 +413,14 @@ def locations_page():
         data=results
     )
 
-# locations INSERT
+@app.route("/delete_location/<int:id>", methods=['GET', 'POST'])
+def delete_location(id):
+    query ="DELETE FROM Locations WHERE location_id = %s"
+    curr = mysql.connection.cursor()
+    curr.execute(query,(id,))
+    mysql.connection.commit()
+    return redirect('/locations.html')
 
-
-# locations UPDATE
-
-
-# locations DELETE
 
 # Listener
 # Port is 5000

@@ -1,16 +1,18 @@
 <br>
 <div id="insert">
-    <form method="POST" id="insert">
+    <form method="POST" id= "insert {{ title }}">
         <legend><strong>Add {{ title }} </strong></legend>
           <fieldset class="fields">
             
             {% for header in headings %}
-            <label> {{ header }}</label> 
-            <input type="text" name="fname">
+              {% if header != "ID" %}
+              <label> {{ header }}</label> 
+              <input type="text" name={{ header }}>
+              {% endif %}
             {% endfor %} 
             
       </fieldset>
-          <input class="btn" type="button" id="add value" value="Add {{ title }}">
+          <input class="btn" type="submit" id="add {{ title }}" value="Add {{ title }}">
           <input class="btn" type="button" value="Cancel" onClick="">
 	</form> 
 </div>
