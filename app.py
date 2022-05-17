@@ -472,7 +472,7 @@ def locations_edit(id):
     return render_template(
         "update_template.j2",
         data=info,
-        description="Editing library location.",
+        description="Editing library location: ",
         headings=locations_edit_headings,
         title="Location",
     )
