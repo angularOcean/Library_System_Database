@@ -7,7 +7,6 @@
 
 import pymysql
 
-
 def connect_to_database(host, user, passwd, db):
     """
     connects to a database and returns a database objects
@@ -52,15 +51,3 @@ def execute_query(db_connection=None, query=None, query_params=()):
     db_connection.commit()
     return cursor
 
-
-if __name__ == "__main__":
-    print(
-        "Executing a sample query on the database using the credentials from db_credentials.py"
-    )
-    db = connect_to_database()
-    query = "SELECT * from Patrons;"
-    results = execute_query(db, query)
-    print("Printing results of %s" % query)
-
-    for r in results.fetchall():
-        print(r)
