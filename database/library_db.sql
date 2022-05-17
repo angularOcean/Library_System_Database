@@ -76,12 +76,11 @@ CREATE TABLE Locations(
 CREATE TABLE BookCopies(
     copy_id INT UNIQUE NOT NULL AUTO_INCREMENT,
     book_id INT,
-    location_id INT DEFAULT -1,
+    location_id INT ,
     PRIMARY KEY (copy_id),
     FOREIGN KEY (book_id) REFERENCES Books(book_id) ON DELETE
     SET NULL,
-        FOREIGN KEY (location_id) REFERENCES Locations(location_id) ON DELETE
-    SET DEFAULT
+        FOREIGN KEY (location_id) REFERENCES Locations(location_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 /*
  Checkouts
