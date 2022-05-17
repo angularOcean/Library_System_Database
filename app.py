@@ -89,7 +89,7 @@ def books_page():
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
-    books_headings = [ "ISBN", "Title", "Year", "Author", "Publisher"]
+    books_headings = [ "ISBN", "Title", "Year", "Author First", "Author Last", "Publisher"]
     return render_template(
         "table_template.j2", 
         title="Books",
