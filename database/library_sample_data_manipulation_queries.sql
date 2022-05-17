@@ -118,11 +118,10 @@ order by Books.title asc;
 
 /* Generate List of Books Currently On Shelf */
 select Books.title,
-  Authors.author_first,
-  Authors.author_last,
+concat(Authors.author_first, ' ', Authors.author_last) as author_name,
   Locations.location_name
 from Locations
-  inner join BookCopies on Locations.location_id = BookCopies.location_id
+  right join BookCopies on Locations.location_id = BookCopies.location_id
   inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
   inner join Books on BookCopies.book_id = Books.book_id
   inner join Authors on Books.author_id = Authors.author_id
@@ -133,11 +132,12 @@ order by Books.title asc;
 /* Generate List of Books Currently Checked Out 
  with Return Dates
  */
-select Books.title,
+select Books.title, 
+concat(Authors.author_first, ' ', Authors.author_last) as author_name,
   Locations.location_name,
   Checkouts.return_date
 from Locations
-  inner join BookCopies on Locations.location_id = BookCopies.location_id
+  right join BookCopies on Locations.location_id = BookCopies.location_id
   inner join Books on BookCopies.book_id = Books.book_id
   inner join Authors on Books.author_id = Authors.author_id
   inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id

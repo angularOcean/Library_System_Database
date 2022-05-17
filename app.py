@@ -136,7 +136,7 @@ def bookcopies_page():
     bookcopies_headings = ["Title", "Author", "Location"]
     return render_template(
         "table_template.j2",
-        title="Bookcopies",
+        title="Book Copies",
         description="This is a database of individual copies of books",
         headings=bookcopies_headings,
         data=results,
@@ -146,31 +146,57 @@ def bookcopies_page():
 # 4.1 Dynamically Display Checked Out Books
 @app.route("/bookcopies/checked-out")
 def show_checked_out():
-    checked_out_headings = ["Title", "Author", "Location", "Return Date"]
-    checked_out_sample = [
-        [
-            "Charlie and the Chocolate Factory",
-            "Roald Dahl",
-            "Royal Penguin Library",
-            "2022-06-11",
-        ]
-    ]
+    query = """
+    select Books.title,
+    concat(Authors.author_first, ' ', Authors.author_last) as author_name,
+    Locations.location_name,
+    Checkouts.return_date
+    from Locations
+    right join BookCopies on Locations.location_id = BookCopies.location_id
+    inner join Books on BookCopies.book_id = Books.book_id
+    inner join Authors on Books.author_id = Authors.author_id
+    inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
+    inner join Checkouts on CheckedBooks.checkout_id = Checkouts.checkout_id
+    where CheckedBooks.returned = 0
+    order by Books.title asc;
+    """
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
+    checked_out_headings = ["Title", "Author" "Location"]
     return render_template(
         "table_template.j2",
         title="Checked Out Books",
+        description="This is a list of all book copies currently checked out.",
         headings=checked_out_headings,
-        data=checked_out_sample,
+        data=results,
     )
 
 
 # 4.2 Dynamically Display Returned Books (On Shelf)
 @app.route("/bookcopies/on-shelf")
 def show_on_shelf():
+    query = """
+    select Books.title,
+    concat(Authors.author_first, ' ', Authors.author_last) as author_name,
+    Locations.location_name
+    from Locations
+    right join BookCopies on Locations.location_id = BookCopies.location_id
+    inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
+    inner join Books on BookCopies.book_id = Books.book_id
+    inner join Authors on Books.author_id = Authors.author_id
+    where CheckedBooks.returned is null
+    or CheckedBooks.returned = 1
+    order by Books.title asc;
+    """
+    cursor = db.execute_query(db_connection=db_connection, query=query)
+    results = cursor.fetchall()
+    on_shelf_headings = ["Title", "Author", "Location"]
     return render_template(
         "table_template.j2",
         title="Books on the Shelf",
-        headings=book_copies_headings,
-        data=book_copies_rows,
+        description="This is a list of all book copies currently on the shelf.",
+        headings=on_shelf_headings,
+        data=results,
     )
 
 
@@ -235,7 +261,7 @@ def checkouts_page():
     return render_template(
         "table_template.j2",
         title="Checkouts",
-        description="This is a database of checkouts.",
+        description="This is a database of checkouts. To select a checkout, click on the Checkout ID. From there, you can edit the checkout items.",
         headings=checkouts_headings,
         data=results,
     )
