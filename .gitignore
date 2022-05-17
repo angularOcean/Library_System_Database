@@ -3,5 +3,6 @@
 .env_heroku
 /venv
 /env
-
 .DS_Store
+.pyc
+/__py_cache__

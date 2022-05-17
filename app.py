@@ -401,7 +401,7 @@ def publishers_page():
 # publishers DELETE
 
 # -----------LOCATIONS-----------
-# 9. locations.htm
+# 9. locations.html
 @app.route("/locations.html", methods=["POST", "GET"])
 def locations_page():
     query = """ 
@@ -447,14 +447,14 @@ def locations_page():
 @app.route("/update_location/<int:id>", methods=["POST", "GET"])
 def locations_edit(id):
     if request.method == "GET":
-        query = "SELECT * FROM Locations WHERE location_id = %s"
+        query = "SELECT location_name, location_address FROM Locations WHERE location_id = %s"
         curr = db.execute_query(
             db_connection=db_connection, query=query, query_params=(id,)
         )
         info = curr.fetchall()
+        print(info)
 
-    locations_edit_headings = ["ID", "Name", "Address"]
-    locations_attributes = ["location_id", "location_name", "location_address"]
+    locations_edit_headings = ["Name", "Address"]
 
     if request.method == "POST":
         request.form.get("Update Location")
@@ -474,7 +474,6 @@ def locations_edit(id):
         data=info,
         description="Editing library location.",
         headings=locations_edit_headings,
-        attributes=locations_attributes,
         title="Location",
     )
 
