@@ -111,7 +111,7 @@ def bookcopies_page():
         concat(Authors.author_first, ' ', Authors.author_last) as author_name,
         Locations.location_name
     from Locations
-        inner join BookCopies on Locations.location_id = BookCopies.location_id
+        right join BookCopies on Locations.location_id = BookCopies.location_id
         inner join Books on BookCopies.book_id = Books.book_id
         inner join Authors on Books.author_id = Authors.author_id
     order by Books.title asc;
