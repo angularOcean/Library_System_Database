@@ -1,8 +1,0 @@
-/.vscode
-.env
-.env_heroku
-/venv
-/env
-
-.DS_Store
-__pycache__/
