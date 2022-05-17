@@ -6,19 +6,9 @@
 # Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/database/db_connector.py
 
 import pymysql
-import os
-from dotenv import load_dotenv, find_dotenv
-
-# Load the .env file into the environment variables
-load_dotenv(find_dotenv())
-
-user = os.environ.get("MYSQL_USER")
-passwd = os.environ.get("MYSQL_PASSWORD")
-host = os.environ.get("MYSQL_HOST")
-db = os.environ.get("MYSQL_DB")
 
 
-def connect_to_database(host=host, user=user, passwd=passwd, db=db):
+def connect_to_database(host, user, passwd, db):
     """
     connects to a database and returns a database objects
     """

@@ -13,26 +13,31 @@
 from flask import Flask, render_template, json, request, redirect
 import os
 import pymysql
-from flask_mysqldb import MySQL
 from flask import request
 import database.db_connector as db
-from boto.s3.connection import S3Connection
-
+from config import DevelopmentConfig, ProductionConfig
 
 # Configuration
 
 app = Flask(__name__)
 
-app.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST")
-app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER")
-app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD")
-app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB")
-app.config["MYSQL_CURSORCLASS"] = os.environ.get("MYSQL_CURSORCLASS")
+if app.config["ENV"] == "production":
+    app.config.from_object("config.ProductionConfig")
+    db_connection = db.connect_to_database(
+        ProductionConfig.DB_HOST,
+        ProductionConfig.DB_USER,
+        ProductionConfig.DB_PASSWORD,
+        ProductionConfig.DB_NAME,
+    )
+else:
+    app.config.from_object("config.DevelopmentConfig")
+    db_connection = db.connect_to_database(
+        DevelopmentConfig.DB_HOST,
+        DevelopmentConfig.DB_USER,
+        DevelopmentConfig.DB_PASSWORD,
+        DevelopmentConfig.DB_NAME,
+    )
 
-mysql = MySQL(app)
-
-# Connect to Database
-db_connection = db.connect_to_database()
 
 # Routes
 @app.route("/")
@@ -46,21 +51,23 @@ def index():
 def root():
     return render_template("main.j2")
 
-#-----------AUTHOSR-----------
-#2. authors.html
+
+# -----------AUTHORS-----------
+# 2. authors.html
 @app.route("/authors.html")
 def authors_page():
     query = "select author_first, author_last from Authors order by author_last asc;"
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
-    authors_headings = [ "First Name", "Last Name"]
+    authors_headings = ["First Name", "Last Name"]
     return render_template(
-        "table_template.j2", 
+        "table_template.j2",
         title="Authors",
-        description = "This is a database of authors.", 
-        headings=authors_headings, 
-        data=results
+        description="This is a database of authors.",
+        headings=authors_headings,
+        data=results,
     )
+
 
 # author INSERT
 
@@ -71,8 +78,8 @@ def authors_page():
 # author DELETE
 
 
-#-----------BOOKS-----------
-#3. books.html
+# -----------BOOKS-----------
+# 3. books.html
 @app.route("/books.html")
 def books_page():
     query = """
@@ -89,21 +96,29 @@ def books_page():
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
-    books_headings = [ "ISBN", "Title", "Year", "Author First", "Author Last", "Publisher"]
+    books_headings = [
+        "ISBN",
+        "Title",
+        "Year",
+        "Author First",
+        "Author Last",
+        "Publisher",
+    ]
     return render_template(
-        "table_template.j2", 
+        "table_template.j2",
         title="Books",
-        description = "This is a database of books.",  
-        headings=books_headings, 
-        data=results
+        description="This is a database of books.",
+        headings=books_headings,
+        data=results,
     )
+
 
 # books INSERT
 
 
 # books DELETE
 
-#4. bookcopies.html
+# 4. bookcopies.html
 @app.route("/bookcopies.html")
 def bookcopies_page():
     query = """
@@ -120,11 +135,11 @@ def bookcopies_page():
     results = cursor.fetchall()
     bookcopies_headings = ["Title", "Author", "Location"]
     return render_template(
-        "table_template.j2", 
-        title="Bookcopies", 
-        description = "This is a database of individual copies of books", 
-        headings=bookcopies_headings, 
-        data=results
+        "table_template.j2",
+        title="Bookcopies",
+        description="This is a database of individual copies of books",
+        headings=bookcopies_headings,
+        data=results,
     )
 
 
@@ -158,11 +173,11 @@ def show_on_shelf():
         data=book_copies_rows,
     )
 
+
 # bookcopies DELETE
 
 
-
-#-----------PATRONS-----------
+# -----------PATRONS-----------
 # 5. patrons.html - Herakles
 @app.route("/patrons.html")
 def patrons_page():
@@ -177,12 +192,14 @@ def patrons_page():
     results = cursor.fetchall()
     patrons_headings = ["First Name", "Last Name", "Email"]
     return render_template(
-        "table_template.j2", 
+        "table_template.j2",
         title="Patrons",
-        description = "This is a database of patrons.",  
-        headings=patrons_headings, 
-        data=results
+        description="This is a database of patrons.",
+        headings=patrons_headings,
+        data=results,
     )
+
+
 # patrons INSERT
 
 
@@ -191,8 +208,8 @@ def patrons_page():
 
 # patrons DELETE
 
-#-----------CHECKOUTS-----------
-# 6. checkouts.html 
+# -----------CHECKOUTS-----------
+# 6. checkouts.html
 @app.route("/checkouts.html")
 def checkouts_page():
     query = """ 
@@ -208,13 +225,19 @@ def checkouts_page():
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
-    checkouts_headings = ["Checkout ID", "First Name", "Last Name", "Checkout Date", "Return Date"]
+    checkouts_headings = [
+        "Checkout ID",
+        "First Name",
+        "Last Name",
+        "Checkout Date",
+        "Return Date",
+    ]
     return render_template(
-        "table_template.j2", 
+        "table_template.j2",
         title="Checkouts",
-        description = "This is a database of checkouts.",  
-        headings=checkouts_headings, 
-        data=results
+        description="This is a database of checkouts.",
+        headings=checkouts_headings,
+        data=results,
     )
 
 
@@ -293,6 +316,7 @@ def go_to_checkedbooks(checkout_id):
         description="",
     )
 
+
 # checkouts INSERT
 
 
@@ -301,7 +325,7 @@ def go_to_checkedbooks(checkout_id):
 
 # checkouts DELETE
 
-#-----------CHECKEDBOOKS-----------
+# -----------CHECKEDBOOKS-----------
 # 7. checkedbooks.html
 @app.route("/checkedbooks.html")
 def checkedbooks_page():
@@ -322,19 +346,23 @@ def checkedbooks_page():
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
-    checkedbooks_headings = [ "Book Title",
-    "Patron First",
-    "Patron Last",
-    "Checkout Date",
-    "Return Date",
-    "Returned"]
+    checkedbooks_headings = [
+        "Book Title",
+        "Patron First",
+        "Patron Last",
+        "Checkout Date",
+        "Return Date",
+        "Returned",
+    ]
     return render_template(
-        "table_template.j2", 
+        "table_template.j2",
         title="Checked Books",
-        description = "This is a read-only list of all checkout line items in the Penguin Library Database. Please edit any checkout information from the Checkouts page.",  
-        headings=checkedbooks_headings, 
-        data=results
+        description="This is a read-only list of all checkout line items in the Penguin Library Database. Please edit any checkout information from the Checkouts page.",
+        headings=checkedbooks_headings,
+        data=results,
     )
+
+
 # checkedbooks INSERT
 
 
@@ -343,7 +371,7 @@ def checkedbooks_page():
 
 # checkedbooks DELETE
 
-#-----------PUBLISHERS-----------
+# -----------PUBLISHERS-----------
 # 8. publishers.html
 @app.route("/publishers.html")
 def publishers_page():
@@ -356,12 +384,13 @@ def publishers_page():
     results = cursor.fetchall()
     publishers_headings = ["Publisher Name"]
     return render_template(
-        "table_template.j2", 
+        "table_template.j2",
         title="Book Publishers",
-        description = "This is a database of publishers",  
-        headings=publishers_headings, 
-        data=results
+        description="This is a database of publishers",
+        headings=publishers_headings,
+        data=results,
     )
+
 
 # publishers INSERT
 
@@ -371,9 +400,9 @@ def publishers_page():
 
 # publishers DELETE
 
-#-----------LOCATIONS-----------
+# -----------LOCATIONS-----------
 # 9. locations.htm
-@app.route("/locations.html", methods = ["POST", "GET"])
+@app.route("/locations.html", methods=["POST", "GET"])
 def locations_page():
     query = """ 
     select location_id,
@@ -386,39 +415,44 @@ def locations_page():
     results = cursor.fetchall()
     locations_headings = ["ID", "Name", "Address"]
 
-# locations INSERT
-    if request.method =="POST":
+    # locations INSERT
+    if request.method == "POST":
         request.form.get("insert Library Locations")
         loc_name = request.form["Name"]
         loc_address = request.form["Address"]
-        query = f"INSERT INTO Locations(location_name, location_address) VALUES (%s,%s); "
-        curr = mysql.connection.cursor()
-        curr.execute(query, (loc_name, loc_address))
-        mysql.connection.commit()
-        return redirect('/locations.html')
+        query = (
+            f"INSERT INTO Locations(location_name, location_address) VALUES (%s,%s); "
+        )
+        cursor = db.execute_query(
+            db_connection=db_connection,
+            query=query,
+            query_params=(loc_name, loc_address),
+        )
+        return redirect("/locations.html")
 
-
-
-#render template
+    # render template
     return render_template(
-        "table_template.j2", 
+        "table_template.j2",
         title="Library Locations",
-        description = "This is a database of library locations",  
-        headings=locations_headings, 
+        description="This is a database of library locations",
+        headings=locations_headings,
         data=results,
-        routeURL = "location"
+        routeURL="location",
     )
+
+
 # locations UPDATE
+
 
 @app.route("/update_location/<int:id>", methods=["POST", "GET"])
 def locations_edit(id):
     if request.method == "GET":
         query = "SELECT * FROM Locations WHERE location_id = %s"
-        curr = mysql.connection.cursor()
-        curr.execute(query,(id,))
+        curr = db.execute_query(
+            db_connection=db_connection, query=query, query_params=(id,)
+        )
         info = curr.fetchall()
-        
-        
+
     locations_edit_headings = ["ID", "Name", "Address"]
     locations_attributes = ["location_id", "location_name", "location_address"]
 
@@ -428,28 +462,31 @@ def locations_edit(id):
         loc_address = request.form["Address"]
         loc_id = id
         query = f"update Locations set location_name = %s, location_address = %s where location_id = %s;"
-        curr = mysql.connection.cursor()
-        curr.execute(query, (loc_name, loc_address, loc_id))
-        mysql.connection.commit()
-        return redirect('/locations.html')
+        curr = db.execute_query(
+            db_connection=db_connection,
+            query=query,
+            query_params=(loc_name, loc_address, loc_id),
+        )
+        return redirect("/locations.html")
 
-    return render_template("update_template.j2",
-    data = info,
-    description = "Editing library location.", 
-    headings = locations_edit_headings,
-    attributes = locations_attributes,
-    title = "Location"
+    return render_template(
+        "update_template.j2",
+        data=info,
+        description="Editing library location.",
+        headings=locations_edit_headings,
+        attributes=locations_attributes,
+        title="Location",
     )
 
 
 # locations DELETE
-@app.route("/delete_location/<int:id>", methods=['GET', 'POST'])
+@app.route("/delete_location/<int:id>", methods=["GET", "POST"])
 def delete_location(id):
-    query ="DELETE FROM Locations WHERE location_id = %s"
-    curr = mysql.connection.cursor()
-    curr.execute(query,(id,))
-    mysql.connection.commit()
-    return redirect('/locations.html')
+    query = "DELETE FROM Locations WHERE location_id = %s"
+    curr = db.execute_query(
+        db_connection=db_connection, query=query, query_params=(id,)
+    )
+    return redirect("/locations.html")
 
 
 # Listener
@@ -458,4 +495,4 @@ if __name__ == "__main__":
     # #port = int(os.environ.get("PORT", 9112))
     # #                                ^^^^
     # #              You can replace this number with any valid port
-    app.run(debug=True)
+    app.run()
