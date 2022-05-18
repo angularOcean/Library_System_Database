@@ -169,6 +169,9 @@ def books_page():
 
 # books DELETE
 
+
+# -----------BOOKCOPIES-----------
+
 # 4. bookcopies.html
 @app.route("/bookcopies.html")
 def bookcopies_page():
@@ -287,12 +290,13 @@ def patrons_page():
 
 # -----------CHECKOUTS-----------
 # 6. checkouts.html
-@app.route("/checkouts.html")
+@app.route("/checkouts.html", methods=["POST", "GET"])
 def checkouts_page():
+    # Initial Display:
     query = """ 
     select
         Checkouts.checkout_id,
-        Patrons.patron_first,
+        Patrons.patron_first,  
         Patrons.patron_last,
         Checkouts.checkout_date,
         Checkouts.return_date
@@ -309,13 +313,41 @@ def checkouts_page():
         "Checkout Date",
         "Return Date",
     ]
+
+    # Get Valid Patron Dropdown
+    query2 = """SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name FROM Patrons ORDER BY patron_last ASC"""
+    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    results2 = cursor2.fetchall()
+    print(results2)
+
+    # checkout INSERT
+    if request.method == "POST":
+        request.form.get("insert Checkouts")
+        input_patron = request.form["patron_choice"]
+        input_checkout_date = request.form["checkout_date_input"]
+        input_return_date = request.form["return_date_input"]
+        query = f"""INSERT INTO Checkouts (checkout_date, return_date, patron_id) VALUES (%s, %s, %s) ; """
+        cursor = db.execute_query(
+            db_connection=db_connection,
+            query=query,
+            query_params=(input_checkout_date, input_return_date, input_patron),
+        )
+        return redirect("/checkouts.html")
+
     return render_template(
         "table_template.j2",
         title="Checkouts",
         description="This is a database of checkouts. To select a checkout, click on the Checkout ID. From there, you can edit the checkout items.",
         headings=checkouts_headings,
         data=results,
+        name_dropdown=results2,
     )
+
+
+# checkouts UPDATE
+
+
+# checkouts DELETE
 
 
 # 6.1 - To CheckedBooks from Checkouts (Jenna)
@@ -393,14 +425,6 @@ def go_to_checkedbooks(checkout_id):
         description="",
     )
 
-
-# checkouts INSERT
-
-
-# checkouts UPDATE
-
-
-# checkouts DELETE
 
 # -----------CHECKEDBOOKS-----------
 # 7. checkedbooks.html
