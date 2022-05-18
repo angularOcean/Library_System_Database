@@ -14,7 +14,7 @@
             {% for index in range(headings| length()) %}
               {% if headings[index] != "ID" %}
                 <label> {{headings[index]}} </label> 
-                <input type="text" name= {{headings[index]}} value ='{{data[0][index]}}'><br><br>
+                <input type="text" name= '{{headings[index]}}' value ='{{data[0][index]}}'><br><br>
               {% endif %} 
             {% endfor %} 
             

@@ -14,18 +14,19 @@ class Config(object):
     DEBUG = False
     TESTING = False
 
+
 class DevelopmentConfig(Config):
-    FLASK_ENV = 'development'
+    FLASK_ENV = "development"
     TESTING = True
     DEBUG = True
     DB_HOST = environ.get("LOCAL_HOST")
     DB_NAME = environ.get("LOCAL_DB")
     DB_PASSWORD = environ.get("LOCAL_PASSWORD")
     DB_USER = environ.get("LOCAL_USER")
-    
+
 
 class ProductionConfig(Config):
-    FLASK_ENV = 'production'
+    FLASK_ENV = "production"
     DB_HOST = environ.get("MYSQL_HOST")
     DB_NAME = environ.get("MYSQL_DB")
     DB_PASSWORD = environ.get("MYSQL_PASSWORD")

@@ -35,7 +35,7 @@ from Authors
 order by author_last asc;
 
 /* Insert */
-insert into (Authors.first_name, Authors.last_name)
+insert into (author_first, author_last)
 values (
     :author_first_name_input,
     :author_last_name_input
