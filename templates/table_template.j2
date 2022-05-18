@@ -27,7 +27,7 @@
                     {% endif %}
                 {% endfor %}
                 <td><a href="#" onClick="update()">Edit</a></td>
-                <td><a href="#" onclick="delete()">Delete</a></td> 
+                <td><a href="/delete_{{routeURL}}/{{row[0]}}" class="btn btn-default">Delete</a></td> 
                 </tr>
             {% endfor %}
         {% else %}

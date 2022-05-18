@@ -341,13 +341,20 @@ def checkouts_page():
         headings=checkouts_headings,
         data=results,
         name_dropdown=results2,
+        routeURL="checkout",
     )
 
 
 # checkouts UPDATE
 
-
 # checkouts DELETE
+@app.route("/delete_checkout/<int:id>", methods=["GET", "POST"])
+def delete_checkout(id):
+    query = "DELETE FROM Checkouts WHERE checkout_id = %s"
+    curr = db.execute_query(
+        db_connection=db_connection, query=query, query_params=(id,)
+    )
+    return redirect("/checkouts.html")
 
 
 # 6.1 - To CheckedBooks from Checkouts (Jenna)
