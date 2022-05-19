@@ -116,6 +116,7 @@ def authors_edit(id):
         description="Editing Author: ",
         headings=authors_edit_headings,
         title="Author",
+        routeURL="authors",
     )
 
 
@@ -635,6 +636,7 @@ def locations_edit(id):
         description="Editing library location: ",
         headings=locations_edit_headings,
         title="Location",
+        routeURL="locations",
     )
 
 
