@@ -258,6 +258,16 @@ delete from Checkouts
 where checkout_id = :checkout_id_selected;
 
 
+/* Generate a CheckedBooks list from a Checkout ID */
+SELECT Books.title, concat(Patrons.patron_first, ' ', Patrons.patron_last) as patron_name, Checkouts.checkout_date, Checkouts.return_date, CheckedBooks.returned
+FROM Checkouts
+INNER JOIN Patrons ON Checkouts.patron_id = Patrons.patron_id
+INNER JOIN CheckedBooks ON Checkouts.checkout_id = CheckedBooks.checkout_id
+INNER JOIN BookCopies ON CheckedBooks.copy_id = BookCopies.copy_id
+INNER JOIN Books ON BookCopies.book_id = Books.book_id
+WHERE Checkouts.checkout_id = :checkout_id_selected;
+
+
 /* ----------- CHECKEDBOOKS QUERIES---------------
  Checkedbooks queries
  CREATE/INSERT

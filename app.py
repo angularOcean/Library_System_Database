@@ -415,76 +415,49 @@ def delete_checkout(id):
 # 6.1 - To CheckedBooks from Checkouts (Jenna)
 @app.route("/checkedbooks/<checkout_id>")
 def go_to_checkedbooks(checkout_id):
+    # Initial Display:
+    query = """
+    SELECT BookCopies.copy_id, Books.title, Locations.location_name, Checkouts.checkout_date, Checkouts.return_date, CheckedBooks.returned
+    FROM Checkouts
+    INNER JOIN CheckedBooks ON Checkouts.checkout_id = CheckedBooks.checkout_id
+    INNER JOIN BookCopies ON CheckedBooks.copy_id = BookCopies.copy_id
+    INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
+    INNER JOIN Books ON BookCopies.book_id = Books.book_id
+    WHERE Checkouts.checkout_id = %s
+    """
+    curr = db.execute_query(
+        db_connection=db_connection, query=query, query_params=(checkout_id)
+    )
+    info = curr.fetchall()
     checkedbooks_headings = [
+        "Copy ID",
         "Book Title",
-        "Patron Name",
+        "Copy Location",
         "Checkout Date",
         "Return Date",
         "Returned",
     ]
-    checkedbooks = []
-    if checkout_id == "1":
-        checkedbooks = [
-            [
-                "Sense and Sensibility",
-                "Zelenka Fichter",
-                "2022-02-03",
-                "2022-02-24",
-                "Yes",
-            ],
-            ["If It Bleeds", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
-            ["Crooked House", "Zelenka Fichter", "2022-02-03", "2022-02-24", "Yes"],
-        ]
-    elif checkout_id == "2":
-        checkedbooks = [
-            ["A Farewell to Arms", "Zelenka Fichter", "2021-01-11", "2021-02-01", "Yes"]
-        ]
-    elif checkout_id == "3":
-        checkedbooks = [
-            [
-                "Adventures of Huckleberry Finn",
-                "Eloise Westfall",
-                "2021-05-26",
-                "2021-06-16",
-                "Yes",
-            ],
-            [
-                "The Adventures of Tom Sawyer: Original Illustrations",
-                "Eloise Westfall",
-                "2021-05-26",
-                "2021-06-16",
-                "Yes",
-            ],
-        ]
-    elif checkout_id == "4":
-        checkedbooks = [
-            [
-                "Adventures of Huckleberry Finn",
-                "Corbett Farner",
-                "2022-01-29",
-                "2022-02-19",
-                "Yes",
-            ]
-        ]
-    elif checkout_id == "5":
-        checkedbooks = [
-            [
-                "The Adventures of Tom Sawyer: Original Illustrations",
-                "Koko Irish",
-                "2021-10-29",
-                "2021-11-19",
-                "Yes",
-            ],
-            ["Needful Things", "Koko Irish", "2021-10-29", "2021-11-19", "Yes"],
-            ["Sense and Sensibility", "Koko Irish", "2021-10-29", "2021-11-19", "Yes"],
-        ]
+
+    # Get Patron Name
+    query2 = """
+    SELECT concat(Patrons.patron_first, ' ', Patrons.patron_last) as patron_name
+    FROM Patrons
+    INNER JOIN Checkouts ON Patrons.patron_id = Checkouts.patron_id 
+    WHERE Checkouts.checkout_id = %s
+    """
+    curr2 = db.execute_query(
+        db_connection=db_connection, query=query2, query_params=(checkout_id)
+    )
+    info2 = curr2.fetchone()
 
     return render_template(
         "table_template.j2",
         title=f"Checkout #{checkout_id}",
         headings=checkedbooks_headings,
-        data=checkedbooks,
-        description="",
+        data=info,
+        description=f"For Patron: {info2[0]}",
+        checkout_id=checkout_id,
+        routeURL="checkedbook",
     )
 
 
@@ -493,13 +466,13 @@ def go_to_checkedbooks(checkout_id):
 @app.route("/checkedbooks.html")
 def checkedbooks_page():
     query = """ 
-    select Books.title,
-        Patrons.patron_first,
-        Patrons.patron_last,
-        Checkouts.checkout_date,
-        Checkouts.return_date,
-        CheckedBooks.returned
-
+    select 
+    BookCopies.copy_id, 
+    Books.title,
+    concat(Patrons.patron_first, ' ', Patrons.patron_last) as patron_name,
+    Checkouts.checkout_date,
+    Checkouts.return_date,
+    CheckedBooks.returned
     from Books
         inner join BookCopies on Books.book_id = BookCopies.book_id
         inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
@@ -510,9 +483,9 @@ def checkedbooks_page():
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
     checkedbooks_headings = [
+        "Copy ID",
         "Book Title",
-        "Patron First",
-        "Patron Last",
+        "Patron Name",
         "Checkout Date",
         "Return Date",
         "Returned",
