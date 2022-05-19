@@ -67,7 +67,7 @@ def authors_page():
         request.form.get("insert Authors")
         author_fname = request.form["First Name"]
         author_lname = request.form["Last Name"]
-        query = f"INSERT INTO Authors(author_first, author_last) VALUES (%s,%s); "
+        query = "INSERT INTO Authors(author_first, author_last) VALUES (%s,%s); "
         cursor = db.execute_query(
             db_connection=db_connection,
             query=query,
@@ -102,7 +102,7 @@ def authors_edit(id):
         author_fname = request.form["First Name"]
         author_lname = request.form["Last Name"]
         auth_id = id
-        query = f"update Authors set author_first = %s, author_last = %s where author_id = %s;"
+        query = "UPDATE Authors SET author_first = %s, author_last = %s WHERE author_id = %s;"
         curr = db.execute_query(
             db_connection=db_connection,
             query=query,
@@ -289,6 +289,7 @@ def patrons_page():
 # patrons DELETE
 
 # -----------CHECKOUTS-----------
+
 # 6. checkouts.html
 @app.route("/checkouts.html", methods=["POST", "GET"])
 def checkouts_page():
@@ -302,7 +303,7 @@ def checkouts_page():
         Checkouts.return_date
     from Patrons
         inner join Checkouts on Patrons.patron_id = Checkouts.patron_id
-    order by Checkouts.checkout_date desc;
+    order by Checkouts.checkout_id asc;
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
@@ -318,7 +319,6 @@ def checkouts_page():
     query2 = """SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name FROM Patrons ORDER BY patron_last ASC"""
     cursor2 = db.execute_query(db_connection=db_connection, query=query2)
     results2 = cursor2.fetchall()
-    print(results2)
 
     # checkout INSERT
     if request.method == "POST":
@@ -337,7 +337,7 @@ def checkouts_page():
     return render_template(
         "table_template.j2",
         title="Checkouts",
-        description="This is a database of checkouts. To select a checkout, click on the Checkout ID. From there, you can edit the checkout items.",
+        description="This is a database of checkouts. To select a checkout, click on the Checkout ID. This will display the CheckedBooks table for that Checkout ID. On that page, you can add, update, and delete the patron's checkout items.",
         headings=checkouts_headings,
         data=results,
         name_dropdown=results2,
@@ -346,6 +346,60 @@ def checkouts_page():
 
 
 # checkouts UPDATE
+@app.route("/update_checkout/<int:id>", methods=["GET", "POST"])
+def checkouts_edit(id):
+    if request.method == "GET":
+        query = """
+        SELECT Checkouts.checkout_id, Patrons.patron_id, Patrons.patron_first, Patrons.patron_last, Checkouts.checkout_date, Checkouts.return_date 
+        FROM Patrons 
+        INNER JOIN Checkouts ON Patrons.patron_id = Checkouts.patron_id 
+        WHERE checkout_id = %s"""
+        curr = db.execute_query(
+            db_connection=db_connection, query=query, query_params=(id,)
+        )
+        info = curr.fetchone()
+    checkouts_edit_headings = [
+        "ID",
+        "ID",
+        "First Name",
+        "Last Name",
+        "Checkout Date",
+        "Return Date",
+    ]
+
+    # Get Valid Patron Dropdown
+    query2 = """SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name FROM Patrons ORDER BY patron_last ASC"""
+    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    results2 = cursor2.fetchall()
+
+    if request.method == "POST":
+        request.form.get("Update Checkout")
+        patron_choice = request.form["patron_choice"]
+        checkout_date_input = request.form["checkout_date_input"]
+        return_date_input = request.form["return_date_input"]
+        checkout_id = id
+        query = "UPDATE Checkouts SET patron_id = %s, checkout_date=%s, return_date=%s WHERE checkout_id=%s"
+        curr = db.execute_query(
+            db_connection=db_connection,
+            query=query,
+            query_params=(
+                patron_choice,
+                checkout_date_input,
+                return_date_input,
+                checkout_id,
+            ),
+        )
+        return redirect("/checkouts.html")
+
+    return render_template(
+        "update_checkouts_template.j2",
+        data=info,
+        description="Editing Checkout #",
+        headings=checkouts_edit_headings,
+        title="Checkout",
+        name_dropdown=results2,
+    )
+
 
 # checkouts DELETE
 @app.route("/delete_checkout/<int:id>", methods=["GET", "POST"])
