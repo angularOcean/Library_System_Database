@@ -49,6 +49,8 @@
     {% include "insert_checkout_template.j2" %}
 {% elif title == "Checkout #{{ checkout_id }}" %}
     {% include "insert_checkedbooks_template.j2"%}
+{% elif title == "Books" %}
+    {% include "insert_books_template.j2" %}
 {% elif title == "Book Copies" %}
     {% include "bookcopies_filter_template.j2" %}
     {% include "insert_bookcopies_template.j2" %}

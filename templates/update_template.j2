@@ -14,12 +14,13 @@
             {% for index in range(headings| length()) %}
               {% if headings[index] != "ID" %}
                 <label> {{headings[index]}} </label> 
-                <input type="text" name= '{{headings[index]}}' value ='{{data[0][index]}}'><br><br>
+                <input type="text" name= '{{headings[index]}}' value ='{{data[0][index]}}' required><br><br>
               {% endif %} 
             {% endfor %} 
             
       </fieldset>
           <input class="btn" type="submit" id="Update {{ title }}" value="Update {{ title }}">
+          <input class="btn" type="button" value="Cancel" onClick="location.href='../{{ routeURL }}.html'">
 	</form>
 </div>
 
