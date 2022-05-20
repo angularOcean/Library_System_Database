@@ -1,4 +1,4 @@
-{% extends "base_template.j2" %}
+{% extends "nav_template.j2" %}
 {{ super() }}
 {% block content %}
 <h1>{{ title }} Data</h1>
@@ -50,13 +50,13 @@
 {% elif title == "Checkout #{{ checkout_id }}" %}
     {% include "insert_checkedbooks_template.j2"%}
 {% elif title == "Book Copies" %}
-    {% include "dynamic_search_template.j2" %}
+    {% include "bookcopies_filter_template.j2" %}
     {% include "insert_bookcopies_template.j2" %}
 {% elif title == "Checked Books" %}
 {% elif title == "Books on the Shelf" %}
-    {% include "dynamic_search_template.j2" %}
+    {% include "bookcopies_filter_template.j2" %}
 {% elif title == "Checked Out Books" %}
-    {% include "dynamic_search_template.j2" %}
+    {% include "bookcopies_filter_template.j2" %}
 {% else %}
     {% include "insert_template.j2" %}
 {% endif %}

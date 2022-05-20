@@ -42,15 +42,7 @@ else:
 # Routes
 @app.route("/")
 def index():
-    return render_template("main.j2")
-
-
-# 1. index.html
-# render a navigation bar
-@app.route("/index.html")
-def root():
-    return render_template("main.j2")
-
+    return render_template("home_template.j2")
 
 # -----------AUTHORS-----------
 # 2. authors.html
