@@ -7,14 +7,17 @@
 
 <br>
 <div id="insert">
-    <form method="POST" id= "update {{ title }}">
+    <form method="POST" id= "update {{ title }}" autocomplete="off">
         <legend><strong>Update {{ title }} </strong></legend>
           <fieldset class="fields">
-              
             {% for index in range(headings| length()) %}
               {% if headings[index] != "ID" %}
-                <label> {{headings[index]}} </label> 
-                <input type="text" name= '{{headings[index]}}' value ='{{data[0][index]}}' required><br><br>
+                <label for='{{headings[index]}}'> {{headings[index]}} </label>
+                {% if headings[index] == "Email" %}
+                  <input type="email" id= '{{headings[index]}}' name= '{{headings[index]}}' value ='{{data[0][index]}}' required><br><br> 
+                {% else %}                  
+                  <input type="text" id = '{{headings[index]}}' name= '{{headings[index]}}' value ='{{data[0][index]}}' required><br><br>
+                {% endif %}
               {% endif %} 
             {% endfor %} 
             

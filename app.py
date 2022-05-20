@@ -252,10 +252,11 @@ def show_on_shelf():
 
 # -----------PATRONS-----------
 # 5. patrons.html - Herakles
-@app.route("/patrons.html")
+@app.route("/patrons.html", methods=["POST", "GET"])
 def patrons_page():
     query = """ 
-    select patron_first,
+    select patron_id,
+        patron_first,
         patron_last,
         email
     from Patrons
@@ -263,23 +264,78 @@ def patrons_page():
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
-    patrons_headings = ["First Name", "Last Name", "Email"]
+    patrons_headings = ["ID", "First Name", "Last Name", "Email"]
+
+# patrons INSERT
+    if request.method == "POST":
+        request.form.get("insert Patrons")
+        patron_first = request.form["First Name"]
+        patron_last = request.form["Last Name"]
+        patron_email = request.form["Email"]
+        query = (
+            f"INSERT INTO Patrons(patron_first, patron_last, email) VALUES (%s, %s, %s);"
+        )
+        cursor = db.execute_query(
+            db_connection=db_connection,
+            query=query,
+            query_params=(patron_first, patron_last, patron_email)
+        )
+        return redirect("/patrons.html")
+
     return render_template(
         "table_template.j2",
         title="Patrons",
         description="This is a database of patrons.",
         headings=patrons_headings,
         data=results,
+        routeURL="patron"
+    )
+
+# patrons UPDATE
+@app.route("/update_patron/<int:id>", methods=["POST", "GET"])
+def patrons_edit(id):
+    if request.method == "GET":
+        query = "SELECT patron_id, patron_first, patron_last, email FROM Patrons WHERE patron_id = %s"
+        curr = db.execute_query(
+            db_connection=db_connection, query=query, query_params=(id,)
+        )
+        info = curr.fetchall()
+        print(info)
+
+    patrons_edit_headings = ["ID", "First Name", "Last Name", "Email"]
+
+    if request.method == "POST":
+        request.form.get("Update Patron")
+        patron_first = request.form["First Name"]
+        patron_last = request.form["Last Name"]
+        patron_email = request.form["Email"]
+        patron_id = id
+        query = f"update Patrons set patron_first = %s, patron_last = %s, email = %s where patron_id = %s;"
+        curr = db.execute_query(
+            db_connection=db_connection,
+            query=query,
+            query_params=(patron_first, patron_last, patron_email, patron_id),
+        )
+        return redirect("/patrons.html")
+
+    return render_template(
+        "update_template.j2",
+        data=info,
+        description="Editing Patron: #",
+        headings=patrons_edit_headings,
+        title="Patrons",
+        routeURL="patrons",
     )
 
 
-# patrons INSERT
-
-
-# patrons UPDATE
-
-
 # patrons DELETE
+@app.route("/delete_patron/<int:id>", methods=["GET", "POST"])
+def delete_patron(id):
+    query = "DELETE FROM Patrons WHERE patron_id = %s"
+    curr = db.execute_query(
+        db_connection=db_connection, query=query, query_params=(id,)
+    )
+    return redirect("/patrons.html")
 
 # -----------CHECKOUTS-----------
 

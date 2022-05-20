@@ -1,17 +1,19 @@
 <br>
 <div id="insert">
-    <form method="POST" id= "insert {{ title }}">
+    <form method="POST" id= "insert {{ title }}" autocomplete="off">
         <legend><strong>Add {{ title }} </strong></legend>
           <fieldset class="fields">
-            
-            {% for header in headings %}
-              {% if header != "ID" %}
-              <label> {{ header }}</label> 
-              <input type="text" name='{{ header }}' required>
-              {% endif %}
-            {% endfor %} 
-            
-      </fieldset>
+             {% for index in range(headings| length()) %}
+              {% if headings[index] != "ID" %}
+                <label for='{{headings[index]}}'> {{headings[index]}} </label>
+                {% if headings[index] == "Email" %}
+                  <input type="email" id= '{{headings[index]}}' name= '{{headings[index]}}' required><br><br> 
+                {% else %}                  
+                  <input type="text" id = '{{headings[index]}}' name= '{{headings[index]}}' required><br><br>
+                {% endif %}
+              {% endif %} 
+            {% endfor %}            
+        </fieldset>
           <input class="btn" type="submit" id="add {{ title }}" value="Add {{ title }}">
           <input class="btn" type="button" value="Cancel" onClick="">
 	</form> 
