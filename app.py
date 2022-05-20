@@ -10,15 +10,11 @@
 # Based on: OSU CS340 Flask Starter Guide
 # Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app
 
-from flask import Flask, render_template, json, request, redirect
-import os
-import pymysql
-from flask import request
+from flask import Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
 
 # Configuration
-
 app = Flask(__name__)
 
 if app.config["ENV"] == "production":
