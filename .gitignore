@@ -138,6 +138,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.env_heroku
 
 # Spyder project settings
 .spyderproject
@@ -164,8 +165,6 @@ dmypy.json
 cython_debug/
 
 
-#heroku
-.env_heroku
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
