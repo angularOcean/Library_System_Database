@@ -40,6 +40,7 @@ else:
 def index():
     return render_template("home_template.j2")
 
+
 # -----------AUTHORS-----------
 # 2. authors.html
 @app.route("/authors.html", methods=["POST", "GET"])
@@ -120,40 +121,68 @@ def delete_author(id):
 
 # -----------BOOKS-----------
 # 3. books.html
-@app.route("/books.html")
+@app.route("/books.html", methods=["POST", "GET"])
 def books_page():
+    # Initial Display
     query = """
-    select Books.isbn, 
+    select Books.book_id,
+    Books.isbn, 
         Books.title, 
-        Books.year,
-        Authors.author_first,
-        Authors.author_last,
-        Publishers.publisher_name
+        concat(Authors.author_first, ' ', Authors.author_last) as author_name,
+        Publishers.publisher_name,
+        Books.year
     from Books
-        inner join Authors on Books.author_id = Authors.author_id
-        inner join Publishers on Books.publisher_id = Publishers.publisher_id
+        left join Authors on Books.author_id = Authors.author_id
+        left join Publishers on Books.publisher_id = Publishers.publisher_id
     order by isbn asc;
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
-    books_headings = [
-        "ISBN",
-        "Title",
-        "Year",
-        "Author First",
-        "Author Last",
-        "Publisher",
-    ]
+    books_headings = ["ID", "ISBN", "Title", "Author", "Publisher", "Year"]
+
+    # Get Valid Author Dropdown
+    query2 = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
+    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    results2 = cursor2.fetchall()
+
+    # Get Valid Publisher Dropdown
+    query3 = """SELECT publisher_id, publisher_name FROM Publishers ORDER BY publisher_name ASC"""
+    cursor3 = db.execute_query(db_connection=db_connection, query=query3)
+    results3 = cursor3.fetchall()
+
+    # books INSERT
+    if request.method == "POST":
+        request.form.get("insert Books")
+        input_isbn = request.form["ISBN"]
+        input_title = request.form["Title"]
+        input_author = request.form["Author"]
+        input_publisher = request.form["Publisher"]
+        input_year = request.form["Year"]
+        print(input_isbn, input_title, input_author, input_publisher, input_year)
+        query = """INSERT INTO Books (isbn, title, author_id, publisher_id, year) VALUES (%s, %s, %s, %s, %s); """
+        cursor = db.execute_query(
+            db_connection=db_connection,
+            query=query,
+            query_params=(
+                input_isbn,
+                input_title,
+                input_author,
+                input_publisher,
+                input_year,
+            ),
+        )
+        return redirect("/books.html")
+
     return render_template(
         "table_template.j2",
         title="Books",
         description="This is a database of books.",
         headings=books_headings,
         data=results,
+        author_dropdown=results2,
+        publisher_dropdown=results3,
+        routeURL="book",
     )
-
-
-# books INSERT
 
 
 # books DELETE
@@ -262,19 +291,17 @@ def patrons_page():
     results = cursor.fetchall()
     patrons_headings = ["ID", "First Name", "Last Name", "Email"]
 
-# patrons INSERT
+    # patrons INSERT
     if request.method == "POST":
         request.form.get("insert Patrons")
         patron_first = request.form["First Name"]
         patron_last = request.form["Last Name"]
         patron_email = request.form["Email"]
-        query = (
-            f"INSERT INTO Patrons(patron_first, patron_last, email) VALUES (%s, %s, %s);"
-        )
+        query = f"INSERT INTO Patrons(patron_first, patron_last, email) VALUES (%s, %s, %s);"
         cursor = db.execute_query(
             db_connection=db_connection,
             query=query,
-            query_params=(patron_first, patron_last, patron_email)
+            query_params=(patron_first, patron_last, patron_email),
         )
         return redirect("/patrons.html")
 
@@ -284,8 +311,9 @@ def patrons_page():
         description="This is a database of patrons.",
         headings=patrons_headings,
         data=results,
-        routeURL="patron"
+        routeURL="patron",
     )
+
 
 # patrons UPDATE
 @app.route("/update_patron/<int:id>", methods=["POST", "GET"])
@@ -333,6 +361,7 @@ def delete_patron(id):
     )
     return redirect("/patrons.html")
 
+
 # -----------CHECKOUTS-----------
 
 # 6. checkouts.html
@@ -361,7 +390,7 @@ def checkouts_page():
     ]
 
     # Get Valid Patron Dropdown
-    query2 = """SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name FROM Patrons ORDER BY patron_last ASC"""
+    query2 = """SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name FROM Patrons ORDER BY patron_last ASC;"""
     cursor2 = db.execute_query(db_connection=db_connection, query=query2)
     results2 = cursor2.fetchall()
 
@@ -371,7 +400,7 @@ def checkouts_page():
         input_patron = request.form["patron_choice"]
         input_checkout_date = request.form["checkout_date_input"]
         input_return_date = request.form["return_date_input"]
-        query = f"""INSERT INTO Checkouts (checkout_date, return_date, patron_id) VALUES (%s, %s, %s) ; """
+        query = """INSERT INTO Checkouts (checkout_date, return_date, patron_id) VALUES (%s, %s, %s) ; """
         cursor = db.execute_query(
             db_connection=db_connection,
             query=query,
@@ -565,13 +594,11 @@ def publishers_page():
     results = cursor.fetchall()
     publishers_headings = ["ID", "Publisher Name"]
 
-# publishers INSERT
+    # publishers INSERT
     if request.method == "POST":
         request.form.get("insert Publishers")
         publisher_name = request.form["Publisher Name"]
-        query = (
-            f"INSERT INTO Publishers(publisher_name) VALUES (%s); "
-        )
+        query = f"INSERT INTO Publishers(publisher_name) VALUES (%s); "
         cursor = db.execute_query(
             db_connection=db_connection,
             query=query,
@@ -580,13 +607,14 @@ def publishers_page():
         return redirect("/publishers.html")
 
     return render_template(
-    "table_template.j2",
-    title="Book Publishers",
-    description="This is a database of publishers",
-    headings=publishers_headings,
-    data=results,
-    routeURL="publisher",
-)
+        "table_template.j2",
+        title="Book Publishers",
+        description="This is a database of publishers",
+        headings=publishers_headings,
+        data=results,
+        routeURL="publisher",
+    )
+
 
 # publishers UPDATE
 @app.route("/update_publisher/<int:id>", methods=["POST", "GET"])
@@ -617,10 +645,11 @@ def publishers_edit(id):
         "update_template.j2",
         data=info,
         description="Editing Publisher: ",
-        headings= publishers_edit_headings,
+        headings=publishers_edit_headings,
         title="Publisher",
         routeURL="publishers",
     )
+
 
 # publishers DELETE
 @app.route("/delete_publisher/<int:id>", methods=["GET", "POST"])
@@ -630,7 +659,6 @@ def delete_publisher(id):
         db_connection=db_connection, query=query, query_params=(id,)
     )
     return redirect("/publishers.html")
-
 
 
 # -----------LOCATIONS-----------
@@ -708,6 +736,7 @@ def locations_edit(id):
         title="Location",
         routeURL="locations",
     )
+
 
 # locations DELETE
 @app.route("/delete_location/<int:id>", methods=["GET", "POST"])

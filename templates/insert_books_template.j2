@@ -1,17 +1,56 @@
+ <!--Citation for 13-digit ISBN Regex:
+Date: 05/20/2022
+Copied From: O'Reilly Regular Expressions Cookbook
+Source URL: https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s13.html -->
+
+ <!--Citation for HTML dropdown menu:
+Date: 05/17/2022
+Based on: Free Code Camp HTML Select Tag tutorial
+Source URL: https://www.freecodecamp.org/news/html-select-tag-how-to-make-a-dropdown-menu-or-combo-list/  -->
+
+ <!--Citation for Year Regex:
+Date: 05/20/2022
+Copied from: Regex Pattern Year
+Source URL: https://regexpattern.com/year/ -->
+
 <br>
 <div id="insert">
-    <form method="POST" id= "insert {{ title }}">
+    <form method="POST" id= "insert {{ title }}" autocomplete="off">
         <legend><strong>Add {{ title }} </strong></legend>
           <fieldset class="fields">
-            
-            {% for header in headings %}
-              {% if header != "ID" %}
-              <label> {{ header }}</label> 
-              <input type="text" name='{{ header }}'>
-              {% endif %}
-            {% endfor %} 
-            
+
+              <label for="ISBN">13-Digit ISBN</label> 
+              <input id="ISBN" type="text" name="ISBN" placeholder="XXX-XXXX-XXXXX-X" 
+              pattern="^97[89][-]?[0-9]{1,5}[-][0-9]+[-]?[0-9]+[-]?[0-9]$" required>
+              <br><br>
+
+              <label for="Title">Title</label> 
+              <input id="Title" type="text" name="Title" required>
+              <br><br>
+
+              <label for="Author">Author</label> 
+              <select id="Author" name="Author" required>
+                <option value="" selected disabled>Name</option>
+                {% for name in author_dropdown %}
+                  <option value="{{ name[0] }}">{{ name[1] }}</option>
+                {% endfor %}
+              </select>
+              <br><br>
+
+              <label for="Publisher">Publisher</label> 
+              <select id="Publisher" name="Publisher" required>
+                <option value="" selected disabled>Publisher</option>
+                {% for name in publisher_dropdown %}
+                  <option value="{{ name[0] }}">{{ name[1] }}</option>
+                {% endfor %}
+              </select>
+              <br><br>
+
+              <label for="Year">Year</label> 
+              <input id="Year" type="text" name="Year" placeholder="YYYY"  pattern="^[12][0-9]{3}$" required>
+              <br><br>
       </fieldset>
+
           <input class="btn" type="submit" id="add {{ title }}" value="Add {{ title }}">
           <input class="btn" type="button" value="Cancel" onClick="">
 	</form> 

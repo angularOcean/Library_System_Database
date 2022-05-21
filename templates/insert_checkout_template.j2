@@ -10,7 +10,7 @@ Source URL: https://www.freecodecamp.org/news/html-select-tag-how-to-make-a-drop
           <fieldset class="fields">
             <label for="patron_choice" >Patron Name</label> 
             <select id="patron_choice" name="patron_choice" required>
-                <option value="dummy" selected disabled>Name</option>
+                <option value="" selected disabled>Name</option>
                 {% for name in name_dropdown %}
                   <option value="{{ name[0] }}">{{ name[1] }}</option>
                 {% endfor %}
