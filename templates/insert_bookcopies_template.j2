@@ -4,16 +4,15 @@
           <fieldset class="fields">
             <label>ISBN</label> 
             <input type="text" name="isbn_entry">
-            <label>Location</location>
-            <select type="location" id="location">
-              <option value="location3" selected>Emperor Penguin Library</option>
-              <option value="location1">Little Penguin Library</option>
-              <option value="location2">Macaroni Penguin Library</option>
-              <option value="location4">Rockhopper Penguin Library</option>
-              <option value="location5">Royal Penguin Library</option>
+            <label for="Location">Location</location>
+            <select type="Location" id="Location" required>
+              <option value="" selected disabled>Location Name</option>
+            {% for name in locations_dropdown %}
+              <option value="{{ name[0] }}">{{ name[1] }}</option>
+              {% endfor %}
             </select>
       </fieldset>
-          <input class="btn" type="button" id="add value" value="Add Book Copy">
+          <input class="btn" type="submit" id="add {{ title }}" value="Add {{ title }}">
           <input class="btn" type="button" value="Cancel" onClick="">
 	</form> 
 </div>
