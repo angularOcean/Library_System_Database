@@ -25,7 +25,7 @@ else:
     )
 
 # -----------CHECKEDBOOKS-----------
-# 7. checkedbooks.html
+# checkedbooks.html
 @checkedbooks_bp.route("/checkedbooks.html")
 def checkedbooks_page():
     query = """ 
