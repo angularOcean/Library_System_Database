@@ -158,7 +158,6 @@ def books_page():
         input_author = request.form["Author"]
         input_publisher = request.form["Publisher"]
         input_year = request.form["Year"]
-        print(input_isbn, input_title, input_author, input_publisher, input_year)
         query = """INSERT INTO Books (isbn, title, author_id, publisher_id, year) VALUES (%s, %s, %s, %s, %s); """
         cursor = db.execute_query(
             db_connection=db_connection,
@@ -185,7 +184,88 @@ def books_page():
     )
 
 
+# books UPDATE
+@app.route("/update_book/<int:id>", methods=["GET", "POST"])
+def books_edit(id):
+    if request.method == "GET":
+        query = """
+        select Books.book_id,
+        Books.isbn, 
+        Books.title,
+        Authors.author_id, 
+        Publishers.publisher_id, 
+        Books.year
+        from Books
+        left join Authors on Books.author_id = Authors.author_id
+        left join Publishers on Books.publisher_id = Publishers.publisher_id
+        where Books.book_id = %s;"""
+        curr = db.execute_query(
+            db_connection=db_connection, query=query, query_params=(id,)
+        )
+        info = curr.fetchone()
+
+    books_edit_headings = [
+        "ID",
+        "ISBN",
+        "Title",
+        "Author ID",
+        "Publisher ID",
+        "Year",
+    ]
+
+    # Get Valid Author Dropdown
+    query2 = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
+    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    results2 = cursor2.fetchall()
+
+    # Get Valid Publisher Dropdown
+    query3 = """SELECT publisher_id, publisher_name FROM Publishers ORDER BY publisher_name ASC"""
+    cursor3 = db.execute_query(db_connection=db_connection, query=query3)
+    results3 = cursor3.fetchall()
+
+    if request.method == "POST":
+        request.form.get("Update Book")
+        input_isbn = request.form["ISBN"]
+        input_title = request.form["Title"]
+        input_author = request.form["Author"]
+        input_publisher = request.form["Publisher"]
+        input_year = request.form["Year"]
+        book_id = id
+        query = "UPDATE Books SET isbn=%s, title=%s, author_id=%s, publisher_id=%s, year=%s WHERE book_id=%s;"
+        curr = db.execute_query(
+            db_connection=db_connection,
+            query=query,
+            query_params=(
+                input_isbn,
+                input_title,
+                input_author,
+                input_publisher,
+                input_year,
+                book_id,
+            ),
+        )
+        return redirect("/books.html")
+
+    return render_template(
+        "update_book_template.j2",
+        data=info,
+        description="Editing Book: #",
+        headings=books_edit_headings,
+        title="Book",
+        author_dropdown=results2,
+        publisher_dropdown=results3,
+        routeURL="books",
+    )
+
+
 # books DELETE
+@app.route("/delete_book/<int:id>", methods=["GET", "POST"])
+def delete_book(id):
+    query = "DELETE FROM Books WHERE book_id = %s"
+    curr = db.execute_query(
+        db_connection=db_connection, query=query, query_params=(id,)
+    )
+    return redirect("/books.html")
 
 
 # -----------BOOKCOPIES-----------
@@ -334,7 +414,7 @@ def patrons_edit(id):
         patron_last = request.form["Last Name"]
         patron_email = request.form["Email"]
         patron_id = id
-        query = f"update Patrons set patron_first = %s, patron_last = %s, email = %s where patron_id = %s;"
+        query = "update Patrons set patron_first = %s, patron_last = %s, email = %s where patron_id = %s;"
         curr = db.execute_query(
             db_connection=db_connection,
             query=query,
@@ -466,7 +546,7 @@ def checkouts_edit(id):
         return redirect("/checkouts.html")
 
     return render_template(
-        "update_checkouts_template.j2",
+        "update_checkout_template.j2",
         data=info,
         description="Editing Checkout #",
         headings=checkouts_edit_headings,

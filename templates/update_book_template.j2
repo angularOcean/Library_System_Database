@@ -1,0 +1,71 @@
+ <!--Citation for 13-digit ISBN Regex:
+Date: 05/20/2022
+Copied From: O'Reilly Regular Expressions Cookbook
+Source URL: https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s13.html -->
+
+ <!--Citation for HTML dropdown menu:
+Date: 05/17/2022
+Based on: Free Code Camp HTML Select Tag tutorial
+Source URL: https://www.freecodecamp.org/news/html-select-tag-how-to-make-a-dropdown-menu-or-combo-list/  -->
+
+ <!--Citation for Year Regex:
+Date: 05/20/2022
+Copied from: Regex Pattern Year
+Source URL: https://regexpattern.com/year/ -->
+
+{% extends "nav_template.j2" %}
+{{ super() }}
+{% block content %}
+<h1>Edit {{ title }} Data</h1>
+<p>{{ description }}{{data[0]}}</p>
+
+
+<br>
+<div id="insert">
+    <form method="POST" id= "update {{ title }}" autocomplete="off">
+        <legend><strong>Update {{ title }} </strong></legend>
+          <fieldset class="fields">
+
+              <label for="ISBN">13-Digit ISBN</label> 
+              <input id="ISBN" type="text" name="ISBN" value="{{ data[1]}}" 
+              pattern="^97[89][-]?[0-9]{1,5}[-][0-9]+[-]?[0-9]+[-]?[0-9]$" required>
+              <br><br>
+
+              <label for="Title">Title</label> 
+              <input id="Title" type="text" name="Title" value="{{ data[2]}}" required>
+              <br><br>
+
+              <label for="Author">Author</label> 
+              <select id="Author" name="Author" required>
+                {% for name in author_dropdown %}
+                    {% if name[0] == data[3] %}
+                        <option value="{{ name[0] }}" selected>{{ name[1] }}</option>
+                    {% else %}
+                        <option value="{{ name[0] }}">{{ name[1] }}</option>
+                    {% endif %}
+                {% endfor %}
+              </select>
+              <br><br>
+
+              <label for="Publisher">Publisher</label> 
+              <select id="Publisher" name="Publisher" required>
+                {% for name in publisher_dropdown %}
+                    {% if name[0] == data[4] %}
+                        <option value="{{ name[0] }}" selected>{{ name[1] }}</option>
+                    {% else %}
+                         <option value="{{ name[0] }}">{{ name[1] }}</option>
+                    {% endif %}                       
+                {% endfor %}
+              </select>
+              <br><br>
+
+              <label for="Year">Year</label> 
+              <input id="Year" type="text" name="Year" value="{{ data[5]}}"  pattern="^[12][0-9]{3}$" required>
+              <br><br>
+      </fieldset>
+          <input class="btn" type="submit" id="Update {{ title }}" value="Update {{ title }}">
+          <input class="btn" type="button" value="Cancel" onClick="location.href='../{{ routeURL }}.html'">
+	</form>
+</div>
+
+{% endblock %}
