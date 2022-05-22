@@ -28,7 +28,7 @@ else:
 
 # -----------PATRONS-----------
 # patrons.html 
-@patrons_bp .route("/patrons.html", methods=["POST", "GET"])
+@patrons_bp.route("/patrons.html", methods=["POST", "GET"])
 def patrons_page():
     query = """ 
     select patron_id,
@@ -67,7 +67,7 @@ def patrons_page():
 
 
 # patrons UPDATE
-@patrons_bp .route("/update_patron/<int:id>", methods=["POST", "GET"])
+@patrons_bp.route("/update_patron/<int:id>", methods=["POST", "GET"])
 def patrons_edit(id):
     if request.method == "GET":
         query = "SELECT patron_id, patron_first, patron_last, email FROM Patrons WHERE patron_id = %s"
@@ -104,7 +104,7 @@ def patrons_edit(id):
 
 
 # patrons DELETE
-@patrons_bp .route("/delete_patron/<int:id>", methods=["GET", "POST"])
+@patrons_bp.route("/delete_patron/<int:id>", methods=["GET", "POST"])
 def delete_patron(id):
     query = "DELETE FROM Patrons WHERE patron_id = %s"
     curr = db.execute_query(

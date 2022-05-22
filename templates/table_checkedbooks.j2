@@ -1,0 +1,32 @@
+{% extends "nav_template.j2" %}
+{{ super() }}
+{% block content %}
+<h1>{{ title }} Data</h1>
+<p>{{ description }}</p>
+<table>
+    <thead>
+        <tr>
+            {% for header in headings %}
+            <th>{{ header }}</th>
+            {% endfor %}
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+            {% for row in data %}
+                <tr>
+                {% for cell in row %}
+                    <td>{{ cell }}</td>
+                {% endfor %}
+                <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()">Edit</a></td>
+                <td><a href="/delete_{{routeURL}}/{{row[0]}}" class = "btn btn-default">Delete</a></td> 
+                </tr> 
+            {% endfor %}
+
+    </tbody>
+</table>
+
+{% include "insert_checkedbooks_template.j2" %}
+
+{% endblock %}

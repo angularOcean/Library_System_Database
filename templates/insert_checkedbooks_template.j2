@@ -1,10 +1,14 @@
 <br>
+<p>
+Please select the book copy you would like to add to this checkout. 
+</p>
+<br>
 <div id="insert">
     <form method="POST" id= "insert {{ title }}">
         <legend><strong>Add {{ title }} </strong></legend>
           <fieldset class="fields">
             
-            {% for header in headings %}
+            {% for header in form_headers %}
               {% if header != "ID" %}
               <label> {{ header }}</label> 
               <input type="text" name='{{ header }}'>
