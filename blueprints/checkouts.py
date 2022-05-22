@@ -1,3 +1,6 @@
+#Checkouts Page: Select, Insert, Update, Delete
+#CheckedBooks Insert, Update, and Delete from this page
+ 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig

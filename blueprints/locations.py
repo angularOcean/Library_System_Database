@@ -1,3 +1,5 @@
+#Locations Page: Select, Insert, Update, Delete
+
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
@@ -25,7 +27,7 @@ else:
     )
 
 # -----------LOCATIONS-----------
-# 9. locations.html
+# locations.html
 @locations_bp.route("/locations.html", methods=["POST", "GET"])
 def locations_page():
     query = """ 

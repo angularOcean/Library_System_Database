@@ -1,3 +1,5 @@
+#Publishers Page: Select, Insert, Update, Delete
+
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
@@ -25,7 +27,7 @@ else:
     )
 
 # -----------PUBLISHERS-----------
-# 8. publishers.html
+# publishers.html
 @publishers_bp .route("/publishers.html", methods=["POST", "GET"])
 def publishers_page():
     query = """ 

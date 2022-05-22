@@ -1,3 +1,5 @@
+#Checkedbooks Page: Select
+
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
@@ -62,10 +64,3 @@ def checkedbooks_page():
     )
 
 
-# checkedbooks INSERT
-
-
-# checkedbooks UPDATE
-
-
-# checkedbooks DELETE
