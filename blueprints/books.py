@@ -1,10 +1,10 @@
-#Books Page: Select, Insert, Update, Delete
+# Books Page: Select, Insert, Update, Delete
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
 
-books_bp = Blueprint('books', __name__)
+books_bp = Blueprint("books", __name__)
 
 # Configuration
 app = Flask(__name__)
@@ -28,7 +28,7 @@ else:
 
 # -----------BOOKS-----------
 # books.html
-@books_bp .route("/books.html", methods=["POST", "GET"])
+@books_bp.route("/books.html", methods=["POST", "GET"])
 def books_page():
     # Initial Display
     query = """
@@ -80,7 +80,7 @@ def books_page():
         return redirect("/books.html")
 
     return render_template(
-        "table_template.j2",
+        "table_books.j2",
         title="Books",
         description="This is a database of books.",
         headings=books_headings,
@@ -92,7 +92,7 @@ def books_page():
 
 
 # books UPDATE
-@books_bp .route("/update_book/<int:id>", methods=["GET", "POST"])
+@books_bp.route("/update_book/<int:id>", methods=["GET", "POST"])
 def books_edit(id):
     if request.method == "GET":
         query = """
@@ -166,7 +166,7 @@ def books_edit(id):
 
 
 # books DELETE
-@books_bp .route("/delete_book/<int:id>", methods=["GET", "POST"])
+@books_bp.route("/delete_book/<int:id>", methods=["GET", "POST"])
 def delete_book(id):
     query = "DELETE FROM Books WHERE book_id = %s"
     curr = db.execute_query(
