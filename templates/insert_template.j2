@@ -1,6 +1,6 @@
 <br>
 <div id="insert">
-    <form method="POST" id= "insert {{ title }}" autocomplete="off">
+    <form method="POST" id= "insert {{ title }}" autocomplete="off" align>
         <legend><strong>Add {{ title }} </strong></legend>
           <fieldset class="fields">
              {% for index in range(headings| length()) %}
@@ -14,7 +14,7 @@
               {% endif %} 
             {% endfor %}            
         </fieldset>
-          <input class="btn" type="submit" id="add {{ title }}" value="Add {{ title }}">
-          <input class="btn" type="button" value="Cancel" onClick="">
+          <input class="btn btn-primary" type="submit" id="add {{ title }}" value="Add {{ title }}">
+          <input class="btn btn-secondary" type="reset" value="Clear" onClick="">
 	</form> 
 </div>

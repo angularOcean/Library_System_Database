@@ -1,7 +1,7 @@
 {% extends "nav_template.j2" %}
 {{ super() }}
 {% block content %}
-<h1>Edit {{ title }} Data</h1>
+<h2>Edit {{ title }} Data</h2>
 <p>{{ description }}{{data[0][0]}}</p>
 
 
@@ -22,8 +22,8 @@
             {% endfor %} 
             
       </fieldset>
-          <input class="btn" type="submit" id="Update {{ title }}" value="Update {{ title }}">
-          <input class="btn" type="button" value="Cancel" onClick="location.href='../{{ routeURL }}.html'">
+          <input class="btn btn-primary" type="submit" id="Update {{ title }}" value="Update {{ title }}">
+          <input class="btn btn-secondary" type="button" value="Cancel" onClick="location.href='../{{ routeURL }}.html'">
 	</form>
 </div>
 

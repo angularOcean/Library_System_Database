@@ -145,4 +145,47 @@ def show_on_shelf():
     )
 
 
+# To Bookcopies from Books
+@bookcopies_bp.route("/bookcopies/<book_id>", methods = ["POST", "GET"] )
+def go_to_bookcopies(book_id):
+    #Initial Display 
+    query1 = """
+    SELECT bookcopies.copy_id, bookcopies.book_id, locations.location_name
+    FROM bookcopies
+    INNER JOIN locations ON bookcopies.location_id = locations.location_id
+    WHERE bookcopies.book_id = %s
+    """ 
+    curr = db.execute_query(
+    db_connection=db_connection, query=query1, query_params=(book_id)
+    )
+    info = curr.fetchall()
+    bookcopy_headings = [
+        "ID",
+        "Book ID",
+        "Location"
+    ]
+
+    query2 = """
+    SELECT
+    Books.title, 
+    concat(Authors.author_first, ' ', Authors.author_last) as author_name
+    from Books
+    left join Authors on Books.author_id = Authors.author_id
+    WHERE books.book_id = %s
+    """
+
+    curr2 = db.execute_query(
+    db_connection=db_connection, query=query2, query_params=(book_id)
+    )
+    titleinfo = curr2.fetchall()
+
+    return render_template(
+        "table_bookcopies.j2",
+        title=f"Book #{book_id}",
+        headings= bookcopy_headings,
+        data=info,
+        description=f"For Book: '{titleinfo[0][0]}' by {titleinfo[0][1]}",
+        routeURL="bookcopy"
+    )
+
 # bookcopies DELETE

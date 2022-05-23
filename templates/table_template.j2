@@ -1,15 +1,39 @@
+
 {% extends "nav_template.j2" %}
 {{ super() }}
 {% block content %}
-<h1>{{ title }} Data</h1>
+<h2>{{ title }} Data</h2>
 <p>{{ description }}</p>
-<table>
+{% if title == "Checkouts" %}
+<br>
+<p>To see all checked books please click "View All": </p>
+<a href="/checkedbooks.html" class='btn btn-primary'>View All</a>
+</br>          
+{% elif title == "Books" %}
+<br>
+<p>To see all book copies please click "View All": </p>
+<a href="/bookcopies.html" class='btn btn-primary'>View All</a>
+</br>  
+{% else %}
+
+{% endif %}
+
+<table class ="center">
     <thead>
         <tr>
             {% for header in headings %}
             <th>{{ header }}</th>
             {% endfor %}
-            {% if title != "Checked Books" %}
+            {% if title == "Checkouts" %}
+                <th>Update Checked Books</th>
+                <th>Edit Checkout</th>
+                <th>Delete</th>   
+            {% elif title == "Books" %}
+                <th>Update Book Copies</th>
+                <th>Edit Book</th>
+                <th>Delete</th>
+            {% elif title == "Checked Books" %}   
+            {% else %}
                 <th>Edit</th>
                 <th>Delete</th>
             {% endif %}
@@ -20,14 +44,22 @@
             {% for row in data %}
                 <tr>
                 {% for cell in row %}
-                    {% if cell == row[0]%}
-                        <td><a href="/checkedbooks/{{ cell }}" onClick="go_to_checkedbooks({{ cell }})">{{ cell }}</a></td>
-                    {% else %}
                         <td>{{ cell }}</td>
-                    {% endif %}
                 {% endfor %}
-                <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()">Edit</a></td>
-                <td><a href="/delete_{{routeURL}}/{{row[0]}}" class="btn btn-default">Delete</a></td> 
+                <td><a href="/checkedbooks/{{row[0]}}" onClick="go_to_checkedbooks({{ cell }})" class="btn btn-secondary">Update</a></td>
+                <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()" class="btn btn-info">Edit</a></td>
+                <td><a href="/delete_{{routeURL}}/{{row[0]}}" class="btn btn-danger">Delete</a></td> 
+                </tr>
+            {% endfor %}
+        {% elif title == "Books" %}
+            {% for row in data %}
+                <tr>
+                {% for cell in row %}
+                        <td>{{ cell }}</td>
+                {% endfor %}
+                <td><a href="/bookcopies/{{row[0]}}" onClick="go_to_bookcopies({{ cell }})" class="btn btn-secondary">Update</a></td>
+                <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()" class="btn btn-info">Edit</a></td>
+                <td><a href="/delete_{{routeURL}}/{{row[0]}}" class="btn btn-danger">Delete</a></td> 
                 </tr>
             {% endfor %}
         {% else %}
@@ -37,8 +69,8 @@
                     <td>{{ cell }}</td>
                 {% endfor %}
                 {% if title != "Checked Books" %}
-                    <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()">Edit</a></td>
-                    <td><a href="/delete_{{routeURL}}/{{row[0]}}" class = "btn btn-default">Delete</a></td> 
+                    <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()" class="btn btn-info">Edit</a></td>
+                    <td><a href="/delete_{{routeURL}}/{{row[0]}}" class = "btn btn-danger">Delete</a></td> 
                 {% endif %}
                 </tr> 
             {% endfor %}

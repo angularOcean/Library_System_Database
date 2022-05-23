@@ -16,7 +16,7 @@ Source URL: https://regexpattern.com/year/ -->
 {% extends "nav_template.j2" %}
 {{ super() }}
 {% block content %}
-<h1>Edit {{ title }} Data</h1>
+<h2>Edit {{ title }} Data</h2>
 <p>{{ description }}{{data[0]}}</p>
 
 
@@ -63,8 +63,8 @@ Source URL: https://regexpattern.com/year/ -->
               <input id="Year" type="text" name="Year" value="{{ data[5]}}"  pattern="^[12][0-9]{3}$" required>
               <br><br>
       </fieldset>
-          <input class="btn" type="submit" id="Update {{ title }}" value="Update {{ title }}">
-          <input class="btn" type="button" value="Cancel" onClick="location.href='../{{ routeURL }}.html'">
+          <input class="btn btn-success" type="submit" id="Update {{ title }}" value="Update {{ title }}">
+          <input class="btn btn-secondary" type="button" value="Cancel" onClick="location.href='../{{ routeURL }}.html'">
 	</form>
 </div>
 
