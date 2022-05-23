@@ -27,7 +27,6 @@ from blueprints.checkedbooks import checkedbooks_bp
 
 # Configuration
 app = Flask(__name__)
-
 if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
     db_connection = db.connect_to_database(
@@ -46,28 +45,28 @@ else:
     )
 
 # -----------REGISTOR BLUEPRINTS-----------
-#AUTHORS 
+# AUTHORS
 app.register_blueprint(authors_bp)
 
-#BOOKS 
+# BOOKS
 app.register_blueprint(books_bp)
 
-#BOOKCOPIES 
+# BOOKCOPIES
 app.register_blueprint(bookcopies_bp)
 
-#PATRONS
+# PATRONS
 app.register_blueprint(patrons_bp)
 
-#CHECKOUTS
+# CHECKOUTS
 app.register_blueprint(checkouts_bp)
 
-#CHECKEDBOOKS
+# CHECKEDBOOKS
 app.register_blueprint(checkedbooks_bp)
 
-#PUBLISHERS
+# PUBLISHERS
 app.register_blueprint(publishers_bp)
 
-#LOCATIONS
+# LOCATIONS
 app.register_blueprint(locations_bp)
 
 

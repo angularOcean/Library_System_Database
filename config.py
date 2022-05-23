@@ -13,6 +13,7 @@ load_dotenv(find_dotenv())
 class Config(object):
     DEBUG = False
     TESTING = False
+    SECRET_KEY = environ.get("SECRET_KEY")
 
 
 class DevelopmentConfig(Config):

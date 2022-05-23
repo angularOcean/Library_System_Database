@@ -3,6 +3,7 @@
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
+from forms import AuthorsFilter, AddBook
 
 books_bp = Blueprint("books", __name__)
 
@@ -47,24 +48,136 @@ def books_page():
     results = cursor.fetchall()
     books_headings = ["ID", "ISBN", "Title", "Author", "Publisher", "Year"]
 
+    # Set up Dropdowns for Filter and Add Book Forms
+    author_query = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
+    author_cursor = db.execute_query(db_connection=db_connection, query=author_query)
+    author_results = author_cursor.fetchall()
+    author_form = AuthorsFilter()
+    author_form.author_dropdown.choices = author_results
+    selected_author = None
+
+    add_book_form = AddBook()
+    add_book_form.author_dropdown.choices = author_results
+
+    publisher_query = """SELECT publisher_id, publisher_name FROM Publishers ORDER BY publisher_name ASC"""
+    publisher_cursor = db.execute_query(
+        db_connection=db_connection, query=publisher_query
+    )
+    publisher_results = publisher_cursor.fetchall()
+    add_book_form.publisher_dropdown.choices = publisher_results
+
+    # Intialize form results to None
+    selected_author = None
+
+    return render_template(
+        "table_books.j2",
+        title="Books",
+        description="This is a database of books.",
+        headings=books_headings,
+        data=results,
+        routeURL="book",
+        author_form=author_form,
+        add_book_form=add_book_form,
+        selected_author=selected_author,
+    )
+
+
+# Books -- Filter By Author
+@books_bp.route("/books/author", methods=["POST", "GET"])
+def books_by_author():
+    # Initialize Author Filter Form
+    selected_author = None
+    author_query = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
+    author_cursor = db.execute_query(db_connection=db_connection, query=author_query)
+    author_results = author_cursor.fetchall()
+    author_form = AuthorsFilter()
+    author_form.author_dropdown.choices = author_results
+
+    # If Someone Submits the Author Filter Form
+    if author_form.validate_on_submit():
+        selected_author = author_form.author_dropdown.data
+
+    # Intialize Book Table
+    filter_query = """
+    select Books.book_id,
+    Books.isbn, 
+        Books.title,
+        Publishers.publisher_name,
+        Books.year
+    from Books
+        left join Authors on Books.author_id = Authors.author_id
+        left join Publishers on Books.publisher_id = Publishers.publisher_id
+    where Authors.author_id = %s
+    order by isbn asc;
+    """
+    filter_cursor = db.execute_query(
+        db_connection=db_connection, query=filter_query, query_params=(selected_author,)
+    )
+    filter_results = filter_cursor.fetchall()
+
+    books_headings = ["ID", "ISBN", "Title", "Publisher", "Year"]
+
+    # Grab Author's Name for Page Information
+    selected_query = "select concat(Authors.author_first, ' ', Authors.author_last) as author_name from Authors where Authors.author_id = %s"
+    selected_cursor = db.execute_query(
+        db_connection=db_connection,
+        query=selected_query,
+        query_params=(int(selected_author),),
+    )
+    selected_results = selected_cursor.fetchone()
+
+    # Initialize Add Book Form
+    add_book_form = AddBook()
+
+    return render_template(
+        "table_books.j2",
+        title=f"Books by {selected_results[0]}",
+        author_form=author_form,
+        add_book_form=add_book_form,
+        selected_author=selected_author,
+        headings=books_headings,
+        data=filter_results,
+        routeURL="book",
+    )
+
+
+# books INSERT/ADD
+@books_bp.route("/add_book", methods=["POST", "GET"])
+def books_add():
+    input_isbn = None
+    input_title = None
+    input_author = None
+    input_publisher = None
+    input_year = None
+
+    selected_author = None
+    author_form = AuthorsFilter()
+    add_book_form = AddBook()
+
     # Get Valid Author Dropdown
-    query2 = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
-    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
-    results2 = cursor2.fetchall()
+    author_query = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
+    author_query = db.execute_query(db_connection=db_connection, query=author_query)
+    author_results = author_query.fetchall()
+    add_book_form.author_dropdown.choices = author_results
+    author_form.author_dropdown.choices = author_results
 
     # Get Valid Publisher Dropdown
-    query3 = """SELECT publisher_id, publisher_name FROM Publishers ORDER BY publisher_name ASC"""
-    cursor3 = db.execute_query(db_connection=db_connection, query=query3)
-    results3 = cursor3.fetchall()
+    publisher_query = """SELECT publisher_id, publisher_name FROM Publishers ORDER BY publisher_name ASC"""
+    publisher_cursor = db.execute_query(
+        db_connection=db_connection, query=publisher_query
+    )
+    publisher_results = publisher_cursor.fetchall()
+    add_book_form.publisher_dropdown.choices = publisher_results
 
-    # books INSERT
-    if request.method == "POST":
-        request.form.get("insert Books")
-        input_isbn = request.form["ISBN"]
-        input_title = request.form["Title"]
-        input_author = request.form["Author"]
-        input_publisher = request.form["Publisher"]
-        input_year = request.form["Year"]
+    # Form submission
+    if add_book_form.validate_on_submit():
+        input_isbn = add_book_form.isbn.data
+        input_title = add_book_form.title.data
+        input_author = add_book_form.author_dropdown.data
+        input_publisher = add_book_form.publisher_dropdown.data
+        input_year = add_book_form.year.data
+
+        # Insert Into Database
         query = """INSERT INTO Books (isbn, title, author_id, publisher_id, year) VALUES (%s, %s, %s, %s, %s); """
         cursor = db.execute_query(
             db_connection=db_connection,
@@ -77,18 +190,7 @@ def books_page():
                 input_year,
             ),
         )
-        return redirect("/books.html")
-
-    return render_template(
-        "table_books.j2",
-        title="Books",
-        description="This is a database of books.",
-        headings=books_headings,
-        data=results,
-        author_dropdown=results2,
-        publisher_dropdown=results3,
-        routeURL="book",
-    )
+    return redirect("/books.html")
 
 
 # books UPDATE
