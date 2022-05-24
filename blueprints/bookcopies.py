@@ -7,7 +7,7 @@ bookcopies_bp = Blueprint("bookcopies", __name__)
 
 # Configuration
 app = Flask(__name__)
-
+app.config.from_pyfile("config.py")
 if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
     db_connection = db.connect_to_database(

@@ -3,12 +3,17 @@
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
+from os import environ
+from dotenv import load_dotenv, find_dotenv
+
+# Load the .env file into the environment variables
+load_dotenv(find_dotenv())
 
 authors_bp = Blueprint('authors', __name__)
 
 # Configuration
 app = Flask(__name__)
-
+app.config.from_pyfile("config.py")
 if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
     db_connection = db.connect_to_database(

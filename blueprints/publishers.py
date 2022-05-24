@@ -1,14 +1,14 @@
-#Publishers Page: Select, Insert, Update, Delete
+# Publishers Page: Select, Insert, Update, Delete
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
 
-publishers_bp = Blueprint('publishers', __name__)
+publishers_bp = Blueprint("publishers", __name__)
 
 # Configuration
 app = Flask(__name__)
-
+app.config.from_pyfile("config.py")
 if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
     db_connection = db.connect_to_database(
@@ -28,7 +28,7 @@ else:
 
 # -----------PUBLISHERS-----------
 # publishers.html
-@publishers_bp .route("/publishers.html", methods=["POST", "GET"])
+@publishers_bp.route("/publishers.html", methods=["POST", "GET"])
 def publishers_page():
     query = """ 
     select publisher_id,
@@ -63,7 +63,7 @@ def publishers_page():
 
 
 # publishers UPDATE
-@publishers_bp .route("/update_publisher/<int:id>", methods=["POST", "GET"])
+@publishers_bp.route("/update_publisher/<int:id>", methods=["POST", "GET"])
 def publishers_edit(id):
     if request.method == "GET":
         query = "SELECT publisher_name FROM Publishers WHERE publisher_id = %s"
@@ -98,7 +98,7 @@ def publishers_edit(id):
 
 
 # publishers DELETE
-@publishers_bp .route("/delete_publisher/<int:id>", methods=["GET", "POST"])
+@publishers_bp.route("/delete_publisher/<int:id>", methods=["GET", "POST"])
 def delete_publisher(id):
     query = "DELETE FROM Publishers WHERE publisher_id = %s"
     curr = db.execute_query(
