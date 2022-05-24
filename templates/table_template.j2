@@ -61,14 +61,6 @@
 {% elif title == "Checkout #{{ checkout_id }}" %}
     {% include "insert_checkedbooks_template.j2"%}
 {% elif title == "Book Copies" %}
-    {% include "bookcopies_filter_template.j2" %}
-    {% include "insert_bookcopies_template.j2" %}
-{% elif title == "Books on the Shelf" %}
-    {% include "bookcopies_filter_template.j2" %}
-    {% include "insert_bookcopies_template.j2" %}
-{% elif title == "Checked Out Books" %}
-    {% include "bookcopies_filter_template.j2" %}
-    {% include "insert_bookcopies_template.j2" %}
 {% elif title == "Checked Books" %}
 {% else %}
     {% include "insert_template.j2" %}

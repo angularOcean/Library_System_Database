@@ -1,18 +1,10 @@
 <div >
     <form method="POST" id="insert">
         <legend><strong>Add Book Copy</strong></legend>
-          <fieldset class="fields">
-            <label>ISBN</label> 
-            <input type="text" name="isbn_entry">
-            <label for="Location">Location</location>
-            <select type="Location" id="Location" required>
-              <option value="" selected disabled>Location Name</option>
-            {% for name in locations_dropdown %}
-              <option value="{{ name[0] }}">{{ name[1] }}</option>
-              {% endfor %}
-            </select>
-      </fieldset>
-          <input class="btn btn-primary" type="submit" id="add {{ title }}" value="Add {{ title }}">
+        {{ add_copy_form.hidden_tag() }}
+        {{ add_copy_form.location_dropdown.label }}
+        {{ add_copy_form.location_dropdown() }}
+        {{ add_copy_form.submit() }}
           <input class="btn btn-secondary" type="reset" value="Cancel">
 	</form> 
 </div>
