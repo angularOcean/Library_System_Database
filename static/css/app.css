@@ -129,6 +129,11 @@ th, td {
     vertical-align: middle;
 }
 
+select {
+  border: 1px;
+  width: auto;
+}
+
 .center {
   margin-left: auto;
   margin-right: auto;
@@ -159,3 +164,9 @@ th, td {
 .filter_label {
   font-weight: bold;
 }
+
+
+input, select {
+  margin: 5px;
+}
+

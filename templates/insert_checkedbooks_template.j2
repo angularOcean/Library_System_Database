@@ -5,17 +5,20 @@ Please select the book copy you would like to add to this checkout.
 <br>
 <div id="insert">
     <form method="POST" id= "insert {{ title }}">
-        <legend><strong>Add Book Copy to {{ title }} </strong></legend>
-          <fieldset class="fields">
-          {{ add_checkedbook_form.hidden_tag() }}
-          {{ add_checkedbook_form.bookcopy_dropdown.label }}
-          {{ add_checkedbook_form.bookcopy_dropdown() }}
-          <br>
-          {{ add_checkedbook_form.returned_checkbox.label }}
-          {{ add_checkedbook_form.returned_checkbox() }}
-          <br>
-          {{ add_checkedbook_form.submit(class="btn btn-primary") }}
+        <fieldset>
+            <legend><strong>Add Book Copy to {{ title }} </strong></legend>
+            <fieldset class="fields">
+            {{ add_checkedbook_form.hidden_tag() }}
+            {{ add_checkedbook_form.bookcopy_dropdown.label }}
+            {{ add_checkedbook_form.bookcopy_dropdown() }}
+            <br>
+            {{ add_checkedbook_form.returned_checkbox.label }}
+            {{ add_checkedbook_form.returned_checkbox() }}
+            <br>
+            {{ add_checkedbook_form.submit(class="btn btn-primary") }}
+            <input class="btn btn-secondary" type="reset" value="Clear" onClick="">
       </fieldset>
-          <input class="btn btn-secondary" type="reset" value="Clear" onClick="">
+            <br>
+
 	</form> 
 </div>
