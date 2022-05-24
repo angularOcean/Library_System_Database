@@ -21,7 +21,7 @@
 
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SubmitField
+from wtforms import StringField, SelectField, SubmitField, BooleanField
 from wtforms.validators import InputRequired, Regexp
 
 
@@ -64,8 +64,17 @@ class AddCopy(FlaskForm):
     )
     submit = SubmitField()
 
+
 class AddCopy(FlaskForm):
     location_dropdown = SelectField(
         "Location", coerce=int, validators=[InputRequired()]
     )
+    submit = SubmitField()
+
+
+class AddCheckedBook(FlaskForm):
+    bookcopy_dropdown = SelectField(
+        "Book Copy", coerce=int, validators=[InputRequired()]
+    )
+    returned_checkbox = BooleanField("Returned?")
     submit = SubmitField()

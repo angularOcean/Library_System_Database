@@ -1,9 +1,10 @@
 # Checkedbooks Page: Select
 # https://stackoverflow.com/questions/61625290/flask-make-a-button-direct-to-another-page
 
-from flask import Blueprint, Flask, render_template, request, redirect
+from flask import Blueprint, Flask, render_template, request, redirect, jsonify
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
+from forms import AddCheckedBook
 
 checkedbooks_bp = Blueprint("checkedbooks", __name__)
 
@@ -132,18 +133,37 @@ def go_to_checkedbooks(checkout_id):
     insert_headers = ["Copy ID", "Returned"]
 
     # checkedbook INSERT
-    if request.method == "POST":
-        request.form.get(f"insert Checkout #{checkout_id}")
-        checkouts_id = checkout_id
-        input_copyid = request.form["Copy ID"]
-        input_returned = request.form["Returned"]
-        query = f"""INSERT INTO Checkedbooks (checkout_id, copy_id, returned) VALUES (%s, %s, %s) ; """
-        cursor = db.execute_query(
+    add_checkedbook_form = AddCheckedBook()
+
+    # Get Dropdown of all Book Copies not currently in Checkout
+    bookcopies_query = """
+    SELECT BookCopies.copy_id,
+    concat(Books.title, ' by ', Authors.author_first, ' ', Authors.author_last, ' at ', Locations.location_name, ' (Copy ID: ', BookCopies.copy_id, ')') as book_entry
+    FROM BookCopies
+    INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
+    INNER JOIN Books ON BookCopies.book_id = Books.book_id
+    INNER JOIN Authors ON Books.author_id = Authors.author_id
+    INNER JOIN CheckedBooks ON CheckedBooks.copy_id = BookCopies.copy_id
+    Inner JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
+    WHERE Checkouts.checkout_id != %s
+    ORDER BY Books.title asc;
+    """
+    bookcopies_cursor = db.execute_query(
+        db_connection=db_connection, query=bookcopies_query, query_params=(checkout_id,)
+    )
+    bookcopies_info = bookcopies_cursor.fetchall()
+    add_checkedbook_form.bookcopy_dropdown.choices = bookcopies_info
+
+    if add_checkedbook_form.validate_on_submit():
+        selected_bookcopy = add_checkedbook_form.bookcopy_dropdown.data
+        selected_return = add_checkedbook_form.returned_checkbox.data
+        # INSERT Query
+        insert_checkedbook_query = "INSERT INTO CheckedBooks (checkout_id, copy_id, returned) VALUES (%s, %s, %s)"
+        insert_checkedbook_cursor = db.execute_query(
             db_connection=db_connection,
-            query=query,
-            query_params=(checkouts_id, input_copyid, input_returned),
+            query=insert_checkedbook_query,
+            query_params=(checkout_id, selected_bookcopy, selected_return),
         )
-        return redirect(request.url)
 
     return render_template(
         "table_checkedbooks.j2",
@@ -154,6 +174,7 @@ def go_to_checkedbooks(checkout_id):
         checkout_id=checkout_id,
         routeURL="checkedbook",
         form_headers=insert_headers,
+        add_checkedbook_form=add_checkedbook_form,
     )
 
 
