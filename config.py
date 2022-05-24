@@ -24,6 +24,7 @@ class DevelopmentConfig(Config):
     DB_NAME = environ.get("LOCAL_DB")
     DB_PASSWORD = environ.get("LOCAL_PASSWORD")
     DB_USER = environ.get("LOCAL_USER")
+    SECRET_KEY = environ.get("SECRET_KEY")
 
 
 class ProductionConfig(Config):
@@ -32,3 +33,4 @@ class ProductionConfig(Config):
     DB_NAME = environ.get("MYSQL_DB")
     DB_PASSWORD = environ.get("MYSQL_PASSWORD")
     DB_USER = environ.get("MYSQL_USER")
+    SECRET_KEY = environ.get("SECRET_KEY")
