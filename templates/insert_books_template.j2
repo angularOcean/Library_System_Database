@@ -18,7 +18,7 @@
         {{ add_book_form.year.label }}
         {{ add_book_form.year(pattern="^[12][0-9]{3}$", placeholder="YYYY") }}
         <br>
-        {{ add_book_form.submit() }}
+        {{ add_book_form.submit(class="btn btn-primary") }}
           <input class="btn btn-secondary" type="reset" value="Clear" onClick="">
 	</form> 
 </div>

@@ -4,19 +4,18 @@
 {% block content %}
 <h2>{{ title }} Data</h2>
 <p>{{ description }}</p>
-<br>
-<p>To see all book copies please click "View All": </p>
-<a href="/bookcopies.html" class='btn btn-primary'>View All</a>
+<p><em>To see a complete read-only Book Copies table, click "View All". To edit a Book Copy, access each book's Book Copies from the table below. </em></p>
+<a href="/bookcopies.html" class='btn btn-primary' id="view_bookcopies_button">View All</a>
 </br>
 </br> 
 
 {# if someone has chosen an author to filter by, render the /books/author page#}
 {% if selected_author %}
-    <form action="/books/author" method="POST">
+    <form action="/books/author" method="POST" class="filter_form">
         {{ author_form.hidden_tag() }}
-        {{ author_form.author_dropdown.label }}
+        {{ author_form.author_dropdown.label(class="filter_label") }}
         {{ author_form.author_dropdown() }}
-        {{ author_form.submit() }}
+        {{ author_form.submit(class="btn btn-primary") }}
     </form>
     <table class ="center">
     <thead>
@@ -44,11 +43,11 @@
     </table>
 {# otherwise: render original page #}
 {% else %}
-    <form action="/books/author" method="POST">
+    <form action="/books/author" method="POST" class="filter_form">
         {{ author_form.hidden_tag() }}
-        {{ author_form.author_dropdown.label }}
+        {{ author_form.author_dropdown.label(class="filter_label") }}
         {{ author_form.author_dropdown() }}
-        {{ author_form.submit() }}
+        {{ author_form.submit(class="btn btn-primary") }}
     </form>
     <table class ="center">
     <thead>
@@ -80,6 +79,7 @@
 {% if title == "Books" %}
 {% include "insert_books_template.j2" %}
 {% else %}
-    <input class="btn btn-primary" type="button" value="View All Books" onClick="location.href='/books.html'">
+    <br>
+    <input class="btn btn-primary" type="button" id="view_all_books_button" value="View All Books" onClick="location.href='/books.html'">
 {% endif %}
 {% endblock %}

@@ -16,7 +16,7 @@ https://pythonhow.com/python-tutorial/flask/Adding-CSS-styling-to-your-website/
 
 
 body {
-    margin: 0;
+    margin-left: 0;
     padding: 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #444;
@@ -68,6 +68,10 @@ body {
     align-items: left;
   }
 
+  p {
+    margin-left: 25px;
+  }
+
   div.home {
     padding: 10px 0 30px 0;
     background-color: #E6E6FA;
@@ -85,6 +89,7 @@ body {
   h2 {
     font-size: 2em;
     margin-top: 40px;
+    margin-left: 25px;
     text-align: center;
     letter-spacing: -2px;
     display: flex;
@@ -93,6 +98,7 @@ body {
     font-size: 1.4em;
     font-weight: 100;
     margin-top: 30px;
+    margin-left: 25px;
     text-align: center;
     letter-spacing: -1px;
     color: rgb(7, 7, 7);
@@ -126,4 +132,27 @@ th, td {
 .center {
   margin-left: auto;
   margin-right: auto;
+}
+
+#homepage_table {
+  margin-left: 25px;
+}
+
+#view_bookcopies_button {
+  margin-left: 25px;
+}
+
+#view_all_books_button {
+  margin-left: 25px;
+}
+
+#view_all_checkedbooks_button {
+  margin-left: 25px;
+}
+
+.filter_form {
+  margin-left: 25px;
+}
+.filter_label {
+  font-weight: bold;
 }

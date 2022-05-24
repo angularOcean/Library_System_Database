@@ -6,8 +6,8 @@ Source URL: https://www.freecodecamp.org/news/html-select-tag-how-to-make-a-drop
 <br>
 <div id="insert">
     <form method="POST" id= "insert {{ title }}>
-        <legend><strong>Add {{ title }} </strong></legend>
           <fieldset class="fields">
+          <legend><strong> Add {{ title }} </strong></legend>
             <label for="patron_choice" >Patron Name</label> 
             <select id="patron_choice" name="patron_choice" required>
                 <option value="" selected disabled>Name</option>
@@ -15,11 +15,14 @@ Source URL: https://www.freecodecamp.org/news/html-select-tag-how-to-make-a-drop
                   <option value="{{ name[0] }}">{{ name[1] }}</option>
                 {% endfor %}
             </select>
+            <br>
             <label>Checkout Date</label>
-            <input type="date" name="checkout_date_input" required max="return_date_input">
+            <input type="date" name="checkout_date_input" required>
+            <br>
             <label>Return Date</label>
-            <input type="date" name="return_date_input" required min="checkout_date_input"=>
-        </fieldset>
+            <input type="date" name="return_date_input" required>
+          </fieldset>
+          <br>
           <input class="btn btn-primary" type="submit" id="add {{ title }}" value="Add {{ title }}">
           <input class="btn btn-secondary" type="reset" value="Clear" onClick="">
 	</form> 

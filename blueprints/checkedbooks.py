@@ -28,7 +28,7 @@ else:
         DevelopmentConfig.DB_NAME,
     )
 
-# -----------CHECKEDBOOKS-----------
+# -----------CHECKEDBOOKS (DIRECT) -----------
 # checkedbooks.html
 @checkedbooks_bp.route("/checkedbooks.html")
 def checkedbooks_page():
@@ -80,7 +80,7 @@ def checkedbooks_page():
     )
 
 
-# To CheckedBooks from Checkouts
+# -------------------To CheckedBooks from Checkouts----------------------------
 @checkedbooks_bp.route("/checkedbooks/<checkout_id>", methods=["POST", "GET"])
 def go_to_checkedbooks(checkout_id):
     # Initial Display:
