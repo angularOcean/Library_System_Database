@@ -4,15 +4,20 @@
         <legend><strong>Add {{ title }} </strong></legend>
         {{ add_book_form.hidden_tag() }}
         {{ add_book_form.isbn.label }}
-        {{ add_book_form.isbn(pattern="^97[89][-]?[0-9]{1,5}[-][0-9]+[-]?[0-9]+[-]?[0-9]$") }}
+        {{ add_book_form.isbn(pattern="^97[89][-]?[0-9]{1,5}[-][0-9]+[-]?[0-9]+[-]?[0-9]$", placeholder="XXX-X-XXX-XXXXX-X")  }}
+        <br>
         {{ add_book_form.title.label }}
         {{ add_book_form.title() }}
+        <br>
         {{ add_book_form.author_dropdown.label }}
         {{ add_book_form.author_dropdown() }}
+        <br>
         {{ add_book_form.publisher_dropdown.label }}
         {{ add_book_form.publisher_dropdown() }}
+        <br>
         {{ add_book_form.year.label }}
-        {{ add_book_form.year(pattern="^[12][0-9]{3}$") }}
+        {{ add_book_form.year(pattern="^[12][0-9]{3}$", placeholder="YYYY") }}
+        <br>
         {{ add_book_form.submit() }}
           <input class="btn btn-secondary" type="reset" value="Clear" onClick="">
 	</form> 

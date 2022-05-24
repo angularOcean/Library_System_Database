@@ -1,0 +1,28 @@
+{% extends "nav_template.j2" %}
+{{ super() }}
+{% block content %}
+<h2>Edit {{ title }} Data</h2>
+<p>{{ description }}</p>
+
+<div id="insert">
+    <form method="POST" id= "update {{ title }}">
+        <legend><strong>Edit {{ title }} Location</strong></legend>
+        <fieldset class="fields">
+                    <label for="location_input" >Location Name</label> 
+                    <select id="location_input" name="location_input" required>
+                        {% for name in name_dropdown %}
+                            {% if name[0] == data[4] %}:
+                                <option value="{{ name[0] }}" selected>{{ name[1] }}</option>
+                            {% else %}
+                                <option value="{{ name[0] }}" >{{ name[1] }}</option>
+                            {% endif %}
+                        {% endfor %}
+                        <option value="-1">No Location</option>
+                    </select><br><br>
+                </fieldset><br>
+          <input class="btn btn-success" type="submit" id="Update {{ title }}" value="Update {{ title }}">
+           <input class="btn btn-secondary" type="button" value="Cancel" onClick="location.href='/bookcopies/{{ data[1]}}'">
+	</form>
+</div>
+
+{% endblock %}

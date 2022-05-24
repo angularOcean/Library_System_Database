@@ -57,3 +57,9 @@ class AddCopy(FlaskForm):
         "Location", coerce=int, validators=[InputRequired()]
     )
     submit = SubmitField()
+
+class AddCopy(FlaskForm):
+    location_dropdown = SelectField(
+        "Location", coerce=int, validators=[InputRequired()]
+    )
+    submit = SubmitField()

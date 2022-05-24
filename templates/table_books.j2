@@ -24,8 +24,8 @@
             {% for header in headings %}
             <th>{{ header }}</th>
             {% endfor %}
-                <th>Update Book Copies</th>
-                <th>Edit Book</th>
+                <th>See Book Copies</th>
+                <th>Edit Book Information</th>
                 <th>Delete</th>
         </tr>
     </thead>
@@ -35,7 +35,7 @@
             {% for cell in row %}
                     <td>{{ cell }}</td>
             {% endfor %}
-            <td><a href="/bookcopies/{{row[0]}}" onClick="go_to_bookcopies({{ cell }})" class="btn btn-secondary">Update</a></td>
+            <td><a href="/bookcopies/{{row[0]}}" onClick="go_to_bookcopies({{ cell }})" class="btn btn-secondary">View</a></td>
             <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()" class="btn btn-info">Edit</a></td>
             <td><a href="/delete_{{routeURL}}/{{row[0]}}" class="btn btn-danger">Delete</a></td> 
             </tr>
@@ -56,8 +56,8 @@
             {% for header in headings %}
             <th>{{ header }}</th>
             {% endfor %}
-                <th>Update Book Copies</th>
-                <th>Edit Book</th>
+                <th>See Book Copies</th>
+                <th>Edit Book Information</th>
                 <th>Delete</th>
         </tr>
     </thead>
@@ -67,7 +67,7 @@
             {% for cell in row %}
                     <td>{{ cell }}</td>
             {% endfor %}
-            <td><a href="/bookcopies/{{row[0]}}" onClick="go_to_bookcopies({{ cell }})" class="btn btn-secondary">Update</a></td>
+            <td><a href="/bookcopies/{{row[0]}}" onClick="go_to_bookcopies({{ cell }})" class="btn btn-secondary">View</a></td>
             <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()" class="btn btn-info">Edit</a></td>
             <td><a href="/delete_{{routeURL}}/{{row[0]}}" class="btn btn-danger">Delete</a></td> 
             </tr>

@@ -19,7 +19,7 @@
             <th>{{ header }}</th>
             {% endfor %}
             {% if title == "Checkouts" %}
-                <th>Update Checked Books</th>
+                <th>See CheckedBooks</th>
                 <th>Edit Checkout</th>
                 <th>Delete</th>   
             {% elif title == "Checked Books" %}   
@@ -36,7 +36,7 @@
                 {% for cell in row %}
                         <td>{{ cell }}</td>
                 {% endfor %}
-                <td><a href="/checkedbooks/{{row[0]}}" onClick="go_to_checkedbooks({{ cell }})" class="btn btn-secondary">Update</a></td>
+                <td><a href="/checkedbooks/{{row[0]}}" onClick="go_to_checkedbooks({{ cell }})" class="btn btn-secondary">View</a></td>
                 <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()" class="btn btn-info">Edit</a></td>
                 <td><a href="/delete_{{routeURL}}/{{row[0]}}" class="btn btn-danger">Delete</a></td> 
                 </tr>

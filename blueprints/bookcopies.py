@@ -62,7 +62,7 @@ def go_to_bookcopies(book_id):
     query1 = """
     SELECT bookcopies.copy_id, bookcopies.book_id, locations.location_name
     FROM bookcopies
-    INNER JOIN locations ON bookcopies.location_id = locations.location_id
+    LEFT JOIN locations ON bookcopies.location_id = locations.location_id
     WHERE bookcopies.book_id = %s
     """
     curr = db.execute_query(
@@ -132,14 +132,77 @@ def go_to_bookcopies(book_id):
     )
 
 
-# @bookcopies_bp.route("/update_bookcopy/<int:id>", methods=["POST", "GET"])
-# def bookcopy_edit(id):
-#     pass
+@bookcopies_bp.route("/update_bookcopy/<int:id>", methods=["POST", "GET"])
+def bookcopies_edit(id):
+    # Retrieve Book ID information
+    query1 = "select Books.book_id from BookCopies INNER JOIN Books ON BookCopies.book_id = Books.book_id WHERE BookCopies.copy_id  = %s;"
+    cursor = db.execute_query(
+        db_connection=db_connection,
+        query=query1,
+        query_params=(id,),
+    )
+    book_id = cursor.fetchone()
+
+    if request.method == "GET":
+        query = """
+        SELECT BookCopies.copy_id, 
+        Books.book_id, 
+        Books.title, 
+        concat(Authors.author_first, ' ', Authors.author_last) as author_name, Locations.location_name
+        FROM BookCopies 
+            LEFT JOIN Locations ON BookCopies.location_id = Locations.location_id
+            INNER JOIN Books ON BookCopies.book_id = Books.book_id
+            INNER JOIN Authors ON Books.author_id = Authors.author_id
+        WHERE BookCopies.copy_id = %s"""
+        curr = db.execute_query(
+            db_connection=db_connection, query=query, query_params=(id,)
+        )
+        info = curr.fetchone()
+    bookcopies_edit_headings = [
+        "Copy ID",
+        "Book ID",
+        "Title",
+        "Author",
+        "Current Location",
+    ]
+
+    # Get Valid Location Dropdown
+    query2 = """SELECT location_id, location_name FROM Locations ORDER BY location_name ASC"""
+    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    results2 = cursor2.fetchall()
+
+    if request.method == "POST":
+        request.form.get("update BookCopy")
+        location_input = request.form["location_input"]
+        copy_id = id
+
+        if location_input == "-1":
+            null_query = "UPDATE BookCopies SET location_id = NULL WHERE copy_id=%s"
+            null_cursor = db.execute_query(
+                db_connection=db_connection,
+                query=null_query,
+                query_params=(copy_id,),
+            )
+        else:
+            query = "UPDATE BookCopies SET location_id = %s WHERE copy_id=%s"
+            curr = db.execute_query(
+                db_connection=db_connection,
+                query=query,
+                query_params=(location_input, copy_id),
+            )
+        return redirect(f"/bookcopies/{book_id[0]}")
+
+    return render_template(
+        "update_bookcopies_template.j2",
+        data=info,
+        description=f"For Book: '{info[2]}' by {info[3]}",
+        headings=bookcopies_edit_headings,
+        title=f"Book Copy #{info[0]}",
+        name_dropdown=results2,
+    )
 
 
 # bookcopies DELETE
-
-
 @bookcopies_bp.route("/delete_bookcopy/<int:id>", methods=["POST", "GET"])
 def bookcopy_delete(id):
 

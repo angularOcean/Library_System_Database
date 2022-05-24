@@ -51,7 +51,7 @@ def books_page():
     # Set up Dropdowns for Filter and Add Book Forms
     author_query = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
     author_cursor = db.execute_query(db_connection=db_connection, query=author_query)
-    author_results = author_cursor.fetchall()
+    author_results = list(author_cursor.fetchall())
     author_form = AuthorsFilter()
     author_form.author_dropdown.choices = author_results
     selected_author = None

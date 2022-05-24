@@ -139,7 +139,7 @@ def go_to_checkedbooks(checkout_id):
 
 # checkedbooks UPDATE
 @checkedbooks_bp.route("/update_checkedbook/<int:id>", methods=["POST", "GET"])
-def locations_edit(id):
+def checkedbooks_edit(id):
     query1 = "select checkout_id from checkedbooks where checked_book_id = %s;"
     cursor = db.execute_query(db_connection=db_connection, query=query1, query_params=(id,),)
     checkout_id = cursor.fetchall()
