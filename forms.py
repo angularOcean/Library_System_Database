@@ -25,6 +25,7 @@ from wtforms import StringField, SelectField, SubmitField, BooleanField
 from wtforms.validators import InputRequired, Regexp
 
 
+
 class AuthorsFilter(FlaskForm):
     author_dropdown = SelectField(
         "Filter by Author", coerce=int, validators=[InputRequired()]
