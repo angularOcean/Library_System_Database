@@ -26,7 +26,6 @@ else:
     )
 
 # -----------BOOKCOPIES-----------
-
 # bookcopies.html
 @bookcopies_bp.route("/bookcopies.html")
 def bookcopies_page():
@@ -90,7 +89,7 @@ def go_to_bookcopies(book_id):
     location_query = """SELECT location_id, location_name FROM Locations ORDER BY location_name ASC"""
     location_query = db.execute_query(db_connection=db_connection, query=location_query)
     location_results = list(location_query.fetchall())
-    location_results.append((-1, "None"))
+    location_results.append((-1, "No Location"))
 
     # Intialize Add Book Copy Form
     add_copy_form = AddCopy()
@@ -101,7 +100,7 @@ def go_to_bookcopies(book_id):
         input_location = add_copy_form.location_dropdown.data
 
         # Account for Null Location
-        if input_location == "-1":
+        if input_location == -1:
             add_copy_query = (
                 """INSERT INTO BookCopies (book_id, location_id) VALUES (%s, NULL); """
             )
@@ -120,6 +119,7 @@ def go_to_bookcopies(book_id):
                 query=add_copy_query,
                 query_params=(book_id, input_location),
             )
+        return redirect(f"/bookcopies/{book_id}")
 
     return render_template(
         "table_bookcopies.j2",

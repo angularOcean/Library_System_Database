@@ -1,0 +1,30 @@
+{% extends "nav_template.j2" %}
+{{ super() }}
+{% block content %}
+<h2>Edit {{ title }} Data</h2>
+<p>{{ description }}</p>
+
+
+<br>
+<div id="insert">
+    <form method="POST" id= "update {{ title }}" autocomplete="off">
+        <legend><strong>Update {{ title }} </strong></legend>
+          <fieldset class="fields">
+                <label for='Returned'> Returned? </label>
+                  <select id = 'Returned' name= 'Returned' required>
+                  {% if data[0] == 1 %}
+                    <option value='1' selected >Yes</option>
+                    <option value='0'>No</option>
+                  {% else %}
+                    <option value='0' selected>No</option>
+                    <option value='1'>Yes</option>
+                    {% endif %}
+                  </select>
+                  <br><br>           
+      </fieldset>
+          <input class="btn btn-primary" type="submit" id="Update {{ title }}" value="Update {{ title }}">
+          <input class="btn btn-secondary" type="button" value="Cancel" onClick="location.href='../{{ routeURL }}/{{ checked_book_id }}'">
+	</form>
+</div>
+
+{% endblock %}

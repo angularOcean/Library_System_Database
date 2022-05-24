@@ -1,11 +1,11 @@
-#Checkedbooks Page: Select
-#https://stackoverflow.com/questions/61625290/flask-make-a-button-direct-to-another-page 
+# Checkedbooks Page: Select
+# https://stackoverflow.com/questions/61625290/flask-make-a-button-direct-to-another-page
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
 
-checkedbooks_bp = Blueprint('checkedbooks', __name__)
+checkedbooks_bp = Blueprint("checkedbooks", __name__)
 
 
 # Configuration
@@ -66,7 +66,8 @@ def checkedbooks_page():
         data=results,
     )
 
-# To CheckedBooks from Checkouts 
+
+# To CheckedBooks from Checkouts
 @checkedbooks_bp.route("/checkedbooks/<checkout_id>", methods=["POST", "GET"])
 def go_to_checkedbooks(checkout_id):
     # Initial Display:
@@ -106,11 +107,8 @@ def go_to_checkedbooks(checkout_id):
         db_connection=db_connection, query=query2, query_params=(checkout_id)
     )
     info2 = curr2.fetchone()
- 
-    insert_headers = [
-        "Copy ID",
-        "Returned"
-    ]
+
+    insert_headers = ["Copy ID", "Returned"]
 
     # checkedbook INSERT
     if request.method == "POST":
@@ -122,7 +120,7 @@ def go_to_checkedbooks(checkout_id):
         cursor = db.execute_query(
             db_connection=db_connection,
             query=query,
-            query_params=(checkouts_id, input_copyid, input_returned ),
+            query_params=(checkouts_id, input_copyid, input_returned),
         )
         return redirect(request.url)
 
@@ -134,23 +132,27 @@ def go_to_checkedbooks(checkout_id):
         description=f"For Patron: {info2[0]}",
         checkout_id=checkout_id,
         routeURL="checkedbook",
-        form_headers = insert_headers
+        form_headers=insert_headers,
     )
+
 
 # checkedbooks UPDATE
 @checkedbooks_bp.route("/update_checkedbook/<int:id>", methods=["POST", "GET"])
 def checkedbooks_edit(id):
     query1 = "select checkout_id from checkedbooks where checked_book_id = %s;"
-    cursor = db.execute_query(db_connection=db_connection, query=query1, query_params=(id,),)
+    cursor = db.execute_query(
+        db_connection=db_connection,
+        query=query1,
+        query_params=(id,),
+    )
     checkout_id = cursor.fetchall()
-    
+
     if request.method == "GET":
         query2 = "SELECT returned from checkedbooks where checked_book_id = %s;"
         curr = db.execute_query(
             db_connection=db_connection, query=query2, query_params=(id,)
         )
-        info = curr.fetchall()
-        #print(info)
+        info = curr.fetchone()
 
     checkedbook_edit_headings = ["Returned"]
 
@@ -167,24 +169,29 @@ def checkedbooks_edit(id):
         return redirect(f"/checkedbooks/{checkout_id[0][0]}")
 
     return render_template(
-        "update_template.j2",
+        "update_checkedbook_template.j2",
         data=info,
-        description="Editing checked book: ",
+        description=f"Editing Checked Book: # {id}",
         headings=checkedbook_edit_headings,
         title="Checked Book",
-        routeURL="checkedbook",
+        routeURL="checkedbooks",
+        checked_book_id=id,
     )
+
 
 # checkedbook DELETE
 @checkedbooks_bp.route("/delete_checkedbook/<int:id>", methods=["GET", "POST"])
 def delete_checkedbook(id):
     query1 = "select checkout_id from checkedbooks where checked_book_id = %s;"
-    cursor = db.execute_query(db_connection=db_connection, query=query1, query_params=(id,),)
+    cursor = db.execute_query(
+        db_connection=db_connection,
+        query=query1,
+        query_params=(id,),
+    )
     checkout_id = cursor.fetchall()
 
     query2 = "DELETE FROM checkedbooks WHERE checked_book_id = %s"
     curr = db.execute_query(
         db_connection=db_connection, query=query2, query_params=(id,)
-        )
+    )
     return redirect(f"/checkedbooks/{checkout_id[0][0]}")
-    

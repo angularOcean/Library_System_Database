@@ -5,18 +5,20 @@ Please select the book copy you would like to add to this checkout.
 <br>
 <div id="insert">
     <form method="POST" id= "insert {{ title }}">
-        <legend><strong>Add {{ title }} </strong></legend>
+        <legend><strong>Add Book to {{ title }} </strong></legend>
           <fieldset class="fields">
-            
-            {% for header in form_headers %}
-              {% if header != "ID" %}
-              <label> {{ header }}</label> 
-              <input type="text" name='{{ header }}'>
-              {% endif %}
-            {% endfor %} 
-            
+                <label for='Copy ID'>Book Copy ID</label>
+                <input type="text" id="Copy ID" name="Copy ID"></input>
+                <label for='Returned'> Returned? </label>
+                  <select id = 'Returned' name= 'Returned' required>
+                    <option value='' selected disabled>Select</option>
+                    <option value='1'>Yes</option>
+                    <option value='0'>No</option>
+                  </select>
+                  <br><br>           
       </fieldset>
-          <input class="btn btn-primary" type="submit" id="add {{ title }}" value="Add {{ title }}">
+      </fieldset>
+          <input class="btn btn-primary" type="submit" id="add {{ title }}" value="Add">
           <input class="btn btn-secondary" type="reset" value="Clear" onClick="">
 	</form> 
 </div>
