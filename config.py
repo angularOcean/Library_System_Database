@@ -11,26 +11,25 @@ load_dotenv(find_dotenv())
 
 
 class Config(object):
+    SECRET_KEY = environ.get("SECRET_KEY")
     DEBUG = False
     TESTING = False
-    SECRET_KEY = environ.get("SECRET_KEY")
 
 
 class DevelopmentConfig(Config):
+    SECRET_KEY = environ.get("SECRET_KEY")
     FLASK_ENV = "development"
     TESTING = True
     DEBUG = True
     DB_HOST = environ.get("LOCAL_HOST")
     DB_NAME = environ.get("LOCAL_DB")
     DB_PASSWORD = environ.get("LOCAL_PASSWORD")
-    DB_USER = environ.get("LOCAL_USER")
-    SECRET_KEY = environ.get("SECRET_KEY")
 
 
 class ProductionConfig(Config):
+    SECRET_KEY = environ.get("SECRET_KEY")
     FLASK_ENV = "production"
     DB_HOST = environ.get("MYSQL_HOST")
     DB_NAME = environ.get("MYSQL_DB")
     DB_PASSWORD = environ.get("MYSQL_PASSWORD")
     DB_USER = environ.get("MYSQL_USER")
-    SECRET_KEY = environ.get("SECRET_KEY")

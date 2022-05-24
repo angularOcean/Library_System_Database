@@ -28,7 +28,6 @@ from blueprints.checkedbooks import checkedbooks_bp
 
 # Configuration
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
 if app.config["ENV"] == "production":
     app.config.from_object("config.ProductionConfig")
     db_connection = db.connect_to_database(
