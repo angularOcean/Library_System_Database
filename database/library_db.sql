@@ -41,13 +41,13 @@ CREATE TABLE Books
     (author_id) REFERENCES Authors
     (author_id) ON
     DELETE
-    SET NULL
+    CASCADE ON UPDATE CASCADE
     ,
         FOREIGN KEY
     (publisher_id) REFERENCES Publishers
     (publisher_id) ON
     DELETE
-    SET NULL
+    CASCADE ON UPDATE CASCADE
     );
     /*
  Authors 
@@ -120,7 +120,7 @@ CREATE TABLE Books
                         (book_id) REFERENCES Books
                         (book_id) ON
                         DELETE
-                        SET NULL
+                        CASCADE ON UPDATE CASCADE
                         ,
         FOREIGN KEY
                         (location_id) REFERENCES Locations
@@ -146,7 +146,7 @@ CREATE TABLE Books
                             (patron_id) REFERENCES Patrons
                             (patron_id) ON
                             DELETE
-                            SET NULL
+                            CASCADE
                             ON
                             UPDATE CASCADE
 );
@@ -173,7 +173,7 @@ CREATE TABLE Books
         FOREIGN KEY (copy_id) REFERENCES BookCopies(copy_id)
                                 ON
                                 DELETE
-                                SET NULL
+                                CASCADE
                                 ON
                                 UPDATE CASCADE
 );

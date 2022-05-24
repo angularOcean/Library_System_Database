@@ -33,7 +33,8 @@ else:
 @checkedbooks_bp.route("/checkedbooks.html")
 def checkedbooks_page():
     query = """ 
-    select 
+    select
+    CheckedBooks.checked_book_id, 
     BookCopies.copy_id, 
     Books.title,
     concat(Patrons.patron_first, ' ', Patrons.patron_last) as patron_name,
@@ -50,6 +51,7 @@ def checkedbooks_page():
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
     checkedbooks_headings = [
+        "CheckedBook ID",
         "Copy ID",
         "Book Title",
         "Patron Name",
@@ -64,6 +66,7 @@ def checkedbooks_page():
         description="This is a read-only list of all checkout line items in the Penguin Library Database. Please edit any checkout information from the Checkouts page.",
         headings=checkedbooks_headings,
         data=results,
+        routeURL="checkedbook",
     )
 
 
@@ -145,7 +148,7 @@ def checkedbooks_edit(id):
         query=query1,
         query_params=(id,),
     )
-    checkout_id = cursor.fetchall()
+    checkout_id = cursor.fetchone()
 
     if request.method == "GET":
         query2 = "SELECT returned from checkedbooks where checked_book_id = %s;"
@@ -166,7 +169,7 @@ def checkedbooks_edit(id):
             query=query,
             query_params=(checkedbook_returned, checkedbook_id),
         )
-        return redirect(f"/checkedbooks/{checkout_id[0][0]}")
+        return redirect(f"/checkedbooks/{checkout_id[0]}")
 
     return render_template(
         "update_checkedbook_template.j2",
@@ -188,10 +191,11 @@ def delete_checkedbook(id):
         query=query1,
         query_params=(id,),
     )
-    checkout_id = cursor.fetchall()
+    checkout_id = cursor.fetchone()
+    print(id)
 
     query2 = "DELETE FROM checkedbooks WHERE checked_book_id = %s"
     curr = db.execute_query(
         db_connection=db_connection, query=query2, query_params=(id,)
     )
-    return redirect(f"/checkedbooks/{checkout_id[0][0]}")
+    return redirect(request.referrer)

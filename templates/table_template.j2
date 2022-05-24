@@ -22,9 +22,10 @@
                 <th>See CheckedBooks</th>
                 <th>Edit Checkout</th>
                 <th>Delete</th>   
-            {% elif title == "Checked Books" %}   
             {% else %}
+                {% if title != "Book Copies" and title != "Checked Books" %}
                 <th>Edit</th>
+                {% endif %}
                 <th>Delete</th>
             {% endif %}
         </tr>
@@ -47,10 +48,10 @@
                 {% for cell in row %}
                     <td>{{ cell }}</td>
                 {% endfor %}
-                {% if title != "Checked Books" %}
+                    {% if title != "Book Copies" and title != "Checked Books" %}
                     <td><a href= /update_{{routeURL}}/{{row[0]}} onClick="update()" class="btn btn-info">Edit</a></td>
+                    {% endif %}
                     <td><a href="/delete_{{routeURL}}/{{row[0]}}" class = "btn btn-danger">Delete</a></td> 
-                {% endif %}
                 </tr> 
             {% endfor %}
         {% endif %}

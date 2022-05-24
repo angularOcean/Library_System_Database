@@ -25,7 +25,7 @@ else:
         DevelopmentConfig.DB_NAME,
     )
 
-# -----------BOOKCOPIES-----------
+# -----------BOOKCOPIES (DIRECT VIEW) -----------
 # bookcopies.html
 @bookcopies_bp.route("/bookcopies.html")
 def bookcopies_page():
@@ -54,7 +54,7 @@ def bookcopies_page():
     )
 
 
-# To Bookcopies from Books
+# ----------- TO BOOKCOPIES FROM BOOKS ------------------------
 @bookcopies_bp.route("/bookcopies/<book_id>", methods=["POST", "GET"])
 def go_to_bookcopies(book_id):
     # Initial Display
@@ -218,4 +218,4 @@ def bookcopy_delete(id):
     curr = db.execute_query(
         db_connection=db_connection, query=query, query_params=(id,)
     )
-    return redirect(f"/bookcopies/{book_id[0]}")
+    return redirect(request.referrer)
