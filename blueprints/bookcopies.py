@@ -83,7 +83,8 @@ def go_to_bookcopies(book_id):
     curr2 = db.execute_query(
         db_connection=db_connection, query=query2, query_params=(book_id)
     )
-    titleinfo = curr2.fetchall()
+    titleinfo = curr2.fetchone()
+    print(titleinfo)
 
     # Get Valid Locations Dropdown
     location_query = """SELECT location_id, location_name FROM Locations ORDER BY location_name ASC"""
@@ -125,10 +126,33 @@ def go_to_bookcopies(book_id):
         title=f"Book #{book_id}",
         headings=bookcopy_headings,
         data=info,
-        description=f"For Book: '{titleinfo[0][0]}' by {titleinfo[0][1]}",
+        description=f"For Book: '{titleinfo[0]}' by {titleinfo[1]}",
         routeURL="bookcopy",
         add_copy_form=add_copy_form,
     )
 
 
+# @bookcopies_bp.route("/update_bookcopy/<int:id>", methods=["POST", "GET"])
+# def bookcopy_edit(id):
+#     pass
+
+
 # bookcopies DELETE
+
+
+@bookcopies_bp.route("/delete_bookcopy/<int:id>", methods=["POST", "GET"])
+def bookcopy_delete(id):
+
+    query1 = "select Books.book_id from BookCopies INNER JOIN Books ON BookCopies.book_id = Books.book_id WHERE BookCopies.copy_id  = %s;"
+    cursor = db.execute_query(
+        db_connection=db_connection,
+        query=query1,
+        query_params=(id,),
+    )
+    book_id = cursor.fetchone()
+
+    query = "DELETE FROM BookCopies WHERE copy_id = %s"
+    curr = db.execute_query(
+        db_connection=db_connection, query=query, query_params=(id,)
+    )
+    return redirect(f"/bookcopies/{book_id[0]}")
