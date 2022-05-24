@@ -49,7 +49,8 @@ def checkedbooks_page():
     order by Checkouts.checkout_date desc;
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
-    results = cursor.fetchall()
+    results = list(cursor.fetchall())
+
     checkedbooks_headings = [
         "CheckedBook ID",
         "Copy ID",
@@ -59,13 +60,22 @@ def checkedbooks_page():
         "Return Date",
         "Returned",
     ]
+    # Render Returned as "Yes"/"No" instead of 1/0
+    results_list = []
+    for entry in results:
+        entry = list(entry)
+        if entry[6] == 0:
+            entry[6] = "No"
+        else:
+            entry[6] = "Yes"
+        results_list.append(entry)
 
     return render_template(
         "table_template.j2",
         title="Checked Books",
         description="This is a read-only list of all checkout line items in the Penguin Library Database. Please edit any checkout information from the Checkouts page.",
         headings=checkedbooks_headings,
-        data=results,
+        data=results_list,
         routeURL="checkedbook",
     )
 
@@ -86,9 +96,9 @@ def go_to_checkedbooks(checkout_id):
     curr = db.execute_query(
         db_connection=db_connection, query=query, query_params=(checkout_id)
     )
-    info = curr.fetchall()
+    info = list(curr.fetchall())
     checkedbooks_headings = [
-        "ID",
+        "Checked Book ID",
         "Copy ID",
         "Book Title",
         "Copy Location",
@@ -97,7 +107,15 @@ def go_to_checkedbooks(checkout_id):
         "Returned",
     ]
 
-    checkoutid = checkout_id
+    # Render Returned as "Yes"/"No" instead of 1/0
+    info_list = []
+    for entry in info:
+        entry = list(entry)
+        if entry[6] == 0:
+            entry[6] = "No"
+        else:
+            entry[6] = "Yes"
+        info_list.append(entry)
 
     # Get Patron Name
     query2 = """
@@ -131,7 +149,7 @@ def go_to_checkedbooks(checkout_id):
         "table_checkedbooks.j2",
         title=f"Checkout #{checkout_id}",
         headings=checkedbooks_headings,
-        data=info,
+        data=info_list,
         description=f"For Patron: {info2[0]}",
         checkout_id=checkout_id,
         routeURL="checkedbook",
