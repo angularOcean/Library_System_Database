@@ -41,7 +41,7 @@ def books_page():
     from Books
         left join Authors on Books.author_id = Authors.author_id
         left join Publishers on Books.publisher_id = Publishers.publisher_id
-    order by isbn asc;
+    order by Authors.author_last asc, Books.title asc;
     """
     cursor = db.execute_query(db_connection=db_connection, query=query)
     results = cursor.fetchall()
@@ -107,7 +107,7 @@ def books_by_author():
         left join Authors on Books.author_id = Authors.author_id
         left join Publishers on Books.publisher_id = Publishers.publisher_id
     where Authors.author_id = %s
-    order by isbn asc;
+    order by Books.title asc;
     """
     filter_cursor = db.execute_query(
         db_connection=db_connection, query=filter_query, query_params=(selected_author,)
