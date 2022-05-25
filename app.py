@@ -10,7 +10,6 @@
 # Based on: OSU CS340 Flask Starter Guide
 # Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app
 
-from tabnanny import check
 from flask import Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig

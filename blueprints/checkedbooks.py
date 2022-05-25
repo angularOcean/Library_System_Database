@@ -224,7 +224,8 @@ def checkedbooks_edit(id):
         headings=checkedbook_edit_headings,
         title="Checked Book",
         routeURL="checkedbooks",
-        checked_book_id=id,
+        checkedbook_id=id,
+        checkout_id=checkout_id[0],
     )
 
 
