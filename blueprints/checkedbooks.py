@@ -136,19 +136,27 @@ def go_to_checkedbooks(checkout_id):
 
     # Get Dropdown of all Book Copies not currently in Checkout
     bookcopies_query = """
-    SELECT BookCopies.copy_id,
+
+  SELECT BookCopies.copy_id,
     concat(Books.title, ' by ', Authors.author_first, ' ', Authors.author_last, ' at ', Locations.location_name, ' (Copy ID: ', BookCopies.copy_id, ')') as book_entry
-    FROM BookCopies
+	FROM BookCopies
     INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
     INNER JOIN Books ON BookCopies.book_id = Books.book_id
     INNER JOIN Authors ON Books.author_id = Authors.author_id
     INNER JOIN CheckedBooks ON CheckedBooks.copy_id = BookCopies.copy_id
     Inner JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
-    WHERE Checkouts.checkout_id != %s
-    ORDER BY Books.title asc;
+    WHERE Checkouts.checkout_id != %s AND BookCopies.copy_id NOT IN 
+    (SELECT BookCopies.copy_id FROM BookCopies INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
+    INNER JOIN Books ON BookCopies.book_id = Books.book_id
+    INNER JOIN Authors ON Books.author_id = Authors.author_id
+    INNER JOIN CheckedBooks ON CheckedBooks.copy_id = BookCopies.copy_id
+    Inner JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
+    WHERE Checkouts.checkout_id = %s);
     """
     bookcopies_cursor = db.execute_query(
-        db_connection=db_connection, query=bookcopies_query, query_params=(checkout_id,)
+        db_connection=db_connection,
+        query=bookcopies_query,
+        query_params=(checkout_id, checkout_id),
     )
     bookcopies_info = bookcopies_cursor.fetchall()
     add_checkedbook_form.bookcopy_dropdown.choices = bookcopies_info

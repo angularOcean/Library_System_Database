@@ -24,6 +24,7 @@ class DevelopmentConfig(Config):
     DB_HOST = environ.get("LOCAL_HOST")
     DB_NAME = environ.get("LOCAL_DB")
     DB_PASSWORD = environ.get("LOCAL_PASSWORD")
+    DB_USER = environ.get("LOCAL_USER")
 
 
 class ProductionConfig(Config):
