@@ -92,6 +92,7 @@ def go_to_checkedbooks(checkout_id):
     INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
     INNER JOIN Books ON BookCopies.book_id = Books.book_id
     WHERE Checkouts.checkout_id = %s
+    ORDER BY Books.title ASC;
     """
     curr = db.execute_query(
         db_connection=db_connection, query=query, query_params=(checkout_id)
@@ -134,24 +135,32 @@ def go_to_checkedbooks(checkout_id):
     # checkedbook INSERT
     add_checkedbook_form = AddCheckedBook()
 
-    # Get Dropdown of all Book Copies not currently in Checkout
+    # Get Dropdown of all Book Copies not currently in Checkout (besides those where Location is NULL)
     bookcopies_query = """
 
-  SELECT BookCopies.copy_id,
-    concat(Books.title, ' by ', Authors.author_first, ' ', Authors.author_last, ' at ', Locations.location_name, ' (Copy ID: ', BookCopies.copy_id, ')') as book_entry
-	FROM BookCopies
-    INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
-    INNER JOIN Books ON BookCopies.book_id = Books.book_id
-    INNER JOIN Authors ON Books.author_id = Authors.author_id
-    INNER JOIN CheckedBooks ON CheckedBooks.copy_id = BookCopies.copy_id
-    Inner JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
-    WHERE Checkouts.checkout_id != %s AND BookCopies.copy_id NOT IN 
+SELECT BookCopies.copy_id,
+concat(Books.title, ' by ', Authors.author_first, ' ', Authors.author_last, ' at ', Locations.location_name, ' (Copy ID: ', BookCopies.copy_id, ')') as book_entry
+FROM BookCopies
+INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
+INNER JOIN Books ON BookCopies.book_id = Books.book_id
+INNER JOIN Authors ON Books.author_id = Authors.author_id
+LEFT JOIN CheckedBooks ON CheckedBooks.copy_id = BookCopies.copy_id
+LEFT JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
+WHERE Checkouts.checkout_id IS NULL 
+OR 
+(Checkouts.checkout_id != %s
+AND 
+BookCopies.copy_id NOT IN 
     (SELECT BookCopies.copy_id FROM BookCopies INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
     INNER JOIN Books ON BookCopies.book_id = Books.book_id
     INNER JOIN Authors ON Books.author_id = Authors.author_id
     INNER JOIN CheckedBooks ON CheckedBooks.copy_id = BookCopies.copy_id
-    Inner JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
-    WHERE Checkouts.checkout_id = %s);
+    INNER JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
+    WHERE Checkouts.checkout_id = %s)
+)
+GROUP BY BookCopies.copy_id
+ORDER BY Books.title asc
+;
     """
     bookcopies_cursor = db.execute_query(
         db_connection=db_connection,
@@ -171,6 +180,7 @@ def go_to_checkedbooks(checkout_id):
             query=insert_checkedbook_query,
             query_params=(checkout_id, selected_bookcopy, selected_return),
         )
+        return redirect(request.referrer)
 
     return render_template(
         "table_checkedbooks.j2",
