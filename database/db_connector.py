@@ -11,7 +11,7 @@ def connect_to_database(host, user, passwd, db):
     """
     connects to a database and returns a database objects
     """
-    db_connection = pymysql.connect(host=host, user=user, password=passwd, database=db)
+    db_connection = pymysql.connect(host=host, user=user, password=passwd, database=db, connect_timeout="")
     return db_connection
 
 

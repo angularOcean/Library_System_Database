@@ -274,3 +274,5 @@ def delete_book(id):
         db_connection=db_connection, query=query, query_params=(id,)
     )
     return redirect("/books.html")
+
+
