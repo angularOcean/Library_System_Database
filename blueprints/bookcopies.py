@@ -46,7 +46,7 @@ def bookcopies_page():
     return render_template(
         "table_template.j2",
         title="Book Copies",
-        description="This is a database of individual copies of books",
+        description="This is a read-only list of all book copies items in the Penguin Library System. Please edit any book information from the Books page.",
         headings=bookcopies_headings,
         data=results,
         routeURL="bookcopy",

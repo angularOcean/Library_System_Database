@@ -73,7 +73,7 @@ def checkedbooks_page():
     return render_template(
         "table_template.j2",
         title="Checked Books",
-        description="This is a read-only list of all checkout line items in the Penguin Library Database. Please edit any checkout information from the Checkouts page.",
+        description="This is a read-only list of all checkout line items in the Penguin Library System. Please edit any checkout information from the Checkouts page.",
         headings=checkedbooks_headings,
         data=results_list,
         routeURL="checkedbook",

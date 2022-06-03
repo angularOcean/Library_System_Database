@@ -54,7 +54,7 @@ def publishers_page():
     return render_template(
         "table_template.j2",
         title="Book Publishers",
-        description="This is a database of publishers",
+        description="This is the publisher data for the Penguin Library System.",
         headings=publishers_headings,
         data=results,
         routeURL="publisher",

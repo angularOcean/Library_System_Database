@@ -1,4 +1,4 @@
-#Authors Page: Select, Insert, Update, Delete
+# Authors Page: Select, Insert, Update, Delete
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
@@ -9,7 +9,7 @@ from dotenv import load_dotenv, find_dotenv
 # Load the .env file into the environment variables
 load_dotenv(find_dotenv())
 
-authors_bp = Blueprint('authors', __name__)
+authors_bp = Blueprint("authors", __name__)
 
 # Configuration
 app = Flask(__name__)
@@ -56,7 +56,7 @@ def authors_page():
     return render_template(
         "table_template.j2",
         title="Authors",
-        description="This is a list of authors.",
+        description="This is the author data for the Penguin Library System.",
         headings=authors_headings,
         routeURL="author",
         data=results,

@@ -1,10 +1,10 @@
-#Patrons Page: Select, Insert, Update, Delete
+# Patrons Page: Select, Insert, Update, Delete
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
 
-patrons_bp = Blueprint('patrons', __name__)
+patrons_bp = Blueprint("patrons", __name__)
 
 # Configuration
 app = Flask(__name__)
@@ -26,7 +26,7 @@ else:
     )
 
 # -----------PATRONS-----------
-# patrons.html 
+# patrons.html
 @patrons_bp.route("/patrons.html", methods=["POST", "GET"])
 def patrons_page():
     query = """ 
@@ -58,7 +58,7 @@ def patrons_page():
     return render_template(
         "table_template.j2",
         title="Patrons",
-        description="This is a database of patrons.",
+        description="This is the patron data for the Penguin Library System.",
         headings=patrons_headings,
         data=results,
         routeURL="patron",

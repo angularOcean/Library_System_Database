@@ -1,11 +1,11 @@
-#Checkouts Page: Select, Insert, Update, Delete
-#CheckedBooks Insert, Update, and Delete from this page
- 
+# Checkouts Page: Select, Insert, Update, Delete
+# CheckedBooks Insert, Update, and Delete from this page
+
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
 
-checkouts_bp = Blueprint('checkouts', __name__)
+checkouts_bp = Blueprint("checkouts", __name__)
 
 # Configuration
 app = Flask(__name__)
@@ -35,8 +35,7 @@ def checkouts_page():
     query = """ 
     select
         Checkouts.checkout_id,
-        Patrons.patron_first,  
-        Patrons.patron_last,
+        concat(Patrons.patron_first, ' ', Patrons.patron_last) as patron_name,
         Checkouts.checkout_date,
         Checkouts.return_date
     from Patrons
@@ -47,8 +46,7 @@ def checkouts_page():
     results = cursor.fetchall()
     checkouts_headings = [
         "Checkout ID",
-        "First Name",
-        "Last Name",
+        "Patron Name",
         "Checkout Date",
         "Return Date",
     ]
@@ -75,7 +73,7 @@ def checkouts_page():
     return render_template(
         "table_template.j2",
         title="Checkouts",
-        description="This is a database of checkouts. To select a checkout, click on the Checkout ID. This will display the CheckedBooks table for that Checkout ID. On that page, you can add, update, and delete the patron's checkout items.",
+        description="This is the checkout data for the Penguin Library System.",
         headings=checkouts_headings,
         data=results,
         name_dropdown=results2,
@@ -147,5 +145,3 @@ def delete_checkout(id):
         db_connection=db_connection, query=query, query_params=(id,)
     )
     return redirect("/checkouts.html")
-
-

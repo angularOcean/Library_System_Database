@@ -59,7 +59,7 @@ def locations_page():
     return render_template(
         "table_template.j2",
         title="Library Locations",
-        description="This is a database of library locations",
+        description="This is the location data for the Penguin Library System.",
         headings=locations_headings,
         data=results,
         routeURL="location",

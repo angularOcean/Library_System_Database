@@ -60,7 +60,7 @@ body {
   }
 
   .insert {
-    margin: 2 auto;
+    margin: 10 auto 20 auto;
     width: 550px;
     padding: 20px 25px;
     background-color: #f2f2f3;
@@ -75,6 +75,7 @@ body {
 
   p {
     margin-left: 25px;
+    margin-right: 30px;
   }
 
   div.home {
@@ -127,6 +128,7 @@ body {
 
 table { 
     border: 5px solid black;
+    margin: 10px 10px;
 }
 th, td { 
     border: 3px solid rgb(26, 47, 124);

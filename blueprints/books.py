@@ -71,7 +71,7 @@ def books_page():
     return render_template(
         "table_books.j2",
         title="Books",
-        description="This is a database of books.",
+        description="This is the book data for the Penguin Library System.",
         headings=books_headings,
         data=results,
         routeURL="book",
