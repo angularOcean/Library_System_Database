@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS Locations;
  */
 CREATE TABLE Locations (
     location_id INT UNSIGNED AUTO_INCREMENT,
-    location_name VARCHAR (255) NOT NULL,
-    location_address VARCHAR (255) NOT NULL,
+    location_name VARCHAR (255),
+    location_address VARCHAR (255),
     PRIMARY KEY (location_id)
 );
 
@@ -78,7 +78,8 @@ CREATE TABLE BookCopies (
     PRIMARY KEY (copy_id),
     FOREIGN KEY (book_id) REFERENCES Books (book_id) 
                 ON DELETE CASCADE 
-                ON UPDATE CASCADE,
+                ON UPDATE
+                 CASCADE,
     FOREIGN KEY (location_id) REFERENCES Locations (location_id) 
                 ON DELETE SET NULL 
                 ON UPDATE CASCADE
