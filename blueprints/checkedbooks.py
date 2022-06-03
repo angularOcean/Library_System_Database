@@ -89,7 +89,7 @@ def go_to_checkedbooks(checkout_id):
     FROM Checkouts
     INNER JOIN CheckedBooks ON Checkouts.checkout_id = CheckedBooks.checkout_id
     INNER JOIN BookCopies ON CheckedBooks.copy_id = BookCopies.copy_id
-    INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
+    LEFT JOIN Locations ON BookCopies.location_id = Locations.location_id
     INNER JOIN Books ON BookCopies.book_id = Books.book_id
     WHERE Checkouts.checkout_id = %s
     ORDER BY Books.title ASC;
