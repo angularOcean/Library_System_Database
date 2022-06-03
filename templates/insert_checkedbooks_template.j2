@@ -3,9 +3,9 @@
 Please select the book copy you would like to add to this checkout. 
 </p>
 <br>
-<div id="insert">
-    <form method="POST" id= "insert {{ title }}">
-        <fieldset>
+<div class="insert" id="insert_checkedbooks_div">
+    <form method="POST" id="insert_checkedbooks_form">
+        <fieldset id="insert_checkedbooks_fieldset">
             <legend><strong>Add Book Copy to {{ title }} </strong></legend>
             <fieldset class="fields">
             {{ add_checkedbook_form.hidden_tag() }}

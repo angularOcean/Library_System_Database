@@ -4,7 +4,7 @@
 # Source URL: https://wtforms.readthedocs.io/en/3.0.x/fields/#the-field-base-class
 
 
-# --Citation for 13-digit ISBN Regex:
+# Citation for 13-digit ISBN Regex:
 # Date: 05/20/2022
 # Copied From: O'Reilly Regular Expressions Cookbook
 # Source URL: https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s13.html -->
@@ -23,6 +23,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SubmitField, BooleanField
 from wtforms.validators import InputRequired, Regexp
+
+
 class AuthorsFilter(FlaskForm):
     author_dropdown = SelectField(
         "Filter by Author", coerce=int, validators=[InputRequired()]

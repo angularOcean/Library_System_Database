@@ -1,7 +1,6 @@
 /*
 # 
 ------- Citations ---------
-
 # Citation for table_template:
 # Date: 05/03/2022
 # Based on:
@@ -60,13 +59,19 @@ body {
     display: flex;
   }
 
-  #insert {
-    width: 500px;
+  .insert {
     margin: 2 auto;
+    width: 550px;
+    padding: 20px 25px;
     background-color: #f2f2f3;
     border: 5px solid black;
     align-items: left;
   }
+
+  #insert_checkedbooks_div {
+    width: 880px;
+  }
+
 
   p {
     margin-left: 25px;
@@ -140,8 +145,12 @@ select {
 }
 
 #homepage_table {
-  margin-left: auto;
-  margin-right: auto;
+  margin: 20px auto;
+  padding: 5px;
+}
+
+#homepage_table tr, th, td {
+  padding: 8px;
 }
 
 #view_bookcopies_button {
@@ -168,6 +177,7 @@ select {
 
 
 input, select {
-  margin: 5px;
+  margin: 6px;
 }
+
 
