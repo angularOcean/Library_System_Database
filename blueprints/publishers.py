@@ -2,28 +2,9 @@
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
-from config import DevelopmentConfig, ProductionConfig
+import app
 
 publishers_bp = Blueprint("publishers", __name__)
-
-# Configuration
-app = Flask(__name__)
-if app.config["ENV"] == "production":
-    app.config.from_object("config.ProductionConfig")
-    db_connection = db.connect_to_database(
-        ProductionConfig.DB_HOST,
-        ProductionConfig.DB_USER,
-        ProductionConfig.DB_PASSWORD,
-        ProductionConfig.DB_NAME,
-    )
-else:
-    app.config.from_object("config.DevelopmentConfig")
-    db_connection = db.connect_to_database(
-        DevelopmentConfig.DB_HOST,
-        DevelopmentConfig.DB_USER,
-        DevelopmentConfig.DB_PASSWORD,
-        DevelopmentConfig.DB_NAME,
-    )
 
 # -----------PUBLISHERS-----------
 # publishers.html
@@ -35,7 +16,7 @@ def publishers_page():
     from Publishers
     order by Publishers.publisher_name asc;
     """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=app.db_connection, query=query)
     results = cursor.fetchall()
     publishers_headings = ["ID", "Publisher Name"]
 
@@ -45,7 +26,7 @@ def publishers_page():
         publisher_name = request.form["Publisher Name"]
         query = f"INSERT INTO Publishers(publisher_name) VALUES (%s); "
         cursor = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(publisher_name,),
         )
@@ -67,7 +48,7 @@ def publishers_edit(id):
     if request.method == "GET":
         query = "SELECT publisher_name FROM Publishers WHERE publisher_id = %s"
         curr = db.execute_query(
-            db_connection=db_connection, query=query, query_params=(id,)
+            db_connection=app.db_connection, query=query, query_params=(id,)
         )
         info = curr.fetchall()
         print(info)
@@ -80,7 +61,7 @@ def publishers_edit(id):
         publisher_id = id
         query = f"update Publishers set publisher_name = %s where publisher_id = %s;"
         curr = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(publisher_name, publisher_id),
         )
@@ -101,6 +82,6 @@ def publishers_edit(id):
 def delete_publisher(id):
     query = "DELETE FROM Publishers WHERE publisher_id = %s"
     curr = db.execute_query(
-        db_connection=db_connection, query=query, query_params=(id,)
+        db_connection=app.db_connection, query=query, query_params=(id,)
     )
     return redirect("/publishers.html")

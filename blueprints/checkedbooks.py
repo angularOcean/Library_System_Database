@@ -3,30 +3,10 @@
 
 from flask import Blueprint, Flask, render_template, request, redirect, jsonify
 import database.db_connector as db
-from config import DevelopmentConfig, ProductionConfig
+import app
 from forms import AddCheckedBook
 
 checkedbooks_bp = Blueprint("checkedbooks", __name__)
-
-
-# Configuration
-app = Flask(__name__)
-if app.config["ENV"] == "production":
-    app.config.from_object("config.ProductionConfig")
-    db_connection = db.connect_to_database(
-        ProductionConfig.DB_HOST,
-        ProductionConfig.DB_USER,
-        ProductionConfig.DB_PASSWORD,
-        ProductionConfig.DB_NAME,
-    )
-else:
-    app.config.from_object("config.DevelopmentConfig")
-    db_connection = db.connect_to_database(
-        DevelopmentConfig.DB_HOST,
-        DevelopmentConfig.DB_USER,
-        DevelopmentConfig.DB_PASSWORD,
-        DevelopmentConfig.DB_NAME,
-    )
 
 # -----------CHECKEDBOOKS (DIRECT) -----------
 # checkedbooks.html
@@ -48,7 +28,7 @@ def checkedbooks_page():
         inner join Patrons on Patrons.patron_id = Checkouts.patron_id
     order by Checkouts.checkout_date desc;
     """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=app.db_connection, query=query)
     results = list(cursor.fetchall())
 
     checkedbooks_headings = [
@@ -95,7 +75,7 @@ def go_to_checkedbooks(checkout_id):
     ORDER BY Books.title ASC;
     """
     curr = db.execute_query(
-        db_connection=db_connection, query=query, query_params=(checkout_id)
+        db_connection=app.db_connection, query=query, query_params=(checkout_id)
     )
     info = list(curr.fetchall())
     checkedbooks_headings = [
@@ -126,7 +106,7 @@ def go_to_checkedbooks(checkout_id):
     WHERE Checkouts.checkout_id = %s
     """
     curr2 = db.execute_query(
-        db_connection=db_connection, query=query2, query_params=(checkout_id)
+        db_connection=app.db_connection, query=query2, query_params=(checkout_id)
     )
     info2 = curr2.fetchone()
 
@@ -163,7 +143,7 @@ ORDER BY Books.title asc
 ;
     """
     bookcopies_cursor = db.execute_query(
-        db_connection=db_connection,
+        db_connection=app.db_connection,
         query=bookcopies_query,
         query_params=(checkout_id, checkout_id),
     )
@@ -176,7 +156,7 @@ ORDER BY Books.title asc
         # INSERT Query
         insert_checkedbook_query = "INSERT INTO CheckedBooks (checkout_id, copy_id, returned) VALUES (%s, %s, %s)"
         insert_checkedbook_cursor = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=insert_checkedbook_query,
             query_params=(checkout_id, selected_bookcopy, selected_return),
         )
@@ -200,7 +180,7 @@ ORDER BY Books.title asc
 def checkedbooks_edit(id):
     query1 = "select checkout_id from checkedbooks where checked_book_id = %s;"
     cursor = db.execute_query(
-        db_connection=db_connection,
+        db_connection=app.db_connection,
         query=query1,
         query_params=(id,),
     )
@@ -209,7 +189,7 @@ def checkedbooks_edit(id):
     if request.method == "GET":
         query2 = "SELECT returned from checkedbooks where checked_book_id = %s;"
         curr = db.execute_query(
-            db_connection=db_connection, query=query2, query_params=(id,)
+            db_connection=app.db_connection, query=query2, query_params=(id,)
         )
         info = curr.fetchone()
 
@@ -221,7 +201,7 @@ def checkedbooks_edit(id):
         checkedbook_id = id
         query = f"update Checkedbooks set returned = %s where checked_book_id = %s;"
         curr = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(checkedbook_returned, checkedbook_id),
         )
@@ -244,7 +224,7 @@ def checkedbooks_edit(id):
 def delete_checkedbook(id):
     query1 = "select checkout_id from checkedbooks where checked_book_id = %s;"
     cursor = db.execute_query(
-        db_connection=db_connection,
+        db_connection=app.db_connection,
         query=query1,
         query_params=(id,),
     )
@@ -253,6 +233,6 @@ def delete_checkedbook(id):
 
     query2 = "DELETE FROM checkedbooks WHERE checked_book_id = %s"
     curr = db.execute_query(
-        db_connection=db_connection, query=query2, query_params=(id,)
+        db_connection=app.db_connection, query=query2, query_params=(id,)
     )
     return redirect(request.referrer)

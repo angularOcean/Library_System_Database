@@ -2,30 +2,12 @@
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
-from config import DevelopmentConfig, ProductionConfig
+import app
 from forms import AuthorsFilter, AddBook
 
 books_bp = Blueprint("books", __name__)
 
 # Configuration
-app = Flask(__name__)
-if app.config["ENV"] == "production":
-    app.config.from_object("config.ProductionConfig")
-    db_connection = db.connect_to_database(
-        ProductionConfig.DB_HOST,
-        ProductionConfig.DB_USER,
-        ProductionConfig.DB_PASSWORD,
-        ProductionConfig.DB_NAME,
-    )
-else:
-    app.config.from_object("config.DevelopmentConfig")
-    db_connection = db.connect_to_database(
-        DevelopmentConfig.DB_HOST,
-        DevelopmentConfig.DB_USER,
-        DevelopmentConfig.DB_PASSWORD,
-        DevelopmentConfig.DB_NAME,
-    )
-
 # -----------BOOKS-----------
 # books.html
 @books_bp.route("/books.html", methods=["POST", "GET"])
@@ -43,13 +25,13 @@ def books_page():
         left join Publishers on Books.publisher_id = Publishers.publisher_id
     order by Authors.author_last asc, Books.title asc;
     """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=app.db_connection, query=query)
     results = cursor.fetchall()
     books_headings = ["ID", "ISBN", "Title", "Author", "Publisher", "Year"]
 
     # Set up Dropdowns for Filter and Add Book Forms
     author_query = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
-    author_cursor = db.execute_query(db_connection=db_connection, query=author_query)
+    author_cursor = db.execute_query(db_connection=app.db_connection, query=author_query)
     author_results = list(author_cursor.fetchall())
     author_form = AuthorsFilter()
     author_form.author_dropdown.choices = author_results
@@ -60,7 +42,7 @@ def books_page():
 
     publisher_query = """SELECT publisher_id, publisher_name FROM Publishers ORDER BY publisher_name ASC"""
     publisher_cursor = db.execute_query(
-        db_connection=db_connection, query=publisher_query
+        db_connection=app.db_connection, query=publisher_query
     )
     publisher_results = publisher_cursor.fetchall()
     add_book_form.publisher_dropdown.choices = publisher_results
@@ -87,7 +69,7 @@ def books_by_author():
     # Initialize Author Filter Form
     selected_author = None
     author_query = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
-    author_cursor = db.execute_query(db_connection=db_connection, query=author_query)
+    author_cursor = db.execute_query(db_connection=app.db_connection, query=author_query)
     author_results = author_cursor.fetchall()
     author_form = AuthorsFilter()
     author_form.author_dropdown.choices = author_results
@@ -110,7 +92,7 @@ def books_by_author():
     order by Books.title asc;
     """
     filter_cursor = db.execute_query(
-        db_connection=db_connection, query=filter_query, query_params=(selected_author,)
+        db_connection=app.db_connection, query=filter_query, query_params=(selected_author,)
     )
     filter_results = filter_cursor.fetchall()
 
@@ -119,7 +101,7 @@ def books_by_author():
     # Grab Author's Name for Page Information
     selected_query = "select concat(Authors.author_first, ' ', Authors.author_last) as author_name from Authors where Authors.author_id = %s"
     selected_cursor = db.execute_query(
-        db_connection=db_connection,
+        db_connection=app.db_connection,
         query=selected_query,
         query_params=(int(selected_author),),
     )
@@ -155,7 +137,7 @@ def books_add():
 
     # Get Valid Author Dropdown
     author_query = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
-    author_query = db.execute_query(db_connection=db_connection, query=author_query)
+    author_query = db.execute_query(db_connection=app.db_connection, query=author_query)
     author_results = author_query.fetchall()
     add_book_form.author_dropdown.choices = author_results
     author_form.author_dropdown.choices = author_results
@@ -163,7 +145,7 @@ def books_add():
     # Get Valid Publisher Dropdown
     publisher_query = """SELECT publisher_id, publisher_name FROM Publishers ORDER BY publisher_name ASC"""
     publisher_cursor = db.execute_query(
-        db_connection=db_connection, query=publisher_query
+        db_connection=app.db_connection, query=publisher_query
     )
     publisher_results = publisher_cursor.fetchall()
     add_book_form.publisher_dropdown.choices = publisher_results
@@ -179,7 +161,7 @@ def books_add():
         # Insert Into Database
         query = """INSERT INTO Books (isbn, title, author_id, publisher_id, year) VALUES (%s, %s, %s, %s, %s); """
         cursor = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(
                 input_isbn,
@@ -208,7 +190,7 @@ def books_edit(id):
         left join Publishers on Books.publisher_id = Publishers.publisher_id
         where Books.book_id = %s;"""
         curr = db.execute_query(
-            db_connection=db_connection, query=query, query_params=(id,)
+            db_connection=app.db_connection, query=query, query_params=(id,)
         )
         info = curr.fetchone()
 
@@ -223,12 +205,12 @@ def books_edit(id):
 
     # Get Valid Author Dropdown
     query2 = """SELECT author_id, concat(author_first, ' ', author_last) as author_name FROM Authors ORDER BY author_last ASC"""
-    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    cursor2 = db.execute_query(db_connection=app.db_connection, query=query2)
     results2 = cursor2.fetchall()
 
     # Get Valid Publisher Dropdown
     query3 = """SELECT publisher_id, publisher_name FROM Publishers ORDER BY publisher_name ASC"""
-    cursor3 = db.execute_query(db_connection=db_connection, query=query3)
+    cursor3 = db.execute_query(db_connection=app.db_connection, query=query3)
     results3 = cursor3.fetchall()
 
     if request.method == "POST":
@@ -241,7 +223,7 @@ def books_edit(id):
         book_id = id
         query = "UPDATE Books SET isbn=%s, title=%s, author_id=%s, publisher_id=%s, year=%s WHERE book_id=%s;"
         curr = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(
                 input_isbn,
@@ -271,7 +253,7 @@ def books_edit(id):
 def delete_book(id):
     query = "DELETE FROM Books WHERE book_id = %s"
     curr = db.execute_query(
-        db_connection=db_connection, query=query, query_params=(id,)
+        db_connection=app.db_connection, query=query, query_params=(id,)
     )
     return redirect("/books.html")
 

@@ -1,28 +1,9 @@
 from flask import Blueprint, Flask, render_template, request, redirect
+import app
 import database.db_connector as db
-from config import DevelopmentConfig, ProductionConfig
 from forms import AddCopy
 
 bookcopies_bp = Blueprint("bookcopies", __name__)
-
-# Configuration
-app = Flask(__name__)
-if app.config["ENV"] == "production":
-    app.config.from_object("config.ProductionConfig")
-    db_connection = db.connect_to_database(
-        ProductionConfig.DB_HOST,
-        ProductionConfig.DB_USER,
-        ProductionConfig.DB_PASSWORD,
-        ProductionConfig.DB_NAME,
-    )
-else:
-    app.config.from_object("config.DevelopmentConfig")
-    db_connection = db.connect_to_database(
-        DevelopmentConfig.DB_HOST,
-        DevelopmentConfig.DB_USER,
-        DevelopmentConfig.DB_PASSWORD,
-        DevelopmentConfig.DB_NAME,
-    )
 
 # -----------BOOKCOPIES (DIRECT VIEW) -----------
 # bookcopies.html
@@ -39,7 +20,7 @@ def bookcopies_page():
         inner join Authors on Books.author_id = Authors.author_id
     order by Books.title asc;
     """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=app.db_connection, query=query)
     results = cursor.fetchall()
     bookcopies_headings = ["Copy ID", "Title", "Author", "Location"]
 
@@ -64,7 +45,7 @@ def go_to_bookcopies(book_id):
     WHERE bookcopies.book_id = %s
     """
     curr = db.execute_query(
-        db_connection=db_connection, query=query1, query_params=(book_id)
+        db_connection=app.db_connection, query=query1, query_params=(book_id)
     )
     info = curr.fetchall()
     bookcopy_headings = ["Copy ID", "Book ID", "Location"]
@@ -79,14 +60,14 @@ def go_to_bookcopies(book_id):
     """
 
     curr2 = db.execute_query(
-        db_connection=db_connection, query=query2, query_params=(book_id)
+        db_connection=app.db_connection, query=query2, query_params=(book_id)
     )
     titleinfo = curr2.fetchone()
     print(titleinfo)
 
     # Get Valid Locations Dropdown
     location_query = """SELECT location_id, location_name FROM Locations ORDER BY location_name ASC"""
-    location_query = db.execute_query(db_connection=db_connection, query=location_query)
+    location_query = db.execute_query(db_connection=app.db_connection, query=location_query)
     location_results = list(location_query.fetchall())
     location_results.append((-1, "No Location"))
 
@@ -104,7 +85,7 @@ def go_to_bookcopies(book_id):
                 """INSERT INTO BookCopies (book_id, location_id) VALUES (%s, NULL); """
             )
             add_copy_cursor = db.execute_query(
-                db_connection=db_connection,
+                db_connection=app.db_connection,
                 query=add_copy_query,
                 query_params=(book_id,),
             )
@@ -114,7 +95,7 @@ def go_to_bookcopies(book_id):
                 """INSERT INTO BookCopies (book_id, location_id) VALUES (%s, %s); """
             )
             add_copy_cursor = db.execute_query(
-                db_connection=db_connection,
+                db_connection=app.db_connection,
                 query=add_copy_query,
                 query_params=(book_id, input_location),
             )
@@ -136,7 +117,7 @@ def bookcopies_edit(id):
     # Retrieve Book ID information
     query1 = "select Books.book_id from BookCopies INNER JOIN Books ON BookCopies.book_id = Books.book_id WHERE BookCopies.copy_id  = %s;"
     cursor = db.execute_query(
-        db_connection=db_connection,
+        db_connection=app.db_connection,
         query=query1,
         query_params=(id,),
     )
@@ -154,7 +135,7 @@ def bookcopies_edit(id):
             INNER JOIN Authors ON Books.author_id = Authors.author_id
         WHERE BookCopies.copy_id = %s"""
         curr = db.execute_query(
-            db_connection=db_connection, query=query, query_params=(id,)
+            db_connection=app.db_connection, query=query, query_params=(id,)
         )
         info = curr.fetchone()
     bookcopies_edit_headings = [
@@ -167,7 +148,7 @@ def bookcopies_edit(id):
 
     # Get Valid Location Dropdown
     query2 = """SELECT location_id, location_name FROM Locations ORDER BY location_name ASC"""
-    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    cursor2 = db.execute_query(db_connection=app.db_connection, query=query2)
     results2 = cursor2.fetchall()
 
     if request.method == "POST":
@@ -178,14 +159,14 @@ def bookcopies_edit(id):
         if location_input == "-1":
             null_query = "UPDATE BookCopies SET location_id = NULL WHERE copy_id=%s"
             null_cursor = db.execute_query(
-                db_connection=db_connection,
+                db_connection=app.db_connection,
                 query=null_query,
                 query_params=(copy_id,),
             )
         else:
             query = "UPDATE BookCopies SET location_id = %s WHERE copy_id=%s"
             curr = db.execute_query(
-                db_connection=db_connection,
+                db_connection=app.db_connection,
                 query=query,
                 query_params=(location_input, copy_id),
             )
@@ -207,7 +188,7 @@ def bookcopy_delete(id):
 
     query1 = "select Books.book_id from BookCopies INNER JOIN Books ON BookCopies.book_id = Books.book_id WHERE BookCopies.copy_id  = %s;"
     cursor = db.execute_query(
-        db_connection=db_connection,
+        db_connection=app.db_connection,
         query=query1,
         query_params=(id,),
     )
@@ -215,6 +196,6 @@ def bookcopy_delete(id):
 
     query = "DELETE FROM BookCopies WHERE copy_id = %s"
     curr = db.execute_query(
-        db_connection=db_connection, query=query, query_params=(id,)
+        db_connection=app.db_connection, query=query, query_params=(id,)
     )
     return redirect(request.referrer)

@@ -2,28 +2,8 @@
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
-from config import DevelopmentConfig, ProductionConfig
-
+import app
 patrons_bp = Blueprint("patrons", __name__)
-
-# Configuration
-app = Flask(__name__)
-if app.config["ENV"] == "production":
-    app.config.from_object("config.ProductionConfig")
-    db_connection = db.connect_to_database(
-        ProductionConfig.DB_HOST,
-        ProductionConfig.DB_USER,
-        ProductionConfig.DB_PASSWORD,
-        ProductionConfig.DB_NAME,
-    )
-else:
-    app.config.from_object("config.DevelopmentConfig")
-    db_connection = db.connect_to_database(
-        DevelopmentConfig.DB_HOST,
-        DevelopmentConfig.DB_USER,
-        DevelopmentConfig.DB_PASSWORD,
-        DevelopmentConfig.DB_NAME,
-    )
 
 # -----------PATRONS-----------
 # patrons.html
@@ -37,7 +17,7 @@ def patrons_page():
     from Patrons
     order by patron_last asc;
     """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=app.db_connection, query=query)
     results = cursor.fetchall()
     patrons_headings = ["ID", "First Name", "Last Name", "Email"]
 
@@ -49,7 +29,7 @@ def patrons_page():
         patron_email = request.form["Email"]
         query = f"INSERT INTO Patrons(patron_first, patron_last, email) VALUES (%s, %s, %s);"
         cursor = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(patron_first, patron_last, patron_email),
         )
@@ -71,7 +51,7 @@ def patrons_edit(id):
     if request.method == "GET":
         query = "SELECT patron_id, patron_first, patron_last, email FROM Patrons WHERE patron_id = %s"
         curr = db.execute_query(
-            db_connection=db_connection, query=query, query_params=(id,)
+            db_connection=app.db_connection, query=query, query_params=(id,)
         )
         info = curr.fetchall()
         print(info)
@@ -86,7 +66,7 @@ def patrons_edit(id):
         patron_id = id
         query = "update Patrons set patron_first = %s, patron_last = %s, email = %s where patron_id = %s;"
         curr = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(patron_first, patron_last, patron_email, patron_id),
         )
@@ -107,6 +87,6 @@ def patrons_edit(id):
 def delete_patron(id):
     query = "DELETE FROM Patrons WHERE patron_id = %s"
     curr = db.execute_query(
-        db_connection=db_connection, query=query, query_params=(id,)
+        db_connection=app.db_connection, query=query, query_params=(id,)
     )
     return redirect("/patrons.html")

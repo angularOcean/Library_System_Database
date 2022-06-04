@@ -3,28 +3,9 @@
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
-from config import DevelopmentConfig, ProductionConfig
+import app
 
 checkouts_bp = Blueprint("checkouts", __name__)
-
-# Configuration
-app = Flask(__name__)
-if app.config["ENV"] == "production":
-    app.config.from_object("config.ProductionConfig")
-    db_connection = db.connect_to_database(
-        ProductionConfig.DB_HOST,
-        ProductionConfig.DB_USER,
-        ProductionConfig.DB_PASSWORD,
-        ProductionConfig.DB_NAME,
-    )
-else:
-    app.config.from_object("config.DevelopmentConfig")
-    db_connection = db.connect_to_database(
-        DevelopmentConfig.DB_HOST,
-        DevelopmentConfig.DB_USER,
-        DevelopmentConfig.DB_PASSWORD,
-        DevelopmentConfig.DB_NAME,
-    )
 
 # -----------CHECKOUTS-----------
 
@@ -42,7 +23,7 @@ def checkouts_page():
         inner join Checkouts on Patrons.patron_id = Checkouts.patron_id
     order by Checkouts.checkout_id asc;
     """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=app.db_connection, query=query)
     results = cursor.fetchall()
     checkouts_headings = [
         "Checkout ID",
@@ -53,7 +34,7 @@ def checkouts_page():
 
     # Get Valid Patron Dropdown
     query2 = """SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name FROM Patrons ORDER BY patron_last ASC;"""
-    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    cursor2 = db.execute_query(db_connection=app.db_connection, query=query2)
     results2 = cursor2.fetchall()
 
     # checkout INSERT
@@ -64,7 +45,7 @@ def checkouts_page():
         input_return_date = request.form["return_date_input"]
         query = """INSERT INTO Checkouts (checkout_date, return_date, patron_id) VALUES (%s, %s, %s) ; """
         cursor = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(input_checkout_date, input_return_date, input_patron),
         )
@@ -91,7 +72,7 @@ def checkouts_edit(id):
         INNER JOIN Checkouts ON Patrons.patron_id = Checkouts.patron_id 
         WHERE checkout_id = %s"""
         curr = db.execute_query(
-            db_connection=db_connection, query=query, query_params=(id,)
+            db_connection=app.db_connection, query=query, query_params=(id,)
         )
         info = curr.fetchone()
     checkouts_edit_headings = [
@@ -105,7 +86,7 @@ def checkouts_edit(id):
 
     # Get Valid Patron Dropdown
     query2 = """SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name FROM Patrons ORDER BY patron_last ASC"""
-    cursor2 = db.execute_query(db_connection=db_connection, query=query2)
+    cursor2 = db.execute_query(db_connection=app.db_connection, query=query2)
     results2 = cursor2.fetchall()
 
     if request.method == "POST":
@@ -116,7 +97,7 @@ def checkouts_edit(id):
         checkout_id = id
         query = "UPDATE Checkouts SET patron_id = %s, checkout_date=%s, return_date=%s WHERE checkout_id=%s"
         curr = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(
                 patron_choice,
@@ -142,6 +123,6 @@ def checkouts_edit(id):
 def delete_checkout(id):
     query = "DELETE FROM Checkouts WHERE checkout_id = %s"
     curr = db.execute_query(
-        db_connection=db_connection, query=query, query_params=(id,)
+        db_connection=app.db_connection, query=query, query_params=(id,)
     )
     return redirect("/checkouts.html")

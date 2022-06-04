@@ -2,28 +2,9 @@
 
 from flask import Blueprint, Flask, render_template, request, redirect
 import database.db_connector as db
-from config import DevelopmentConfig, ProductionConfig
+import app
 
 locations_bp = Blueprint('locations', __name__)
-
-# Configuration
-app = Flask(__name__)
-if app.config["ENV"] == "production":
-    app.config.from_object("config.ProductionConfig")
-    db_connection = db.connect_to_database(
-        ProductionConfig.DB_HOST,
-        ProductionConfig.DB_USER,
-        ProductionConfig.DB_PASSWORD,
-        ProductionConfig.DB_NAME,
-    )
-else:
-    app.config.from_object("config.DevelopmentConfig")
-    db_connection = db.connect_to_database(
-        DevelopmentConfig.DB_HOST,
-        DevelopmentConfig.DB_USER,
-        DevelopmentConfig.DB_PASSWORD,
-        DevelopmentConfig.DB_NAME,
-    )
 
 # -----------LOCATIONS-----------
 # locations.html
@@ -36,7 +17,7 @@ def locations_page():
     from Locations
     order by location_id asc;
     """
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    cursor = db.execute_query(db_connection=app.db_connection, query=query)
     results = cursor.fetchall()
     locations_headings = ["ID", "Name", "Address"]
 
@@ -49,7 +30,7 @@ def locations_page():
             f"INSERT INTO Locations(location_name, location_address) VALUES (%s,%s); "
         )
         cursor = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(loc_name, loc_address),
         )
@@ -72,7 +53,7 @@ def locations_edit(id):
     if request.method == "GET":
         query = "SELECT location_name, location_address FROM Locations WHERE location_id = %s"
         curr = db.execute_query(
-            db_connection=db_connection, query=query, query_params=(id,)
+            db_connection=app.db_connection, query=query, query_params=(id,)
         )
         info = curr.fetchall()
         print(info)
@@ -86,7 +67,7 @@ def locations_edit(id):
         loc_id = id
         query = f"update Locations set location_name = %s, location_address = %s where location_id = %s;"
         curr = db.execute_query(
-            db_connection=db_connection,
+            db_connection=app.db_connection,
             query=query,
             query_params=(loc_name, loc_address, loc_id),
         )
@@ -107,6 +88,6 @@ def locations_edit(id):
 def delete_location(id):
     query = "DELETE FROM Locations WHERE location_id = %s"
     curr = db.execute_query(
-        db_connection=db_connection, query=query, query_params=(id,)
+        db_connection=app.db_connection, query=query, query_params=(id,)
     )
     return redirect("/locations.html")
