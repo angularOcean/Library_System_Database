@@ -1,6 +1,6 @@
 # Publishers Page: Select, Insert, Update, Delete
 
-from flask import Blueprint, Flask, render_template, request, redirect
+from flask import Blueprint, Flask, render_template, request, redirect, g
 import database.db_connector as db
 import app
 

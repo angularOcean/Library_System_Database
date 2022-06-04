@@ -1,29 +1,19 @@
-# ------- Citations ---------
-
-# Citation for db_connector.py:
-# Date: 05/09/2022
-# Based on: CS340 Flask-starter-app guide on Github
-# Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/database/db_connector.py
-
 import pymysql
+from flask import g
 
+# -------- DATABASE -------------
 def connect_to_database(host, user, passwd, db):
     """
     connects to a database and returns a database objects
     """
-    db_connection = pymysql.connect(host=host, user=user, password=passwd, database=db)
-    return db_connection
-
+    if "db_connection" not in g:
+        g.db_connection = pymysql.connect(host=host, user=user, password=passwd, database=db)
+    return g.db_connection
 
 def execute_query(db_connection=None, query=None, query_params=()):
     """
     executes a given SQL query on the given db connection and returns a Cursor object
-    db_connection: a MySQLdb connection object created by connect_to_database()
-    query: string containing SQL query
-    returns: A Cursor object as specified at https://www.python.org/dev/peps/pep-0249/#cursor-objects.
-    You need to run .fetchall() or .fetchone() on that object to actually acccess the results.
     """
-
     if db_connection is None:
         print(
             "No connection to the database found! Have you called connect_to_database() first?"
@@ -35,19 +25,17 @@ def execute_query(db_connection=None, query=None, query_params=()):
         return None
 
     print("Executing %s with %s" % (query, query_params))
-    # Create a cursor to execute query. Why? Because apparently they optimize execution by retaining a reference according to PEP0249
-    cursor = db_connection.cursor()
 
-    """
-    params = tuple()
-    #create a tuple of paramters to send with the query
-    for q in query_params:
-        params = params + (q)
-    """
-    # TODO: Sanitize the query before executing it!!!
+    cursor = db_connection.cursor()
     cursor.execute(query, query_params)
-    # this will actually commit any changes to the database. without this no
-    # changes will be committed!
     db_connection.commit()
     return cursor
 
+def close_db(e=None):
+    """If this request connected to the database, close the
+    connection.
+    """
+    db = g.pop("db_connection", None)
+
+    if db is not None:
+        db.close()

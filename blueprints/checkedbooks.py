@@ -1,7 +1,7 @@
 # Checkedbooks Page: Select
 # https://stackoverflow.com/questions/61625290/flask-make-a-button-direct-to-another-page
 
-from flask import Blueprint, Flask, render_template, request, redirect, jsonify
+from flask import Blueprint, Flask, render_template, request, redirect, jsonify, g
 import database.db_connector as db
 import app
 from forms import AddCheckedBook
