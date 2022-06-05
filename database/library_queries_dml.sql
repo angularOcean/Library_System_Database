@@ -111,7 +111,7 @@ from Authors
 where Authors.author_id = %s
 
 /* Insert dropdown author */
-ELECT author_id, concat(author_first, ' ', author_last) as author_name 
+SELECT author_id, concat(author_first, ' ', author_last) as author_name 
 FROM Authors 
 ORDER BY author_last ASC
 
