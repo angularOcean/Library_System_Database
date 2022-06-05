@@ -25,6 +25,7 @@ import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
 import os
 import pymysql
+import app
 
 # -----------IMPORT BLUEPRINTS FOR ENTITIES-----------
 from blueprints.authors import authors_bp
