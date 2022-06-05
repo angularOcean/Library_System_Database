@@ -59,7 +59,7 @@ where author_first = :author_first_name_input
 /*
  
 
- /* ----------- BOOKS QUERIES---------------
+ /* ----------- BOOKS.py QUERIES---------------
  CREATE/INSERT
  READ/SELECT
  DELETE
@@ -69,33 +69,92 @@ where author_first = :author_first_name_input
  */
 
  /* Initial Table View*/
- select Books.isbn, 
- Books.title, 
- Books.year,
- Authors.author_first,
- Authors.author_last,
- Publishers.publisher_name
-from Books
-	inner join Authors on Books.author_id = Authors.author_id
-    inner join Publishers on Books.publisher_id = Publishers.publisher_id
-order by isbn asc;
+    select Books.book_id,
+    Books.isbn, 
+        Books.title, 
+        concat(Authors.author_first, ' ', Authors.author_last) as author_name,
+        Publishers.publisher_name,
+        Books.year
+    from Books
+        left join Authors on Books.author_id = Authors.author_id
+        left join Publishers on Books.publisher_id = Publishers.publisher_id
+    order by Authors.author_last asc, Books.title asc;
 
-/* Insertion */
-select publisher_id
-from Publishers
-where  publisher_id = :publisher_id_input;
+/*Set up Dropdown author*/
+  SELECT author_id, concat(author_first, ' ', author_last) as author_name 
+  FROM Authors 
+  ORDER BY author_last ASC
 
-select author_id
-from Authors
-where author_id = :author_id_input;
+/*Set up Dropdown publisher*/
+  SELECT publisher_id, publisher_name 
+  FROM Publishers 
+  ORDER BY publisher_name ASC
 
-insert into Books(isbn, title, year, author_id, publisher_id)
-values(:isbn_input, :title_input, :year_input, :author_id, :publisher_id);
+/*Books by author filter*/
+SELECT author_id, concat(author_first, ' ', author_last) as author_name 
+FROM Authors 
+ORDER BY author_last ASC
 
+/*Books by author table*/
+    select Books.book_id,
+    Books.isbn, 
+        Books.title,
+        Publishers.publisher_name,
+        Books.year
+    from Books
+        left join Authors on Books.author_id = Authors.author_id
+        left join Publishers on Books.publisher_id = Publishers.publisher_id
+    where Authors.author_id = %s
+    order by Books.title asc;
+
+/*Books by author page information*/
+select concat(Authors.author_first, ' ', Authors.author_last) as author_name 
+from Authors 
+where Authors.author_id = %s
+
+/* Insert dropdown author */
+ELECT author_id, concat(author_first, ' ', author_last) as author_name 
+FROM Authors 
+ORDER BY author_last ASC
+
+/* Insert dropdown publisher */
+SELECT publisher_id, publisher_name 
+FROM Publishers 
+ORDER BY publisher_name ASC
+
+/* Insert form submission  */
+INSERT INTO Books (isbn, title, author_id, publisher_id, year) 
+VALUES (%s, %s, %s, %s, %s);
+
+/* Update GET */
+        select Books.book_id,
+        Books.isbn, 
+        Books.title,
+        Authors.author_id, 
+        Publishers.publisher_id, 
+        Books.year
+        from Books
+        left join Authors on Books.author_id = Authors.author_id
+        left join Publishers on Books.publisher_id = Publishers.publisher_id
+        where Books.book_id = %s;
+
+/* Update dropdown author */
+SELECT author_id, concat(author_first, ' ', author_last) as author_name 
+FROM Authors 
+ORDER BY author_last ASC
+
+/* Update dropdown publisher */
+SELECT publisher_id, publisher_name 
+FROM Publishers 
+ORDER BY publisher_name ASC
+
+/* Update POST */
+UPDATE Books 
+SET isbn=%s, title=%s, author_id=%s, publisher_id=%s, year=%s 
+WHERE book_id=%s;
 
 /* Delete */
-delete from Books 
-where book_isbn = :book_isbn_input;
+DELETE FROM Books WHERE book_id = %s
 
 
 /* ----------- BOOKCOPIES.py QUERIES---------------
