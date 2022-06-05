@@ -19,7 +19,7 @@
  9. locations.html
  
  
- /* ----------- AUTHORS QUERIES---------------
+ /* ----------- AUTHORS.py QUERIES---------------
  CREATE/INSERT
  READ/SELECT
  UPDATE
@@ -29,28 +29,28 @@
 
  */
 /* Generate Initial Table View */
-select author_first,
-  author_last
-from Authors
+select author_id, author_first, author_last 
+from Authors 
 order by author_last asc;
 
 /* Insert */
 insert into (author_first, author_last)
 values (
-    :author_first_name_input,
-    :author_last_name_input
+    %s,
+    %s
   );
 
-/* Update */
-update Authors
-set author_first = :author_first_name_input,
-  author_last = :author_last_name_input
-where author_id = (
-    select author_id
-    from Authors
-    where author_first = :author_first_selected
-      and author_last = :author_last_selected
-  );
+/* Update Get */
+
+SELECT author_id, author_first, author_last 
+FROM Authors 
+WHERE author_id = %s;
+  
+
+/* Update Post */
+DELETE 
+FROM Authors 
+WHERE author_id = %s;
 
 /* Delete */
 delete from Authors
@@ -98,68 +98,85 @@ delete from Books
 where book_isbn = :book_isbn_input;
 
 
-/* ----------- BOOKCOPIES QUERIES---------------
+/* ----------- BOOKCOPIES.py QUERIES---------------
  CREATE/INSERT
  READ/SELECT
  DELETE
  pages: bookcopies.html
  */
 
-/* Generate Initial Table View */
-select Books.title,
-  Authors.author_first,
-  Authors.author_last,
-  Locations.location_name
-from Locations
-  inner join BookCopies on Locations.location_id = BookCopies.location_id
-  inner join Books on BookCopies.book_id = Books.book_id
-  inner join Authors on Books.author_id = Authors.author_id
-order by Books.title asc;
+/* Generate Initial Direct Table View */
+    select BookCopies.copy_id, 
+    Books.title,
+        concat(Authors.author_first, ' ', Authors.author_last) as author_name,
+        Locations.location_name
+    from Locations
+        right join BookCopies on Locations.location_id = BookCopies.location_id
+        inner join Books on BookCopies.book_id = Books.book_id
+        inner join Authors on Books.author_id = Authors.author_id
+    order by Books.title asc;
 
-/* Generate List of Books Currently On Shelf */
-select Books.title,
-concat(Authors.author_first, ' ', Authors.author_last) as author_name,
-  Locations.location_name
-from Locations
-  right join BookCopies on Locations.location_id = BookCopies.location_id
-  inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
-  inner join Books on BookCopies.book_id = Books.book_id
-  inner join Authors on Books.author_id = Authors.author_id
-where CheckedBooks.returned is null
-  or CheckedBooks.returned = 1
-order by Books.title asc;
+/*Bookcopies from Books View of Individual Books' copies*/
+    SELECT bookcopies.copy_id, bookcopies.book_id, locations.location_name
+    FROM bookcopies
+    LEFT JOIN locations ON bookcopies.location_id = locations.location_id
+    WHERE bookcopies.book_id = %s
 
-/* Generate List of Books Currently Checked Out 
- with Return Dates
- */
-select Books.title, 
-concat(Authors.author_first, ' ', Authors.author_last) as author_name,
-  Locations.location_name,
-  Checkouts.return_date
-from Locations
-  right join BookCopies on Locations.location_id = BookCopies.location_id
-  inner join Books on BookCopies.book_id = Books.book_id
-  inner join Authors on Books.author_id = Authors.author_id
-  inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
-  inner join Checkouts on CheckedBooks.checkout_id = Checkouts.checkout_id
-where CheckedBooks.returned = 0
-order by Books.title asc;
+/*Bookcopies from Books View of Individual Books' dropdown*/
+  SELECT location_id, location_name 
+  FROM Locations 
+  ORDER BY location_name ASC
 
-/* Create New Book Copy By Searching for Book ISBN. If ISBN is not found, redirect person to Create New Book Table */
-select book_id
-from Books
-where isbn = :isbn_input;
-/* if book_id found from isbn, search location id based on location name  */
-select location_id
-from Locations
-where location.location_name = :location_name_input;
-/* insert into BookCopies */
-insert into BookCopies (book_id, location_id)
-values (:book_id, :location_id);
 
-/* Delete Book Copy */
-delete from BookCopies
-where book_copy_id = :book_copy_selected_from_table;
+/*Bookcopies from Books View of Individual Books' copies form submission */
+  INSERT INTO BookCopies (book_id, location_id) VALUES (%s, NULL)
+
+/*Bookcopies from Books View of Individual Books' copies dropdown form insert into database*/
+  INSERT INTO BookCopies (book_id, location_id) VALUES (%s, %s);
+
+
+/*Bookcopies Update*/
+/* retrieve book ID info */
+select Books.book_id 
+from BookCopies 
+INNER JOIN Books ON BookCopies.book_id = Books.book_id 
+WHERE BookCopies.copy_id  = %s;
+
+/* update GET */
+        SELECT BookCopies.copy_id, 
+        Books.book_id, 
+        Books.title, 
+        concat(Authors.author_first, ' ', Authors.author_last) as author_name, Locations.location_name
+        FROM BookCopies 
+            LEFT JOIN Locations ON BookCopies.location_id = Locations.location_id
+            INNER JOIN Books ON BookCopies.book_id = Books.book_id
+            INNER JOIN Authors ON Books.author_id = Authors.author_id
+        WHERE BookCopies.copy_id = %s
+
+/*update dropdown*/
+SELECT location_id, location_name 
+FROM Locations 
+ORDER BY location_name ASC
+
+/*update dropdown location = -1*/
+UPDATE BookCopies 
+SET location_id = NULL 
+WHERE copy_id=%s
+
+/*update dropdown location else*/
+UPDATE BookCopies 
+SET location_id = %s 
+WHERE copy_id=%s
+
+
+/* Delete Book Copy Get*/
+select Books.book_id 
+from BookCopies INNER JOIN Books ON BookCopies.book_id = Books.book_id 
+WHERE BookCopies.copy_id  = %s;
+
+/* Delete Book Copy Post*/
+DELETE FROM BookCopies 
+WHERE copy_id = %s
 
 
 /* ----------- PATRONS QUERIES---------------
@@ -385,3 +402,4 @@ where location_id = (
 delete from Locations
 where location_name = :location_name_input
 	or location_address = :location_address_input;
+
