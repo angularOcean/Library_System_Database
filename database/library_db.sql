@@ -51,6 +51,8 @@ CREATE TABLE Publishers (
 
 /*
  Books
+ Author FK on delete or update, cascade
+ Publisher FK on delete or update, cascade
  */
 CREATE TABLE Books (
     book_id INT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -70,6 +72,8 @@ CREATE TABLE Books (
 
  /*
  BookCopies 
+ Book FK on delete or update cascade
+ Location FK on delete set null, on update cascade
  */
 CREATE TABLE BookCopies (
     copy_id INT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -78,8 +82,7 @@ CREATE TABLE BookCopies (
     PRIMARY KEY (copy_id),
     FOREIGN KEY (book_id) REFERENCES Books (book_id) 
                 ON DELETE CASCADE 
-                ON UPDATE
-                 CASCADE,
+                ON UPDATE CASCADE,
     FOREIGN KEY (location_id) REFERENCES Locations (location_id) 
                 ON DELETE SET NULL 
                 ON UPDATE CASCADE
@@ -98,6 +101,7 @@ CREATE TABLE Patrons (
 
 /*
  Checkouts
+ Patron FK on delete or update cascade
  */
 CREATE TABLE Checkouts (
     checkout_id INT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -112,6 +116,8 @@ CREATE TABLE Checkouts (
 
 /*
  CheckedBooks 
+ Checkout FK on delete or update cascade
+ Copy FK on delete or update cascade
  */
 CREATE TABLE CheckedBooks (
     checked_book_id INT UNIQUE NOT NULL AUTO_INCREMENT,
