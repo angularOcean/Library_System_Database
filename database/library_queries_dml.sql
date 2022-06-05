@@ -46,7 +46,6 @@ SELECT author_id, author_first, author_last
 FROM Authors 
 WHERE author_id = %s;
   
-
 /* Update Post */
 DELETE 
 FROM Authors 
@@ -56,7 +55,6 @@ WHERE author_id = %s;
 delete from Authors
 where author_first = :author_first_name_input
   and author_last = :author_last_name_input;
-/*
  
 
  /* ----------- BOOKS.py QUERIES---------------

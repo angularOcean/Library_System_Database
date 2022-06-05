@@ -1,3 +1,5 @@
+#Bookcopies Page: Create, Read, Update, Delete  
+
 from flask import Blueprint, Flask, render_template, request, redirect, g
 import app
 import database.db_connector as db

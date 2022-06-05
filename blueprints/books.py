@@ -1,4 +1,4 @@
-# Books Page: Select, Insert, Update, Delete
+# Books Page: Select, Insert, Update, Delete and navigation to bookcopies
 
 from flask import Blueprint, Flask, render_template, request, redirect, g
 import database.db_connector as db

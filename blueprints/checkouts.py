@@ -1,4 +1,4 @@
-# Checkouts Page: Select, Insert, Update, Delete
+# Checkouts Page: Select, Insert, Update, Delete and navigation to checkedbooks page
 # CheckedBooks Insert, Update, and Delete from this page
 
 from flask import Blueprint, Flask, render_template, request, redirect, g

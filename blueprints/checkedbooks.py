@@ -1,4 +1,4 @@
-# Checkedbooks Page: Select
+# Checkedbooks Page: Create, Read, Update, and Delete
 # https://stackoverflow.com/questions/61625290/flask-make-a-button-direct-to-another-page
 
 from flask import Blueprint, Flask, render_template, request, redirect, jsonify, g
