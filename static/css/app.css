@@ -21,12 +21,14 @@ https://pythonhow.com/python-tutorial/flask/Adding-CSS-styling-to-your-website/
 
 body {
     display: flex;
+    box-sizing: border-box;
     flex-flow: column wrap;
     justify-content: space-between;
     align-items: flex-start;
     margin-left: 0;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #444;
+    min-height: 100vh;
   }
   /*
    * Formatting the header area
@@ -102,7 +104,7 @@ body {
   }
   h2 {
     font-size: 2em;
-    margin-top: 40px;
+    margin-top: 25px;
     margin-left: 25px;
     text-align: center;
     letter-spacing: -2px;
