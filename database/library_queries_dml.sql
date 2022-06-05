@@ -69,16 +69,16 @@ where author_first = :author_first_name_input
  */
 
  /* Initial Table View*/
-    select Books.book_id,
-    Books.isbn, 
-        Books.title, 
-        concat(Authors.author_first, ' ', Authors.author_last) as author_name,
-        Publishers.publisher_name,
-        Books.year
-    from Books
-        left join Authors on Books.author_id = Authors.author_id
-        left join Publishers on Books.publisher_id = Publishers.publisher_id
-    order by Authors.author_last asc, Books.title asc;
+select Books.book_id,
+Books.isbn, 
+    Books.title, 
+    concat(Authors.author_first, ' ', Authors.author_last) as author_name,
+    Publishers.publisher_name,
+    Books.year
+from Books
+    left join Authors on Books.author_id = Authors.author_id
+    left join Publishers on Books.publisher_id = Publishers.publisher_id
+order by Authors.author_last asc, Books.title asc;
 
 /*Set up Dropdown author*/
   SELECT author_id, concat(author_first, ' ', author_last) as author_name 
@@ -96,16 +96,16 @@ FROM Authors
 ORDER BY author_last ASC
 
 /*Books by author table*/
-    select Books.book_id,
-    Books.isbn, 
-        Books.title,
-        Publishers.publisher_name,
-        Books.year
-    from Books
-        left join Authors on Books.author_id = Authors.author_id
-        left join Publishers on Books.publisher_id = Publishers.publisher_id
-    where Authors.author_id = %s
-    order by Books.title asc;
+select Books.book_id,
+Books.isbn, 
+    Books.title,
+    Publishers.publisher_name,
+    Books.year
+from Books
+    left join Authors on Books.author_id = Authors.author_id
+    left join Publishers on Books.publisher_id = Publishers.publisher_id
+where Authors.author_id = %s
+order by Books.title asc;
 
 /*Books by author page information*/
 select concat(Authors.author_first, ' ', Authors.author_last) as author_name 
@@ -127,16 +127,16 @@ INSERT INTO Books (isbn, title, author_id, publisher_id, year)
 VALUES (%s, %s, %s, %s, %s);
 
 /* Update GET */
-        select Books.book_id,
-        Books.isbn, 
-        Books.title,
-        Authors.author_id, 
-        Publishers.publisher_id, 
-        Books.year
-        from Books
-        left join Authors on Books.author_id = Authors.author_id
-        left join Publishers on Books.publisher_id = Publishers.publisher_id
-        where Books.book_id = %s;
+select Books.book_id,
+Books.isbn, 
+Books.title,
+Authors.author_id, 
+Publishers.publisher_id, 
+Books.year
+from Books
+left join Authors on Books.author_id = Authors.author_id
+left join Publishers on Books.publisher_id = Publishers.publisher_id
+where Books.book_id = %s;
 
 /* Update dropdown author */
 SELECT author_id, concat(author_first, ' ', author_last) as author_name 
@@ -165,21 +165,21 @@ DELETE FROM Books WHERE book_id = %s
  */
 
 /* Generate Initial Direct Table View */
-    select BookCopies.copy_id, 
-    Books.title,
-        concat(Authors.author_first, ' ', Authors.author_last) as author_name,
-        Locations.location_name
-    from Locations
-        right join BookCopies on Locations.location_id = BookCopies.location_id
-        inner join Books on BookCopies.book_id = Books.book_id
-        inner join Authors on Books.author_id = Authors.author_id
-    order by Books.title asc;
+select BookCopies.copy_id, 
+Books.title,
+    concat(Authors.author_first, ' ', Authors.author_last) as author_name,
+    Locations.location_name
+from Locations
+    right join BookCopies on Locations.location_id = BookCopies.location_id
+    inner join Books on BookCopies.book_id = Books.book_id
+    inner join Authors on Books.author_id = Authors.author_id
+order by Books.title asc;
 
 /*Bookcopies from Books View of Individual Books' copies*/
-    SELECT bookcopies.copy_id, bookcopies.book_id, locations.location_name
-    FROM bookcopies
-    LEFT JOIN locations ON bookcopies.location_id = locations.location_id
-    WHERE bookcopies.book_id = %s
+SELECT bookcopies.copy_id, bookcopies.book_id, locations.location_name
+FROM bookcopies
+LEFT JOIN locations ON bookcopies.location_id = locations.location_id
+WHERE bookcopies.book_id = %s
 
 /*Bookcopies from Books View of Individual Books' dropdown*/
   SELECT location_id, location_name 
@@ -202,15 +202,15 @@ INNER JOIN Books ON BookCopies.book_id = Books.book_id
 WHERE BookCopies.copy_id  = %s;
 
 /* update GET */
-        SELECT BookCopies.copy_id, 
-        Books.book_id, 
-        Books.title, 
-        concat(Authors.author_first, ' ', Authors.author_last) as author_name, Locations.location_name
-        FROM BookCopies 
-            LEFT JOIN Locations ON BookCopies.location_id = Locations.location_id
-            INNER JOIN Books ON BookCopies.book_id = Books.book_id
-            INNER JOIN Authors ON Books.author_id = Authors.author_id
-        WHERE BookCopies.copy_id = %s
+SELECT BookCopies.copy_id, 
+Books.book_id, 
+Books.title, 
+concat(Authors.author_first, ' ', Authors.author_last) as author_name, Locations.location_name
+FROM BookCopies 
+    LEFT JOIN Locations ON BookCopies.location_id = Locations.location_id
+    INNER JOIN Books ON BookCopies.book_id = Books.book_id
+    INNER JOIN Authors ON Books.author_id = Authors.author_id
+WHERE BookCopies.copy_id = %s
 
 /*update dropdown*/
 SELECT location_id, location_name 
@@ -238,7 +238,7 @@ DELETE FROM BookCopies
 WHERE copy_id = %s
 
 
-/* ----------- PATRONS QUERIES---------------
+/* ----------- PATRONS.py QUERIES---------------
  CREATE/INSERT
  READ/SELECT
  UPDATE
@@ -249,42 +249,33 @@ WHERE copy_id = %s
  */
 
 /* Initial Table View*/
- select patron_first,
-patron_last,
-email
- from Patrons
- order by patron_last asc;
-
+select patron_id,
+    patron_first,
+    patron_last,
+    email
+from Patrons
+order by patron_last asc;
 
 /* Insertion */
-insert into Patrons(patron_first, patron_last, email)
-values(
-:patron_first_input,
-:patron_last_input,
-:email_input
-);
+INSERT INTO Patrons(patron_first, patron_last, email) 
+VALUES (%s, %s, %s);
 
-/* Update */
-update Patrons
-set patron_first = :patron_first_input,
-	patron_last = :patron_last_input,
-    email = :email_input
-where patron_id = (
-	select patron_id
-    from Patrons
-    where patron_first = :patron_first_input,
-	and patron_last = :patron_last_input,
-    and email = :email_input
-    );
+/* Update GET*/
+SELECT patron_id, patron_first, patron_last, email 
+FROM Patrons 
+WHERE patron_id = %s
+
+/* Update POST*/
+update Patrons 
+set patron_first = %s, patron_last = %s, email = %s 
+where patron_id = %s;
 
 /* Delete */
-delete from Patrons
-    where patron_first = :patron_first_input,
-	and patron_last = :patron_last_input,
-    and email = :email_input;
+DELETE FROM Patrons 
+WHERE patron_id = %s
 
 
-/* ----------- CHECKOUTS QUERIES---------------
+/* ----------- CHECKOUTS.py QUERIES---------------
  CREATE/INSERT
  READ/SELECT
  UPDATE
@@ -294,44 +285,44 @@ delete from Patrons
  */
 
 /* SQL to Generate Intitial Checkouts Table View */
-select Patrons.patron_first,
-  Patrons.patron_last,
-  Checkouts.checkout_date,
-  Checkouts.return_date
+select
+    Checkouts.checkout_id,
+    concat(Patrons.patron_first, ' ', Patrons.patron_last) as patron_name,
+    Checkouts.checkout_date,
+    Checkouts.return_date
 from Patrons
-  inner join Checkouts on Patrons.patron_id = Checkouts.patron_id
-order by Checkouts.checkout_date desc;
+    inner join Checkouts on Patrons.patron_id = Checkouts.patron_id
+order by Checkouts.checkout_id asc;
 
-/* Checkouts INSERT */
-/* get patron_id from patron's name */
-select patron_id
-from Patrons
-where patron_first = :patron_first_input
-  and patron_last = :patron_last_input;
-/* insertion */
-insert into Checkouts (checkout_date, return_date, patron_id)
-values (
-    :checkout_date_input,
-    :return_date_input,
-    :patron_id_found_from_select_query
-  )
+/*Initial checkouts patron dropdown */
+SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name 
+FROM Patrons 
+ORDER BY patron_last ASC;
 
-/* Checkouts UPDATE - allow for change of checkout date, return date, patron. Books checked out changed through CheckedBooks. */
-/* get patron_id from patron's name */
-select patron_id
-from Patrons
-where patron_first = :patron_first_input
-  and patron_last = :patron_last_input;
-/* update */
-update Checkouts
-set patron_id = :patron_id_found_from_select_query,
-  checkout_date = :checkout_date_input,
-  return_date = :return_date_input
-where checkout_id = :checkout_id_selected;
+/* Checkouts INSERT  POST*/
+INSERT INTO Checkouts (checkout_date, return_date, patron_id) 
+VALUES (%s, %s, %s) 
+
+/* Checkouts Update GET*/
+SELECT Checkouts.checkout_id, Patrons.patron_id, Patrons.patron_first, Patrons.patron_last, Checkouts.checkout_date, Checkouts.return_date 
+FROM Patrons 
+INNER JOIN Checkouts ON Patrons.patron_id = Checkouts.patron_id 
+WHERE checkout_id = %s
+
+/* Checkouts Update Patron dropdown*/
+SELECT patron_id, concat(patron_first, ' ', patron_last) as patron_name 
+FROM Patrons 
+ORDER BY patron_last ASC
+
+/* Checkouts Update GET*/
+UPDATE Checkouts 
+SET patron_id = %s, checkout_date=%s, return_date=%s 
+WHERE checkout_id=%s
+
+
 
 /* Checkouts DELETE - deletes entire Checkout */
-delete from Checkouts
-where checkout_id = :checkout_id_selected;
+DELETE FROM Checkouts WHERE checkout_id = %s
 
 
 /* Generate a CheckedBooks list from a Checkout ID */
@@ -344,7 +335,7 @@ INNER JOIN Books ON BookCopies.book_id = Books.book_id
 WHERE Checkouts.checkout_id = :checkout_id_selected;
 
 
-/* ----------- CHECKEDBOOKS QUERIES---------------
+/* ----------- CHECKEDBOOKS.py QUERIES---------------
  Checkedbooks queries
  CREATE/INSERT
  READ/SELECT
@@ -355,42 +346,89 @@ WHERE Checkouts.checkout_id = :checkout_id_selected;
  */
 
 /* Initial Table View*/
-select Books.title,
-Patrons.patron_first,
-Patrons.patron_last,
+select
+CheckedBooks.checked_book_id, 
+BookCopies.copy_id, 
+Books.title,
+concat(Patrons.patron_first, ' ', Patrons.patron_last) as patron_name,
 Checkouts.checkout_date,
 Checkouts.return_date,
 CheckedBooks.returned
-
 from Books
-  inner join BookCopies on Books.book_id = BookCopies.book_id
-  inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
-  inner join Checkouts on Checkouts.checkout_id = CheckedBooks.checkout_id
-  inner join Patrons on Patrons.patron_id = Checkouts.patron_id
+    inner join BookCopies on Books.book_id = BookCopies.book_id
+    inner join CheckedBooks on BookCopies.copy_id = CheckedBooks.copy_id
+    inner join Checkouts on Checkouts.checkout_id = CheckedBooks.checkout_id
+    inner join Patrons on Patrons.patron_id = Checkouts.patron_id
 order by Checkouts.checkout_date desc;
 
+/* To checkedbooks from checkouts initial display*/
+SELECT Checkedbooks.checked_book_id, BookCopies.copy_id, Books.title, Locations.location_name, Checkouts.checkout_date, Checkouts.return_date, CheckedBooks.returned
+FROM Checkouts
+INNER JOIN CheckedBooks ON Checkouts.checkout_id = CheckedBooks.checkout_id
+INNER JOIN BookCopies ON CheckedBooks.copy_id = BookCopies.copy_id
+LEFT JOIN Locations ON BookCopies.location_id = Locations.location_id
+INNER JOIN Books ON BookCopies.book_id = Books.book_id
+WHERE Checkouts.checkout_id = %s
+ORDER BY Books.title ASC;
+
+/* To checkedbooks from checkouts patron query*/
+SELECT concat(Patrons.patron_first, ' ', Patrons.patron_last) as patron_name
+FROM Patrons
+INNER JOIN Checkouts ON Patrons.patron_id = Checkouts.patron_id 
+WHERE Checkouts.checkout_id = %s
+
+/*Dropdown of all book copies not in checkout*/
+SELECT BookCopies.copy_id,
+concat(Books.title, ' by ', Authors.author_first, ' ', Authors.author_last, ' at ', Locations.location_name, ' (Copy ID: ', BookCopies.copy_id, ')') as book_entry
+FROM BookCopies
+INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
+INNER JOIN Books ON BookCopies.book_id = Books.book_id
+INNER JOIN Authors ON Books.author_id = Authors.author_id
+LEFT JOIN CheckedBooks ON CheckedBooks.copy_id = BookCopies.copy_id
+LEFT JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
+WHERE Checkouts.checkout_id IS NULL 
+OR 
+(Checkouts.checkout_id != %s
+AND 
+BookCopies.copy_id NOT IN 
+    (SELECT BookCopies.copy_id FROM BookCopies INNER JOIN Locations ON BookCopies.location_id = Locations.location_id
+    INNER JOIN Books ON BookCopies.book_id = Books.book_id
+    INNER JOIN Authors ON Books.author_id = Authors.author_id
+    INNER JOIN CheckedBooks ON CheckedBooks.copy_id = BookCopies.copy_id
+    INNER JOIN Checkouts ON CheckedBooks.checkout_id = Checkouts.checkout_id
+    WHERE Checkouts.checkout_id = %s)
+)
+GROUP BY BookCopies.copy_id
+ORDER BY Books.title asc
+;
+
 /* Insertion */
-insert into CheckedBooks (checkout_id, copy_id, returned)
-values (
-  :checkout_id_input,
-  :copy_id_input,
-  0
-);
+INSERT INTO CheckedBooks (checkout_id, copy_id, returned) VALUES (%s, %s, %s);
 
-/* Update */
-update CheckedBooks
-set returned = :return_date_input
-where CheckedBooks_id = :checkedbooks_id_input;
+/* Update display book*/
+select checkout_id from checkedbooks where checked_book_id = %s;
 
-/* Delete */
-delete from CheckedBooks
-where CheckedBooks_id = :checkedbooks_id_input;
+/* Update display book GET*/
+SELECT returned from checkedbooks where checked_book_id = %s;
+
+/* Update display book POST*/
+update Checkedbooks set returned = %s where checked_book_id = %s;
+
+
+/* Delete checkedbook info */
+select checkout_id 
+from checkedbooks 
+where checked_book_id = %s;
+
+/* Delete checkedbook */
+DELETE FROM checkedbooks 
+WHERE checked_book_id = %s
 
 
   /* I was thinking that maybe we should have /checkedbooks.html redirect from clicking on a checkout_id from the Checkouts table. Then it still counts as a separate page. So, a user would first add a Checkout. Then, the checkout would appear on the table. Then, the user would click on the Checkout id in the table and add CheckedBooks from there.*/
 
 
-/* ----------- PUBLISHERS QUERIES---------------
+/* ----------- PUBLISHERS.py QUERIES---------------
   /*
   Publishers queries
   CREATE/INSERT
@@ -402,29 +440,31 @@ where CheckedBooks_id = :checkedbooks_id_input;
   */
 
 /* Generate Intitial Table View */
-select Publishers.publisher_name
+select publisher_id,
+publisher_name
 from Publishers
 order by Publishers.publisher_name asc;
 
 /* Insert Publishers */
-insert into Publishers (publisher_name)
-values (:publisher_name_input);
+INSERT INTO Publishers(publisher_name) 
+VALUES (%s);
 
-/* Update Publishers */
-update Publishers
-set publisher_name = :publisher_name_input
-where author_id = (
-    select publisher_id
-    from Publishers
-    where publisher_name = :publisher_name_selected
-  );
+/* Update Publishers GET */
+SELECT publisher_name 
+FROM Publishers 
+WHERE publisher_id = %s
+
+/* Update Publishers POST */
+update Publishers 
+set publisher_name = %s 
+where publisher_id = %s;
   
 /* Delete Publishers */
-delete from Publishers
-where publisher_name = :publisher_name_selected;
+DELETE FROM Publishers 
+WHERE publisher_id = %s
 
 
-/* ----------- LOCATIONS QUERIES---------------
+/* ----------- LOCATIONS.py QUERIES---------------
  CREATE/INSERT
  READ/SELECT
  UPDATE
@@ -435,30 +475,28 @@ where publisher_name = :publisher_name_selected;
  */
 
  /* Initial Table View*/
- select location_name,
- location_address
- from Locations
- order by location_name asc;
+select location_id,
+location_name,
+location_address
+from Locations
+order by location_id asc;
 
 /* Insertion */
-insert into Locations(location_name, location_address)
-values (
-:location_name_input,
-:location_address_input
-);
+INSERT INTO Locations(location_name, location_address) 
+VALUES (%s,%s);
 
-/* Update */
-update Locations
-set location_name = :location_name_input,
-	location_address = :location_address_input
-where location_id = (
-	select location_id
-    from Locations
-    where location_name = :location_name_input
-	and location_address = :location_address_input
-    );
+/* Update GET*/
+SELECT location_name, location_address 
+FROM Locations 
+WHERE location_id = %s
+
+/* Update Post*/
+update Locations 
+set location_name = %s, location_address = %s 
+where location_id = %s;
+
+
 /* Delete */
-delete from Locations
-where location_name = :location_name_input
-	or location_address = :location_address_input;
+DELETE FROM Locations 
+WHERE location_id = %s
 
