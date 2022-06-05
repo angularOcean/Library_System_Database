@@ -162,6 +162,8 @@ DELETE FROM Books WHERE book_id = %s
  pages: bookcopies.html
  */
 
+ /* Note: To perform BookCopies CRUD functions, users first click on a book_id in the Books table. .*/
+
 /* Generate Initial Direct Table View */
 select BookCopies.copy_id, 
 Books.title,
@@ -343,6 +345,8 @@ WHERE Checkouts.checkout_id = :checkout_id_selected;
  pages: checkedbooks.html
  */
 
+/* Note: To perform CheckedBooks CRUD functions, users first click on a checkout_id in the Checkouts table. .*/
+
 /* Initial Table View*/
 select
 CheckedBooks.checked_book_id, 
@@ -421,9 +425,6 @@ where checked_book_id = %s;
 /* Delete checkedbook */
 DELETE FROM checkedbooks 
 WHERE checked_book_id = %s
-
-
-  /* I was thinking that maybe we should have /checkedbooks.html redirect from clicking on a checkout_id from the Checkouts table. Then it still counts as a separate page. So, a user would first add a Checkout. Then, the checkout would appear on the table. Then, the user would click on the Checkout id in the table and add CheckedBooks from there.*/
 
 
 /* ----------- PUBLISHERS.py QUERIES---------------
