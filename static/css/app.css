@@ -11,6 +11,11 @@ https://pythonhow.com/python-tutorial/flask/Adding-CSS-styling-to-your-website/
 # Date: 05/22/2022
 # Based on:
 # Source URL: https://www.techwithtim.net/tutorials/flask/adding-bootstrap/
+
+# Citation for footer:
+# Date: 06/04/2022
+# Based on:
+# Source URL: https://www.w3schools.com/howto/howto_css_fixed_footer.asp
 */
 
 
@@ -197,4 +202,12 @@ input, select {
   margin: 6px;
 }
 
-
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #3f7ae9;
+  color: white;
+  text-align: center;
+}
