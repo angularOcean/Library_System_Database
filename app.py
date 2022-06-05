@@ -20,6 +20,12 @@
 # Based on: Flaskr Tutorial about App Context
 # Source URL: https://flask.palletsprojects.com/en/2.1.x/appcontext/
 
+# Citation for blueprints
+# Date: 06/03/2022
+# Based on: 
+# Source URL: https://flask.palletsprojects.com/en/2.1.x/blueprints/
+# Source URL: https://realpython.com/flask-blueprint/
+
 from flask import Flask, render_template, request, redirect, g
 import database.db_connector as db
 from config import DevelopmentConfig, ProductionConfig
