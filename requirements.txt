@@ -12,7 +12,7 @@ cryptography==37.0.2
 distlib==0.3.4
 dominate==2.6.0
 filelock==3.6.0
-Flask==2.1.2
+flask>=2.2.5
 Flask-Bootstrap4==4.0.2
 Flask-MySQL==1.5.2
 Flask-MySQLdb==1.0.1
