@@ -35,7 +35,7 @@ pycparser==2.21
 PyMySQL==1.0.2
 python-dotenv==0.20.0
 PyYAML==6.0
-requests==2.27.1
+requests>=2.31.0
 requests-futures==1.0.0
 shellescape==3.8.1
 six==1.16.0
